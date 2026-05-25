@@ -5,10 +5,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>mybookmark - A curated book library, delivered to your door in Bengaluru</title>
 <meta name="description" content="A subscription library in Bengaluru for everyone who reads. Browse our catalogue, request any book, or get curated picks matched to your taste. Doorstep delivery, unlimited swaps, no late fees." />
+
+<!-- Canonical + favicon -->
+<link rel="canonical" href="https://www.mybookmark.in/">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<!-- Open Graph -->
+<meta property="og:title" content="mybookmark — A curated book library in Bengaluru">
+<meta property="og:description" content="Doorstep delivery, unlimited swaps, no late fees. From ₹249/mo.">
+<meta property="og:image" content="https://www.mybookmark.in/og-cover.jpg">
+<meta property="og:url" content="https://www.mybookmark.in/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_IN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="mybookmark — A curated book library in Bengaluru">
+<meta name="twitter:description" content="Doorstep delivery, unlimited swaps, no late fees. From ₹249/mo.">
+<meta name="twitter:image" content="https://www.mybookmark.in/og-cover.jpg">
+
+<!-- LocalBusiness structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "mybookmark",
+  "description": "A curated book library subscription delivered to your door in Bengaluru.",
+  "url": "https://www.mybookmark.in/",
+  "areaServed": "Bengaluru",
+  "telephone": "+91-70221-65307",
+  "address": { "@type": "PostalAddress", "addressLocality": "Bengaluru", "addressRegion": "Karnataka", "addressCountry": "IN" },
+  "priceRange": "₹249 - ₹849 / month"
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Razorpay checkout.js is lazy-loaded on first subscribe click (see subscribe() in JS below) -->
 <script src="books.js"></script>
 <style>
   :root {
@@ -29,6 +62,15 @@
   }
 
   * { box-sizing: border-box; }
+
+  /* Visually hidden, available to screen readers */
+  .sr-only {
+    position: absolute !important;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0);
+    white-space: nowrap; border: 0;
+  }
   html { scroll-behavior: smooth; }
 
   body {
@@ -1691,141 +1733,12 @@
     </div>
   </section>
 
-  <section class="testimonials">
-    <div class="container">
-      <div class="section-head">
-        <div class="section-eyebrow">What members say</div>
-        <h2>Readers, in their own words.</h2>
-        <p>Stories from the people who've made mybookmark part of their reading life.</p>
-      </div>
-      <div class="testimonials-scroll-wrap">
-        <div class="testimonials-scroll">
-
-          <div class="testimonial">
-            <div class="stars">★★★★★</div>
-            <blockquote>"[Testimonial 1 - a specific moment when mybookmark made reading easier or more delightful.]"</blockquote>
-            <div class="testimonial-meta">
-              <div class="testimonial-avatar">A</div>
-              <div>
-                <div class="testimonial-name">Member 1</div>
-                <div class="testimonial-context">Adult reader, Indiranagar</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="testimonial">
-            <div class="stars">★★★★★</div>
-            <blockquote>"[Testimonial 2 - a parent talking about the kids' reading habit changing.]"</blockquote>
-            <div class="testimonial-meta">
-              <div class="testimonial-avatar alt-1">R</div>
-              <div>
-                <div class="testimonial-name">Member 2</div>
-                <div class="testimonial-context">Parent of 2, HSR Layout</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="testimonial">
-            <div class="stars">★★★★★</div>
-            <blockquote>"[Testimonial 3 - a student or young reader who discovered a new genre.]"</blockquote>
-            <div class="testimonial-meta">
-              <div class="testimonial-avatar alt-2">S</div>
-              <div>
-                <div class="testimonial-name">Member 3</div>
-                <div class="testimonial-context">Student, Whitefield</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="testimonial">
-            <div class="stars">★★★★★</div>
-            <blockquote>"[Testimonial 4 - someone praising the curation quality.]"</blockquote>
-            <div class="testimonial-meta">
-              <div class="testimonial-avatar alt-3">M</div>
-              <div>
-                <div class="testimonial-name">Member 4</div>
-                <div class="testimonial-context">Working professional, Koramangala</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="testimonial">
-            <div class="stars">★★★★★</div>
-            <blockquote>"[Testimonial 5 - praise for doorstep delivery convenience.]"</blockquote>
-            <div class="testimonial-meta">
-              <div class="testimonial-avatar">P</div>
-              <div>
-                <div class="testimonial-name">Member 5</div>
-                <div class="testimonial-context">Parent, Sarjapur Road</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="testimonial">
-            <div class="stars">★★★★★</div>
-            <blockquote>"[Testimonial 6 - someone who reads voraciously and loves unlimited swaps.]"</blockquote>
-            <div class="testimonial-meta">
-              <div class="testimonial-avatar alt-1">D</div>
-              <div>
-                <div class="testimonial-name">Member 6</div>
-                <div class="testimonial-context">Avid reader, Jayanagar</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="testimonial">
-            <div class="stars">★★★★★</div>
-            <blockquote>"[Testimonial 7 - a book club organizer or community member.]"</blockquote>
-            <div class="testimonial-meta">
-              <div class="testimonial-avatar alt-2">N</div>
-              <div>
-                <div class="testimonial-name">Member 7</div>
-                <div class="testimonial-context">Book club organizer, Bellandur</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="testimonial">
-            <div class="stars">★★★★★</div>
-            <blockquote>"[Testimonial 8 - a retiree or senior reader.]"</blockquote>
-            <div class="testimonial-meta">
-              <div class="testimonial-avatar alt-3">V</div>
-              <div>
-                <div class="testimonial-name">Member 8</div>
-                <div class="testimonial-context">Lifelong reader, Malleshwaram</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="testimonial">
-            <div class="stars">★★★★★</div>
-            <blockquote>"[Testimonial 9 - someone who appreciates the human curation vs Kindle algorithm.]"</blockquote>
-            <div class="testimonial-meta">
-              <div class="testimonial-avatar">K</div>
-              <div>
-                <div class="testimonial-name">Member 9</div>
-                <div class="testimonial-context">Adult reader, JP Nagar</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="testimonial">
-            <div class="stars">★★★★★</div>
-            <blockquote>"[Testimonial 10 - a founding member sharing their story from the early days.]"</blockquote>
-            <div class="testimonial-meta">
-              <div class="testimonial-avatar alt-1">T</div>
-              <div>
-                <div class="testimonial-name">Member 10</div>
-                <div class="testimonial-context">Founding member, Indiranagar</div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-      <div class="scroll-hint">Swipe to read more <span>→</span></div>
-    </div>
-  </section>
+  <!--
+    Testimonials section temporarily hidden until we collect real quotes from
+    founder cohort members. Re-enable once we have at least 3 authentic ones
+    with member consent. Mock copy was previously visible in production.
+  -->
+  <!-- <section class="testimonials"> ... </section> -->
 
   <section class="pricing" id="pricing">
     <div class="container">
@@ -2143,8 +2056,8 @@
         mybookmark
       </a>
       <div class="nav-right">
-        <a href="#catalogue" class="nav-link">Catalogue</a>
-        <a href="#requests" class="nav-link">My requests</a>
+        <a href="#dash-catalogue" class="nav-link">Catalogue</a>
+        <a href="#" class="nav-link" onclick="openRequestModal(event)">Request a book</a>
         <a href="#" class="user-chip" onclick="signOut(event)">
           <span class="user-avatar">P</span>
           Priya
@@ -2174,8 +2087,8 @@
         </div>
         <div class="stat-card">
           <div class="stat-label">Next delivery</div>
-          <div class="stat-value">Wed</div>
-          <p class="stat-meta">May 27 · WhatsApp requests by Tue noon</p>
+          <div class="stat-value" id="nextDeliveryDay">Wed</div>
+          <p class="stat-meta"><span id="nextDeliveryDate">—</span> · WhatsApp requests by Tue noon</p>
         </div>
         <div class="stat-card">
           <div class="stat-label">Next payment</div>
@@ -2275,7 +2188,7 @@
               <span style="color: #2c7a3d;">● Active</span>
             </div>
             <div class="info-actions">
-              <a href="#upgrade" class="btn-sm primary">Upgrade to Bookworm</a>
+              <button class="btn-sm primary" onclick="upgradeToBookworm()">Upgrade to Bookworm</button>
               <button class="btn-sm" onclick="switchToAnnual()">Switch to annual (save ₹1,188)</button>
               <button class="btn-sm" onclick="pauseSubscription()">Pause</button>
             </div>
@@ -2314,7 +2227,8 @@
         </div>
 
         <div class="catalogue-toolbar">
-          <input type="text" class="catalogue-search" id="catSearch" placeholder="🔍 Search by title, author, or genre..." oninput="renderCatalogue()">
+          <label for="catSearch" class="sr-only">Search the catalogue</label>
+          <input type="search" class="catalogue-search" id="catSearch" aria-label="Search the catalogue by title, author, or genre" placeholder="🔍 Search by title, author, or genre..." oninput="renderCatalogue()">
         </div>
 
         <div id="genreChips" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px;">
@@ -2407,7 +2321,7 @@
   </footer>
 
   <!-- ===== Swap modal ===== -->
-  <div class="m-modal-overlay" id="swapModal" onclick="closeSwapModal(event)">
+  <div class="m-modal-overlay" id="swapModal" role="dialog" aria-modal="true" aria-labelledby="swapTargetTitle" onclick="closeSwapModal(event)">
     <div class="m-modal" onclick="event.stopPropagation()">
       <div class="m-modal-header">
         <div>
@@ -2432,7 +2346,7 @@
   </div>
 
   <!-- ===== Request book modal ===== -->
-  <div class="m-modal-overlay" id="requestModal" onclick="closeRequestModal(event)">
+  <div class="m-modal-overlay" id="requestModal" role="dialog" aria-modal="true" aria-label="Request a book" onclick="closeRequestModal(event)">
     <div class="m-modal" onclick="event.stopPropagation()">
       <div class="m-modal-header">
         <div>
@@ -2474,6 +2388,30 @@
 </div>
 
 <script>
+  // ============================================
+  // Shared config + helpers
+  // ============================================
+  const WHATSAPP_NUMBER = '917022165307';
+  const waLink = (msg) => `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+
+  // Next-Wednesday delivery date — single source of truth for all UI surfaces.
+  function nextDeliveryDate() {
+    const d = new Date();
+    // 3 === Wednesday. If today is Wed and before 12:00, today still counts.
+    const today = d.getDay();
+    let daysAhead = (3 + 7 - today) % 7;
+    if (daysAhead === 0 && d.getHours() >= 12) daysAhead = 7;
+    if (daysAhead === 0) daysAhead = 0; // today
+    d.setDate(d.getDate() + daysAhead);
+    return d;
+  }
+  function nextDeliveryLabel() {
+    return nextDeliveryDate().toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' });
+  }
+  function nextDeliveryDayShort() {
+    return nextDeliveryDate().toLocaleDateString('en-IN', { weekday: 'short' });
+  }
+
   // ============================================
   // View routing (hash-based SPA)
   // ============================================
@@ -2523,16 +2461,7 @@
   // Authentication (mocked - wire up to real auth backend later)
   // ============================================
   function signInWithGoogle() {
-    // PRODUCTION: Replace with Google Identity Services (Sign In With Google).
-    // Requires a Google Cloud OAuth Client ID. See:
-    // https://developers.google.com/identity/gsi/web/guides/overview
-    //
-    // Example real implementation:
-    //   1. Load script: <script src="https://accounts.google.com/gsi/client" async defer></script>
-    //   2. Configure: <div id="g_id_onload" data-client_id="YOUR_CLIENT_ID" data-callback="handleGoogleCallback"></div>
-    //   3. Add button: <div class="g_id_signin"></div>
-    //   4. Handle callback: function handleGoogleCallback(response) { /* verify token, sign user in */ }
-    //
+    // PRODUCTION: Wire up Google Identity Services. See README for setup notes.
     // For now, this mock goes straight to the dashboard.
     goToView('dashboard');
   }
@@ -2573,17 +2502,9 @@
   // ============================================
   // Razorpay subscribe flow
   // ============================================
-  // PRODUCTION SETUP:
-  //   1. Add this script tag to <head>:
-  //      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  //   2. Replace RAZORPAY_KEY_ID below with your real Key ID (rzp_live_xxx or rzp_test_xxx).
-  //   3. Set up Plans in your Razorpay dashboard for each tier x period combination,
-  //      then replace the plan_id values in PLAN_IDS below with your real plan IDs.
-  //   4. Subscription creation must happen on your backend (requires Key Secret).
-  //      The subscribe() function below shows how to call your backend, which then
-  //      returns a subscription_id that the frontend passes to Razorpay Checkout.
-  //   5. See backend-razorpay.js (provided alongside this file) for the Node.js
-  //      reference implementation.
+  // PRODUCTION: see backend-razorpay.js and README for full setup. Key ID and
+  // plan IDs must NOT be hard-coded on the client in production — backend
+  // returns subscription_id + key_id from /api/create-subscription.
   const RAZORPAY_KEY_ID = 'rzp_test_REPLACE_ME';
   const PLAN_PRICES = {
     Kids:     { monthly: 249,  half: 1245, yearly: 2490 },
@@ -2592,6 +2513,23 @@
   };
   const DEPOSITS = { Kids: 400, Reader: 1000, Bookworm: 1500 };
 
+  // Lazy-load Razorpay checkout.js only when needed — saves ~150KB on every
+  // marketing-page render. Idempotent: safe to call repeatedly.
+  let _razorpayPromise = null;
+  function loadRazorpay() {
+    if (window.Razorpay) return Promise.resolve();
+    if (_razorpayPromise) return _razorpayPromise;
+    _razorpayPromise = new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      s.async = true;
+      s.onload = resolve;
+      s.onerror = () => reject(new Error('Razorpay checkout failed to load'));
+      document.head.appendChild(s);
+    });
+    return _razorpayPromise;
+  }
+
   async function subscribe(planName) {
     const period = currentBillingPeriod;
     const amount = PLAN_PRICES[planName][period];
@@ -2599,6 +2537,11 @@
     const total = amount + deposit;
 
     const periodLabel = { monthly: 'monthly', half: 'half-yearly', yearly: 'yearly' }[period];
+
+    try { await loadRazorpay(); } catch (err) {
+      alert('Could not load the secure checkout. Please check your connection and try again.');
+      return;
+    }
 
     if (!confirm(
       `Subscribe to ${planName} (${periodLabel})?\n\n` +
@@ -2649,8 +2592,8 @@
     const locality = document.getElementById('locality').value;
     const notes = document.getElementById('notes').value;
 
-    const message = `Hi mybookmark - I'd like to subscribe.%0A%0AName: ${name}%0APhone: ${phone}%0AReader: ${readerType}%0ALocality: ${locality}%0A%0ANotes: ${notes || 'None'}`;
-    window.open(`https://wa.me/917022165307?text=${message}`, '_blank');
+    const message = `Hi mybookmark - I'd like to subscribe.\n\nName: ${name}\nPhone: ${phone}\nReader: ${readerType}\nLocality: ${locality}\n\nNotes: ${notes || 'None'}`;
+    window.open(waLink(message), '_blank');
 
     document.getElementById('formSuccess').style.display = 'block';
     document.getElementById('signupForm').reset();
@@ -2661,13 +2604,23 @@
   // ============================================
   function requestSwap(bookTitle) {
     const message = `Hi mybookmark - I'd like to swap "${bookTitle}" on my next delivery.`;
-    const url = `https://wa.me/917022165307?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+    window.open(waLink(message), '_blank');
   }
 
   function switchToAnnual() {
     if (confirm('Switch to annual billing? You\'ll pay ₹5,490 upfront and save ₹1,188 over the year.')) {
-      alert('Redirecting to payment...');
+      // Mock state change so the UI reflects the choice. Production posts to backend.
+      MEMBER.period = 'yearly';
+      alert('Switching to annual billing — Razorpay checkout will open in production.');
+    }
+  }
+
+  function upgradeToBookworm() {
+    if (confirm('Upgrade to the Bookworm plan? You\'ll get 6 books at a time (instead of 4) and unlimited swaps for ₹849/month.')) {
+      // Mock state change. Production hits /api/subscription/upgrade.
+      MEMBER.plan = 'Bookworm';
+      MEMBER.bookLimit = 6;
+      alert('Upgrade requested — Razorpay checkout will open in production.');
     }
   }
 
@@ -2799,10 +2752,10 @@
     // PRODUCTION: POST to /api/swap-request { member_id, returning_book_id, requested_book_id }
     // Backend creates a swap request, notifies admin, schedules on next delivery.
     const msg = `Hi mybookmark - I'd like to swap "${returning.title}" for "${target.title}" on my next delivery.`;
-    window.open(`https://wa.me/917022165307?text=${encodeURIComponent(msg)}`, '_blank');
+    window.open(waLink(msg), '_blank');
 
     closeSwapModal();
-    alert(`✅ Swap request submitted!\n\nReturning: "${returning.title}"\nReceiving: "${target.title}"\n\nWe'll bring it on your next delivery (Wed May 27).`);
+    alert(`✅ Swap request submitted!\n\nReturning: "${returning.title}"\nReceiving: "${target.title}"\n\nWe'll bring it on your next delivery (${nextDeliveryLabel()}).`);
   }
 
   function closeSwapModal(e) {
@@ -2833,17 +2786,30 @@
     // PRODUCTION: POST to /api/book-request { member_id, title, author, isbn, why }
     // Goes into admin's Requests queue for manual confirmation.
     const msg = `Hi mybookmark - I'd like to request a book:\n\nTitle: ${title}\nAuthor: ${author}${isbn ? '\nISBN: ' + isbn : ''}${why ? '\n\nWhy: ' + why : ''}`;
-    window.open(`https://wa.me/917022165307?text=${encodeURIComponent(msg)}`, '_blank');
+    window.open(waLink(msg), '_blank');
 
     closeRequestModal();
     alert(`✅ Request submitted!\n\n"${title}" by ${author}\n\nSujay will confirm within 2 hours on WhatsApp.`);
     document.querySelector('#requestModal form').reset();
   }
 
-  // Render the catalogue when the dashboard view loads
+  // Render the catalogue + populate dynamic dates when the dashboard view loads
   window.addEventListener('DOMContentLoaded', () => {
     renderGenreChips();
     renderCatalogue();
+    const dayEl = document.getElementById('nextDeliveryDay');
+    const dateEl = document.getElementById('nextDeliveryDate');
+    if (dayEl) dayEl.textContent = nextDeliveryDayShort();
+    if (dateEl) dateEl.textContent = nextDeliveryLabel();
+  });
+
+  // ============================================
+  // A11y: close any open modal on Escape
+  // ============================================
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.m-modal.active, [class*=modal].active').forEach(m => m.classList.remove('active'));
+    }
   });
 </script>
 
