@@ -442,7 +442,7 @@
       <input type="text" class="search" placeholder="🔍 Search by name, email, or phone..." oninput="filterMembers()" id="memberSearch">
       <select onchange="filterMembers()" id="filterPlan">
         <option value="">All plans</option>
-        <option>Starter</option><option>Reader</option><option>Bookworm</option>
+        <option>Kids</option><option>Reader</option><option>Bookworm</option>
       </select>
       <select onchange="filterMembers()" id="filterStatus">
         <option value="">All statuses</option>
@@ -722,7 +722,7 @@
             <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="var(--gold)" stroke-width="6" stroke-dasharray="30 70" stroke-dashoffset="-70" transform="rotate(-90 21 21)"></circle>
           </svg>
           <div class="donut-legend">
-            <div class="donut-legend-item"><span class="donut-swatch" style="background: var(--blue)"></span> Starter · 2 members (20%)</div>
+            <div class="donut-legend-item"><span class="donut-swatch" style="background: var(--blue)"></span> Kids · 2 members (20%)</div>
             <div class="donut-legend-item"><span class="donut-swatch" style="background: var(--forest)"></span> Reader · 5 members (50%)</div>
             <div class="donut-legend-item"><span class="donut-swatch" style="background: var(--gold)"></span> Bookworm · 3 members (30%)</div>
           </div>
@@ -756,7 +756,7 @@
 
       <div class="panel">
         <h3>Plans & pricing</h3>
-        <div class="setting-row"><strong>Starter</strong><p>₹349/month · ₹1,745/half-yearly (5+1) · ₹3,490/yearly (10+2)<br>Deposit: ₹500 · 2 books at a time</p></div>
+        <div class="setting-row"><strong>Kids</strong><p>₹249/month · ₹1,245/half-yearly (5+1) · ₹2,490/yearly (10+2)<br>Deposit: ₹400 · 3 books at a time</p></div>
         <div class="setting-row"><strong>Reader</strong><p>₹549/month · ₹2,745/half-yearly · ₹5,490/yearly<br>Deposit: ₹1,000 · 4 books at a time</p></div>
         <div class="setting-row"><strong>Bookworm</strong><p>₹849/month · ₹4,245/half-yearly · ₹8,490/yearly<br>Deposit: ₹1,500 · 6 books at a time</p></div>
         <div class="setting-row"><strong>Founding rate</strong><p>₹400/month locked forever · 20 spots total, 1 claimed</p></div>
@@ -766,7 +766,7 @@
       <div class="panel">
         <h3>Razorpay integration</h3>
         <div class="setting-row"><strong>Mode</strong><p>Test mode · rzp_test_xxxxxx<br>Switch to live before launch.</p></div>
-        <div class="setting-row"><strong>Plan IDs</strong><p>9 plans created (Starter/Reader/Bookworm × monthly/half/yearly)<br><a href="#">View plan IDs →</a></p></div>
+        <div class="setting-row"><strong>Plan IDs</strong><p>9 plans created (Kids/Reader/Bookworm × monthly/half/yearly)<br><a href="#">View plan IDs →</a></p></div>
         <div class="setting-row"><strong>Webhook URL</strong><p><code>https://api.mybookmark.in/api/razorpay/webhook</code><br>Last event received: 2 hours ago ✓</p></div>
         <div class="setting-row"><strong>Webhook events</strong><p>subscription.activated, .charged, .paused, .cancelled, payment.failed</p></div>
         <button class="btn btn-secondary btn-sm" style="margin-top: 14px;" onclick="alert('Open Razorpay dashboard')">Open Razorpay dashboard ↗</button>
@@ -820,10 +820,10 @@
     { id: 1, name: 'Priya Sharma', email: 'priya.sharma@gmail.com', phone: '+91 98765 43210', locality: 'Indiranagar', plan: 'Reader', period: 'monthly', status: 'Active', joined: 'Mar 15, 2026', nextBilling: 'Jun 15, 2026', mrr: 549, deposit: 1000, books: 4, founder: false, color: 1, sub_id: 'sub_O7xa9b2K8m' },
     { id: 2, name: 'Arjun Mehta', email: 'arjun.m@example.com', phone: '+91 98220 12345', locality: 'HSR Layout', plan: 'Bookworm', period: 'half', status: 'Active', joined: 'Feb 12, 2026', nextBilling: 'Aug 12, 2026', mrr: 708, deposit: 1500, books: 6, founder: false, color: 2, sub_id: 'sub_O7xb1f4P3n' },
     { id: 3, name: 'Sneha Reddy', email: 'sneha.r@gmail.com', phone: '+91 99000 22345', locality: 'Whitefield', plan: 'Reader', period: 'monthly', status: 'Active', joined: 'Apr 3, 2026', nextBilling: 'Jun 3, 2026', mrr: 549, deposit: 1000, books: 4, founder: false, color: 3, sub_id: 'sub_O8za2g6R9q' },
-    { id: 4, name: 'Rohit Kumar', email: 'rohit@example.com', phone: '+91 97412 87654', locality: 'Koramangala', plan: 'Starter', period: 'monthly', status: 'Active', joined: 'May 10, 2026', nextBilling: 'Jun 10, 2026', mrr: 349, deposit: 500, books: 2, founder: false, color: 4, sub_id: 'sub_O9ab3i7S0r' },
+    { id: 4, name: 'Rohit Kumar', email: 'rohit@example.com', phone: '+91 97412 87654', locality: 'Koramangala', plan: 'Kids', period: 'monthly', status: 'Active', joined: 'May 10, 2026', nextBilling: 'Jun 10, 2026', mrr: 249, deposit: 400, books: 3, founder: false, color: 4, sub_id: 'sub_O9ab3i7S0r' },
     { id: 5, name: 'Anita Iyer', email: 'anita.i@example.com', phone: '+91 98456 11234', locality: 'Jayanagar', plan: 'Reader', period: 'monthly', status: 'Paused', joined: 'Jan 20, 2026', nextBilling: '—', mrr: 0, deposit: 1000, books: 0, founder: false, color: 5, sub_id: 'sub_O5wd0a2L1k' },
     { id: 6, name: 'Vikram Singh', email: 'vikram.s@example.com', phone: '+91 99543 76543', locality: 'Bellandur', plan: 'Bookworm', period: 'yearly', status: 'Active', joined: 'Mar 1, 2026', nextBilling: 'Mar 1, 2027', mrr: 708, deposit: 1500, books: 6, founder: false, color: 1, sub_id: 'sub_O8yc3h5Q7p' },
-    { id: 7, name: 'Kavya Pillai', email: 'kavya.p@gmail.com', phone: '+91 98876 33221', locality: 'Sarjapur Road', plan: 'Starter', period: 'monthly', status: 'Active', joined: 'Apr 25, 2026', nextBilling: 'May 25, 2026', mrr: 349, deposit: 500, books: 2, founder: false, color: 2, sub_id: 'sub_O9bc4j8T2s' },
+    { id: 7, name: 'Kavya Pillai', email: 'kavya.p@gmail.com', phone: '+91 98876 33221', locality: 'Sarjapur Road', plan: 'Kids', period: 'monthly', status: 'Active', joined: 'Apr 25, 2026', nextBilling: 'May 25, 2026', mrr: 249, deposit: 400, books: 3, founder: false, color: 2, sub_id: 'sub_O9bc4j8T2s' },
     { id: 8, name: 'Manish Patel', email: 'manish.p@example.com', phone: '+91 99887 22110', locality: 'Malleshwaram', plan: 'Reader', period: 'monthly', status: 'Cancelled', joined: 'Feb 1, 2026', nextBilling: '—', mrr: 0, deposit: 0, books: 0, founder: false, color: 3, sub_id: 'sub_O6ve1b3M2l' },
     { id: 9, name: 'Divya Nair', email: 'divya.n@example.com', phone: '+91 98998 11221', locality: 'JP Nagar', plan: 'Bookworm', period: 'monthly', status: 'Active', joined: 'May 5, 2026', nextBilling: 'Jun 5, 2026', mrr: 849, deposit: 1500, books: 5, founder: false, color: 4, sub_id: 'sub_OAcd5k9U3t' },
     { id: 10, name: 'Tarun Joshi', email: 'tarun.j@example.com', phone: '+91 98321 90123', locality: 'Indiranagar', plan: 'Reader', period: 'monthly', status: 'Active', joined: 'Jan 5, 2026', nextBilling: 'Jun 5, 2026', mrr: 400, deposit: 1000, books: 4, founder: true, color: 5, sub_id: 'sub_O4uc9z1J0i' }

@@ -72,7 +72,7 @@ const razorpay = new Razorpay({
 // ============================================================
 // Monthly rate per tier (in INR)
 const MONTHLY_RATE = {
-  Starter: 349,
+  Kids: 249,
   Reader: 549,
   Bookworm: 849
 };
@@ -90,13 +90,13 @@ const PERIOD_CONFIG = {
 // Filled in after running `node backend-razorpay.js --create-plans`
 // Plan IDs returned by Razorpay (format: plan_xxxxxxxxxxxxxx)
 const PLAN_IDS = {
-  Starter:  { monthly: 'plan_REPLACE', half: 'plan_REPLACE', yearly: 'plan_REPLACE' },
+  Kids:     { monthly: 'plan_REPLACE', half: 'plan_REPLACE', yearly: 'plan_REPLACE' },
   Reader:   { monthly: 'plan_REPLACE', half: 'plan_REPLACE', yearly: 'plan_REPLACE' },
   Bookworm: { monthly: 'plan_REPLACE', half: 'plan_REPLACE', yearly: 'plan_REPLACE' }
 };
 
 // Deposit amounts per tier (collected as separate one-time payment alongside first subscription charge)
-const DEPOSITS = { Starter: 500, Reader: 1000, Bookworm: 1500 };
+const DEPOSITS = { Kids: 400, Reader: 1000, Bookworm: 1500 };
 
 // ============================================================
 // ONE-TIME: CREATE PLANS

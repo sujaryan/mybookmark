@@ -1846,29 +1846,29 @@
       <div class="plans">
 
         <div class="plan">
-          <h3>Starter</h3>
-          <p class="plan-tagline">For the occasional reader - 1-2 books a month</p>
+          <h3>Kids</h3>
+          <p class="plan-tagline">For young readers - picture books, chapter books &amp; early reads</p>
           <div class="plan-price"
-               data-monthly="349" data-monthly-suffix="/month"
-               data-half="1745" data-half-suffix="/6 months"
-               data-yearly="3490" data-yearly-suffix="/year">
-            ₹349<small>/month</small>
+               data-monthly="249" data-monthly-suffix="/month"
+               data-half="1245" data-half-suffix="/6 months"
+               data-yearly="2490" data-yearly-suffix="/year">
+            ₹249<small>/month</small>
           </div>
           <p class="plan-period-meta"
              data-monthly-meta="Billed every month"
-             data-half-meta="Pay 5, read 6. Save ₹349 (1 month free)"
-             data-yearly-meta="Pay 10, read 12. Save ₹698 (2 months free)">
+             data-half-meta="Pay 5, read 6. Save ₹249 (1 month free)"
+             data-yearly-meta="Pay 10, read 12. Save ₹498 (2 months free)">
             Billed every month
           </p>
-          <p class="plan-deposit">Refundable deposit: ₹500</p>
+          <p class="plan-deposit">Refundable deposit: ₹400</p>
           <ul class="plan-features">
-            <li>2 books at a time</li>
-            <li>Up to 4 swaps per month</li>
-            <li>Browse catalogue + curated picks</li>
-            <li>WhatsApp ordering</li>
-            <li>Pickup or local delivery</li>
+            <li>3 books at a time</li>
+            <li>Up to 6 swaps per month</li>
+            <li>Age-tagged catalogue (3-6, 7-9, 10-12)</li>
+            <li>Curated by reading level</li>
+            <li>Doorstep delivery</li>
           </ul>
-          <button class="btn btn-secondary" onclick="subscribe('Starter')">Choose Starter</button>
+          <button class="btn btn-secondary" onclick="subscribe('Kids')">Choose Kids</button>
         </div>
 
         <div class="plan plan-featured">
@@ -2586,11 +2586,11 @@
   //      reference implementation.
   const RAZORPAY_KEY_ID = 'rzp_test_REPLACE_ME';
   const PLAN_PRICES = {
-    Starter:  { monthly: 349,  half: 1745, yearly: 3490 },
+    Kids:     { monthly: 249,  half: 1245, yearly: 2490 },
     Reader:   { monthly: 549,  half: 2745, yearly: 5490 },
     Bookworm: { monthly: 849,  half: 4245, yearly: 8490 }
   };
-  const DEPOSITS = { Starter: 500, Reader: 1000, Bookworm: 1500 };
+  const DEPOSITS = { Kids: 400, Reader: 1000, Bookworm: 1500 };
 
   async function subscribe(planName) {
     const period = currentBillingPeriod;
