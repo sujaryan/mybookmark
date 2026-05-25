@@ -2056,7 +2056,7 @@
         mybookmark
       </a>
       <div class="nav-right">
-        <a href="#dash-catalogue" class="nav-link">Catalogue</a>
+        <a href="#dash-catalogue" class="nav-link" onclick="scrollToCatalogue(event)">Catalogue</a>
         <a href="#" class="nav-link" onclick="openRequestModal(event)">Request a book</a>
         <a href="#" class="user-chip" onclick="signOut(event)">
           <span class="user-avatar">P</span>
@@ -2100,7 +2100,7 @@
       <section class="row">
         <div class="dash-section-head">
           <h2>Currently reading</h2>
-          <a href="#dash-history" class="link">View reading history →</a>
+          <a href="#dash-history" class="link" onclick="event.preventDefault(); document.getElementById('dash-history').scrollIntoView({behavior:'smooth'})">View reading history →</a>
         </div>
         <div class="books-grid">
 
@@ -2247,7 +2247,7 @@
       <section class="row" id="dash-history">
         <div class="dash-section-head">
           <h2>Reading history</h2>
-          <a href="#" class="link">See all 12 books →</a>
+          <a href="#" class="link" onclick="event.preventDefault(); document.getElementById('dash-history').scrollIntoView({behavior:'smooth'})">See all 12 books →</a>
         </div>
         <div class="history-list">
           <div class="history-row">
@@ -2315,7 +2315,7 @@
     <div class="footer-inner">
       <div>mybookmark · A curated library for readers in Bengaluru</div>
       <div>
-        <a href="#">Help</a> · <a href="#">Privacy</a> · <a href="#" onclick="signOut(event)">Sign out</a>
+        <a href="#" onclick="event.preventDefault()">Help</a> · <a href="#" onclick="event.preventDefault()">Privacy</a> · <a href="#" onclick="signOut(event)">Sign out</a>
       </div>
     </div>
   </footer>
@@ -2394,16 +2394,25 @@
   const WHATSAPP_NUMBER = '917022165307';
   const waLink = (msg) => `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
 
-  // Next-Wednesday delivery date — single source of truth for all UI surfaces.
+  // Next delivery date (Wednesday or Saturday, whichever is sooner).
+  // Cutoff: Tue noon for Wed delivery, Fri noon for Sat delivery.
   function nextDeliveryDate() {
     const d = new Date();
-    // 3 === Wednesday. If today is Wed and before 12:00, today still counts.
-    const today = d.getDay();
-    let daysAhead = (3 + 7 - today) % 7;
-    if (daysAhead === 0 && d.getHours() >= 12) daysAhead = 7;
-    if (daysAhead === 0) daysAhead = 0; // today
-    d.setDate(d.getDate() + daysAhead);
-    return d;
+    const today = d.getDay(); // 0=Sun … 6=Sat
+    const h = d.getHours();
+
+    function daysTo(target) {
+      let diff = (target - today + 7) % 7;
+      // If today IS the delivery day but past noon, skip to next occurrence.
+      if (diff === 0 && h >= 12) diff = 7;
+      return diff;
+    }
+
+    const toWed = daysTo(3);
+    const toSat = daysTo(6);
+    const result = new Date(d);
+    result.setDate(d.getDate() + Math.min(toWed, toSat));
+    return result;
   }
   function nextDeliveryLabel() {
     return nextDeliveryDate().toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' });
@@ -2415,6 +2424,7 @@
   // ============================================
   // View routing (hash-based SPA)
   // ============================================
+  let _currentView = null;
   function showView(name) {
     const views = ['marketing', 'login', 'dashboard'];
     views.forEach(v => {
@@ -2422,7 +2432,10 @@
       if (el) el.style.display = (v === name) ? '' : 'none';
     });
     document.body.className = 'view-' + name;
-    window.scrollTo(0, 0);
+    if (name !== _currentView) {
+      window.scrollTo(0, 0);
+      _currentView = name;
+    }
   }
 
   function handleHashChange() {
@@ -2431,6 +2444,13 @@
       showView('login');
     } else if (hash === 'dashboard') {
       showView('dashboard');
+    } else if (hash === 'dash-catalogue' || hash === 'dash-history') {
+      // Dashboard-internal anchors — stay on dashboard and scroll
+      showView('dashboard');
+      setTimeout(() => {
+        const el = document.getElementById(hash);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
     } else {
       showView('marketing');
       // If hash matches a marketing section, browser handles scroll natively.
@@ -2455,6 +2475,7 @@
   }
 
   window.addEventListener('hashchange', handleHashChange);
+  window.addEventListener('popstate', handleHashChange);
   window.addEventListener('DOMContentLoaded', handleHashChange);
 
   // ============================================
@@ -2698,7 +2719,7 @@
           <p class="cat-author">${b.author}</p>
           <span class="cat-genre">${b.genre}</span>
           <p class="cat-desc">${b.description}</p>
-          <button class="cat-action" ${isOut ? 'disabled' : ''} onclick="openSwapModal('${b.id}')">${isOut ? 'On loan - notify me' : 'Request swap'}</button>
+          <button class="cat-action" onclick="${isOut ? `notifyWhenAvailable('${b.id}')` : `openSwapModal('${b.id}')`}">${isOut ? 'On loan — notify me' : 'Request swap'}</button>
         </div>
       `;
     }).join('');
@@ -2708,6 +2729,13 @@
     if (e) e.preventDefault();
     const el = document.getElementById('dash-catalogue');
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function notifyWhenAvailable(bookId) {
+    const book = CATALOGUE.find(b => b.id === bookId);
+    if (!book) return;
+    const msg = `Hi mybookmark - I'd like to be notified when "${book.title}" by ${book.author} is available.`;
+    window.open(waLink(msg), '_blank');
   }
 
   // ----- Swap modal -----
