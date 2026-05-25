@@ -2181,15 +2181,15 @@
             </div>
             <div class="info-row">
               <span>Refundable deposit</span>
-              <span>₹1,000 held</span>
+              <span id="subDeposit">₹1,000 held</span>
             </div>
             <div class="info-row">
               <span>Status</span>
               <span style="color: #2c7a3d;">● Active</span>
             </div>
             <div class="info-actions">
-              <button class="btn-sm primary" onclick="upgradeToBookworm()">Upgrade to Bookworm</button>
-              <button class="btn-sm" onclick="switchToAnnual()">Switch to annual (save ₹1,188)</button>
+              <button class="btn-sm primary" id="btnUpgradeBookworm" onclick="upgradeToBookworm()">Upgrade to Bookworm</button>
+              <button class="btn-sm" id="btnSwitchAnnual" onclick="switchToAnnual()">Switch to annual (save ₹1,188)</button>
               <button class="btn-sm" onclick="pauseSubscription()">Pause</button>
             </div>
           </div>
@@ -2533,6 +2533,7 @@
     Bookworm: { monthly: 849,  half: 4245, yearly: 8490 }
   };
   const DEPOSITS = { Kids: 400, Reader: 1000, Bookworm: 1500 };
+  const PLAN_BOOK_LIMITS = { Kids: 2, Reader: 4, Bookworm: 6 };
 
   // Lazy-load Razorpay checkout.js only when needed — saves ~150KB on every
   // marketing-page render. Idempotent: safe to call repeatedly.
@@ -2629,18 +2630,27 @@
   }
 
   function switchToAnnual() {
-    if (confirm('Switch to annual billing? You\'ll pay ₹5,490 upfront and save ₹1,188 over the year.')) {
-      // Mock state change so the UI reflects the choice. Production posts to backend.
+    const annualPrice = PLAN_PRICES[MEMBER.plan].yearly;
+    const savings = PLAN_PRICES[MEMBER.plan].monthly * 2;
+    if (confirm('Switch to annual billing? You\'ll pay ₹' + annualPrice.toLocaleString('en-IN') + ' upfront and save ₹' + savings.toLocaleString('en-IN') + ' over the year.')) {
       MEMBER.period = 'yearly';
+      MEMBER.mrr = annualPrice;
+      populateDashboard();
       alert('Switching to annual billing — Razorpay checkout will open in production.');
     }
   }
 
   function upgradeToBookworm() {
-    if (confirm('Upgrade to the Bookworm plan? You\'ll get 6 books at a time (instead of 4) and unlimited swaps for ₹849/month.')) {
-      // Mock state change. Production hits /api/subscription/upgrade.
-      MEMBER.plan = 'Bookworm';
-      MEMBER.bookLimit = 6;
+    const nextPlan = 'Bookworm';
+    const price = PLAN_PRICES[nextPlan].monthly;
+    const newLimit = PLAN_BOOK_LIMITS[nextPlan];
+    const curLimit = PLAN_BOOK_LIMITS[MEMBER.plan];
+    if (confirm('Upgrade to the Bookworm plan? You\'ll get ' + newLimit + ' books at a time (instead of ' + curLimit + ') and unlimited swaps for ₹' + price + '/month.')) {
+      MEMBER.plan = nextPlan;
+      MEMBER.mrr = price;
+      MEMBER.bookLimit = newLimit;
+      MEMBER.deposit = DEPOSITS[nextPlan];
+      populateDashboard();
       alert('Upgrade requested — Razorpay checkout will open in production.');
     }
   }
@@ -2869,6 +2879,23 @@
     setText('subPlan', MEMBER.plan + ' · ₹' + MEMBER.mrr + '/' + MEMBER.period);
     setText('subPeriod', periodLabel);
     setText('subNextPayment', payDate.toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' }));
+    setText('subDeposit', '₹' + MEMBER.deposit.toLocaleString('en-IN') + ' held');
+
+    // Upgrade button — hide when already on Bookworm
+    const upgradeBtn = document.getElementById('btnUpgradeBookworm');
+    if (upgradeBtn) upgradeBtn.style.display = MEMBER.plan === 'Bookworm' ? 'none' : '';
+
+    // Annual switch button — hide when already on annual, show computed savings
+    const annualBtn = document.getElementById('btnSwitchAnnual');
+    if (annualBtn) {
+      if (MEMBER.period === 'yearly') {
+        annualBtn.style.display = 'none';
+      } else {
+        const savings = PLAN_PRICES[MEMBER.plan].monthly * 2;
+        annualBtn.textContent = 'Switch to annual (save ₹' + savings.toLocaleString('en-IN') + ')';
+        annualBtn.style.display = '';
+      }
+    }
   }
 
   // Render the catalogue + populate dynamic dates when the dashboard view loads
