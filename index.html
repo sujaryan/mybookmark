@@ -2709,6 +2709,8 @@
 
     grid.innerHTML = filtered.map(b => {
       const isOut = b.status === 'checked-out';
+      const btnOnclick = isOut ? "notifyWhenAvailable('" + b.id + "')" : "openSwapModal('" + b.id + "')";
+      const btnText = isOut ? 'On loan — notify me' : 'Request swap';
       return `
         <div class="cat-book">
           <div class="cat-cover ${b.coverGradient}">
@@ -2719,7 +2721,7 @@
           <p class="cat-author">${b.author}</p>
           <span class="cat-genre">${b.genre}</span>
           <p class="cat-desc">${b.description}</p>
-          <button class="cat-action" onclick="${isOut ? `notifyWhenAvailable('${b.id}')` : `openSwapModal('${b.id}')`}">${isOut ? 'On loan — notify me' : 'Request swap'}</button>
+          <button class="cat-action" onclick="${btnOnclick}">${btnText}</button>
         </div>
       `;
     }).join('');
