@@ -2059,8 +2059,8 @@
         <a href="#dash-catalogue" class="nav-link" onclick="scrollToCatalogue(event)">Catalogue</a>
         <a href="#" class="nav-link" onclick="openRequestModal(event)">Request a book</a>
         <a href="#" class="user-chip" onclick="signOut(event)">
-          <span class="user-avatar">P</span>
-          Priya
+          <span class="user-avatar" id="dashUserAvatar">P</span>
+          <span id="dashUserName">Priya</span>
         </a>
       </div>
     </div>
@@ -2069,10 +2069,10 @@
   <section class="welcome">
     <div class="container welcome-inner">
       <div>
-        <h1>Welcome back, Priya 👋</h1>
-        <p class="welcome-sub">Member since March 2026 · 12 books read so far</p>
+        <h1 id="dashWelcome">Welcome back, Priya 👋</h1>
+        <p class="welcome-sub" id="dashWelcomeSub">Member since March 2026 · 12 books read so far</p>
       </div>
-      <span class="plan-pill">Reader plan</span>
+      <span class="plan-pill" id="dashPlanPill">Reader plan</span>
     </div>
   </section>
 
@@ -2082,18 +2082,18 @@
       <div class="stats">
         <div class="stat-card">
           <div class="stat-label">Currently reading</div>
-          <div class="stat-value">4 <small>/ 4 books</small></div>
-          <p class="stat-meta">Limit reached - return one to add a new pick</p>
+          <div class="stat-value" id="dashBooksCount">4 <small>/ 4 books</small></div>
+          <p class="stat-meta" id="dashBooksLimit">Limit reached - return one to add a new pick</p>
         </div>
         <div class="stat-card">
           <div class="stat-label">Next delivery</div>
           <div class="stat-value" id="nextDeliveryDay">Wed</div>
-          <p class="stat-meta"><span id="nextDeliveryDate">—</span> · WhatsApp requests by Tue noon</p>
+          <p class="stat-meta"><span id="nextDeliveryDate">—</span> · <span id="dashDeliveryCutoff">WhatsApp requests by Tue noon</span></p>
         </div>
         <div class="stat-card">
           <div class="stat-label">Next payment</div>
-          <div class="stat-value">₹549</div>
-          <p class="stat-meta">Due June 15 · 22 days from today</p>
+          <div class="stat-value" id="dashPaymentAmount">₹549</div>
+          <p class="stat-meta" id="dashPaymentMeta">Due June 15 · 22 days from today</p>
         </div>
       </div>
 
@@ -2169,15 +2169,15 @@
             <h3>Subscription</h3>
             <div class="info-row">
               <span>Plan</span>
-              <span>Reader · ₹549/month</span>
+              <span id="subPlan">Reader · ₹549/month</span>
             </div>
             <div class="info-row">
               <span>Billing cycle</span>
-              <span>Monthly</span>
+              <span id="subPeriod">Monthly</span>
             </div>
             <div class="info-row">
               <span>Next payment</span>
-              <span>June 15, 2026</span>
+              <span id="subNextPayment">June 15, 2026</span>
             </div>
             <div class="info-row">
               <span>Refundable deposit</span>
@@ -2658,7 +2658,13 @@
   const MEMBER = {
     name: 'Priya',
     plan: 'Reader',
+    mrr: 549,
+    period: 'monthly',
+    deposit: 1000,
     bookLimit: 4,
+    memberSince: 'March 2026',
+    booksRead: 12,
+    nextPaymentDate: '2026-06-15',
     currentBooks: [
       { title: 'The Midnight Library', author: 'Matt Haig', cover: 'cover-orange' },
       { title: 'Sapiens', author: 'Yuval Noah Harari', cover: 'cover-forest' },
@@ -2823,14 +2829,53 @@
     document.querySelector('#requestModal form').reset();
   }
 
+  function nextDeliveryCutoff() {
+    const d = nextDeliveryDate();
+    return d.getDay() === 3 ? 'Tue noon' : 'Fri noon';
+  }
+
+  function populateDashboard() {
+    const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+    // Nav + header
+    const initial = MEMBER.name.charAt(0).toUpperCase();
+    setText('dashUserAvatar', initial);
+    setText('dashUserName', MEMBER.name);
+    setText('dashWelcome', 'Welcome back, ' + MEMBER.name + ' 👋');
+    setText('dashWelcomeSub', 'Member since ' + MEMBER.memberSince + ' · ' + MEMBER.booksRead + ' books read so far');
+    setText('dashPlanPill', MEMBER.plan + ' plan');
+
+    // Stats — books
+    const booksEl = document.getElementById('dashBooksCount');
+    if (booksEl) booksEl.innerHTML = MEMBER.currentBooks.length + ' <small>/ ' + MEMBER.bookLimit + ' books</small>';
+    const atLimit = MEMBER.currentBooks.length >= MEMBER.bookLimit;
+    setText('dashBooksLimit', atLimit ? 'Limit reached — return one to add a new pick' : (MEMBER.bookLimit - MEMBER.currentBooks.length) + ' slot' + (MEMBER.bookLimit - MEMBER.currentBooks.length === 1 ? '' : 's') + ' available');
+
+    // Stats — delivery
+    setText('nextDeliveryDay', nextDeliveryDayShort());
+    setText('nextDeliveryDate', nextDeliveryLabel());
+    setText('dashDeliveryCutoff', 'WhatsApp requests by ' + nextDeliveryCutoff());
+
+    // Stats — payment
+    const payDate = new Date(MEMBER.nextPaymentDate);
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const daysUntil = Math.round((payDate - today) / 86400000);
+    const payMonthLong = payDate.toLocaleDateString('en-IN', { month: 'long', day: 'numeric' });
+    setText('dashPaymentAmount', '₹' + MEMBER.mrr);
+    setText('dashPaymentMeta', 'Due ' + payMonthLong + ' · ' + daysUntil + ' day' + (daysUntil === 1 ? '' : 's') + ' from today');
+
+    // Subscription info rows
+    const periodLabel = MEMBER.period.charAt(0).toUpperCase() + MEMBER.period.slice(1);
+    setText('subPlan', MEMBER.plan + ' · ₹' + MEMBER.mrr + '/' + MEMBER.period);
+    setText('subPeriod', periodLabel);
+    setText('subNextPayment', payDate.toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' }));
+  }
+
   // Render the catalogue + populate dynamic dates when the dashboard view loads
   window.addEventListener('DOMContentLoaded', () => {
+    populateDashboard();
     renderGenreChips();
     renderCatalogue();
-    const dayEl = document.getElementById('nextDeliveryDay');
-    const dateEl = document.getElementById('nextDeliveryDate');
-    if (dayEl) dayEl.textContent = nextDeliveryDayShort();
-    if (dateEl) dateEl.textContent = nextDeliveryLabel();
   });
 
   // ============================================
