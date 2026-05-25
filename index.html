@@ -1,0 +1,2851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>mybookmark - A curated book library, delivered to your door in Bengaluru</title>
+<meta name="description" content="A subscription library in Bengaluru for everyone who reads. Browse our catalogue, request any book, or get curated picks matched to your taste. Doorstep delivery, unlimited swaps, no late fees." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="books.js"></script>
+<style>
+  :root {
+    --cream: #fbf6ec;
+    --paper: #f4ecd8;
+    --ink: #1f2a1f;
+    --ink-soft: #3a4a3a;
+    --muted: #6b6358;
+    --rust: #b8552b;
+    --rust-dark: #963f1c;
+    --forest: #2c4a35;
+    --forest-dark: #1e3424;
+    --gold: #d4a437;
+    --line: #d9cdb2;
+    --shadow: 0 8px 24px rgba(31, 42, 31, 0.08);
+    --shadow-lg: 0 14px 40px rgba(31, 42, 31, 0.12);
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body.view-login {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--ink);
+    margin: 0 0 0.5em 0;
+    letter-spacing: -0.01em;
+  }
+  h1 { font-size: clamp(2.4rem, 5.5vw, 4rem); }
+  h2 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); }
+  h3 { font-size: 1.3rem; }
+  p { margin: 0 0 1em 0; }
+  a { color: var(--rust); text-decoration: none; }
+  a:hover { color: var(--rust-dark); }
+
+  .container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ===== Shared logo ===== */
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .logo-mark {
+    width: 28px;
+    height: 28px;
+    background: var(--rust);
+    border-radius: 4px 4px 0 0;
+    position: relative;
+    transform: rotate(-3deg);
+  }
+  .logo-mark::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 14px solid var(--rust);
+    border-right: 14px solid var(--rust);
+    border-bottom: 8px solid transparent;
+  }
+
+  /* ===== Shared buttons ===== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    text-align: center;
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: var(--rust);
+    color: var(--cream);
+    box-shadow: 0 4px 14px rgba(184, 85, 43, 0.3);
+  }
+  .btn-primary:hover {
+    background: var(--rust-dark);
+    color: var(--cream);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(184, 85, 43, 0.4);
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--forest);
+    border: 1.5px solid var(--forest);
+  }
+  .btn-secondary:hover {
+    background: var(--forest);
+    color: var(--cream);
+  }
+  .btn-whatsapp {
+    background: #25d366;
+    color: white;
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
+  }
+  .btn-whatsapp:hover {
+    background: #1faa54;
+    color: white;
+    transform: translateY(-1px);
+  }
+  .btn-google {
+    background: white;
+    color: #1f1f1f;
+    border: 1px solid #dadce0;
+    font-weight: 500;
+  }
+  .btn-google:hover {
+    background: #f8f9fa;
+    color: #1f1f1f;
+    border-color: #b8b8b8;
+    transform: translateY(-1px);
+  }
+  .btn-google svg { width: 18px; height: 18px; }
+
+  /* ============================================
+     MARKETING VIEW
+     ============================================ */
+
+  /* Nav */
+  #view-marketing nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(251, 246, 236, 0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  #view-marketing .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+  #view-marketing .nav-links {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+  }
+  #view-marketing .nav-links a {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  #view-marketing .nav-links a:hover { color: var(--rust); }
+  #view-marketing .nav-cta {
+    background: var(--forest);
+    color: var(--cream) !important;
+    padding: 9px 18px;
+    border-radius: 999px;
+    font-weight: 500 !important;
+  }
+  #view-marketing .nav-cta:hover { background: var(--forest-dark); }
+  @media (max-width: 720px) {
+    #view-marketing .nav-links { gap: 14px; }
+    #view-marketing .nav-links a:not(.nav-cta) { display: none; }
+  }
+
+  /* Hero */
+  .hero { padding: 80px 0 100px; position: relative; overflow: hidden; }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .hero-eyebrow {
+    display: inline-block;
+    background: var(--paper);
+    color: var(--forest);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    border: 1px solid var(--line);
+  }
+  .hero h1 em { font-style: italic; color: var(--rust); }
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+    margin-bottom: 28px;
+    max-width: 520px;
+  }
+  .hero-ctas {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .hero-tertiary {
+    margin-bottom: 28px;
+  }
+  .hero-tertiary a {
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+  .hero-tertiary a:hover { color: var(--rust); }
+  .hero-trust {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .hero-trust-dot {
+    width: 8px;
+    height: 8px;
+    background: #4caf50;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.15);
+  }
+  .hero-visual { position: relative; height: 460px; }
+  .book {
+    position: absolute;
+    border-radius: 4px;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    color: var(--cream);
+    font-size: 0.95rem;
+    line-height: 1.2;
+  }
+  .book-1 { width: 200px; height: 280px; background: linear-gradient(135deg, var(--rust), var(--rust-dark)); top: 20px; left: 30px; transform: rotate(-8deg); }
+  .book-2 { width: 200px; height: 280px; background: linear-gradient(135deg, var(--forest), var(--forest-dark)); top: 80px; left: 180px; transform: rotate(6deg); }
+  .book-3 { width: 200px; height: 280px; background: linear-gradient(135deg, #4a6fa5, #2c4a7a); top: 150px; left: 90px; transform: rotate(-2deg); z-index: 2; }
+  .book-spine { position: absolute; left: 0; top: 0; bottom: 0; width: 8px; background: rgba(0,0,0,0.15); border-radius: 4px 0 0 4px; }
+  .floating-tag {
+    position: absolute;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 16px;
+    box-shadow: var(--shadow);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .tag-1 { top: 0; right: 0; color: var(--forest); }
+  .tag-2 { bottom: 20px; left: 0; color: var(--rust); }
+  @media (max-width: 880px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+    .hero-visual { height: 380px; }
+    .hero { padding: 50px 0 60px; }
+  }
+
+  /* Sections */
+  #view-marketing section { padding: 80px 0; }
+  .section-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.8rem;
+    color: var(--rust);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .section-head {
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto 56px;
+  }
+  .section-head p {
+    color: var(--ink-soft);
+    font-size: 1.1rem;
+  }
+
+  /* Problem */
+  .problem { background: var(--paper); padding: 80px 0; }
+  .problem-quote { max-width: 780px; margin: 0 auto; text-align: center; }
+  .problem-quote p {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+    line-height: 1.4;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .problem-quote span { color: var(--rust); font-style: italic; }
+
+  /* Steps */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+  }
+  .step { text-align: left; position: relative; }
+  .step-num {
+    font-family: 'Fraunces', serif;
+    font-size: 2.5rem;
+    color: var(--rust);
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+  .step h3 { margin-bottom: 8px; font-size: 1.15rem; }
+  .step p { color: var(--ink-soft); font-size: 0.95rem; margin: 0; }
+  @media (max-width: 880px) {
+    .steps { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+  }
+  @media (max-width: 520px) {
+    .steps { grid-template-columns: 1fr; }
+  }
+
+  /* Features */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  .feature {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+  }
+  .feature-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--paper);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 1.6rem;
+  }
+  .feature h3 { font-size: 1.2rem; margin-bottom: 10px; }
+  .feature p { color: var(--ink-soft); margin: 0; font-size: 0.95rem; }
+  @media (max-width: 880px) { .features-grid { grid-template-columns: 1fr; } }
+
+  /* Testimonials */
+  .testimonials { background: var(--cream); overflow: hidden; }
+  .testimonials-scroll-wrap { position: relative; margin: 0 -24px; }
+  .testimonials-scroll-wrap::before,
+  .testimonials-scroll-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 14px;
+    width: 60px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .testimonials-scroll-wrap::before { left: 0; background: linear-gradient(to right, var(--cream), transparent); }
+  .testimonials-scroll-wrap::after { right: 0; background: linear-gradient(to left, var(--cream), transparent); }
+  .testimonials-scroll {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding: 4px 24px 14px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .testimonials-scroll::-webkit-scrollbar { height: 6px; }
+  .testimonials-scroll::-webkit-scrollbar-track { background: transparent; }
+  .testimonials-scroll::-webkit-scrollbar-thumb { background: var(--line); border-radius: 999px; }
+  .testimonials-scroll::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+  .testimonial {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    flex: 0 0 340px;
+    scroll-snap-align: start;
+    min-height: 280px;
+  }
+  .testimonial::before {
+    content: '"';
+    position: absolute;
+    top: 8px;
+    left: 20px;
+    font-family: 'Fraunces', serif;
+    font-size: 5rem;
+    color: var(--rust);
+    line-height: 1;
+    opacity: 0.18;
+  }
+  .stars {
+    color: var(--gold);
+    font-size: 1rem;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 1;
+  }
+  blockquote {
+    margin: 0 0 24px;
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: var(--ink);
+    font-weight: 500;
+    flex-grow: 1;
+    position: relative;
+    z-index: 1;
+  }
+  .testimonial-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-top: 1px solid var(--line);
+    padding-top: 18px;
+  }
+  .testimonial-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--forest);
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .testimonial-avatar.alt-1 { background: var(--rust); }
+  .testimonial-avatar.alt-2 { background: #4a6fa5; }
+  .testimonial-avatar.alt-3 { background: var(--gold); color: var(--ink); }
+  .testimonial-name { font-weight: 600; color: var(--ink); font-size: 0.95rem; }
+  .testimonial-context { color: var(--muted); font-size: 0.85rem; }
+  .scroll-hint { text-align: center; color: var(--muted); font-size: 0.85rem; margin-top: 18px; }
+  .scroll-hint span { display: inline-block; animation: scroll-nudge 1.6s ease-in-out infinite; }
+  @keyframes scroll-nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(6px); } }
+  @media (max-width: 600px) { .testimonial { flex: 0 0 86%; } }
+
+  /* Pricing */
+  .pricing { background: var(--paper); }
+  .billing-toggle {
+    display: inline-flex;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 5px;
+    margin: 0 auto 36px;
+    gap: 4px;
+  }
+  .billing-toggle-wrap { text-align: center; }
+  .billing-btn {
+    background: transparent;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 999px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.18s ease;
+    position: relative;
+  }
+  .billing-btn:hover { color: var(--ink); }
+  .billing-btn.active {
+    background: var(--forest);
+    color: var(--cream);
+  }
+  .billing-btn .save-pill {
+    background: var(--gold);
+    color: var(--ink);
+    padding: 1px 7px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    margin-left: 6px;
+    vertical-align: 1px;
+  }
+  .billing-btn.active .save-pill { background: rgba(251, 246, 236, 0.95); color: var(--forest-dark); }
+  @media (max-width: 520px) {
+    .billing-toggle { flex-direction: column; padding: 6px; border-radius: 14px; }
+    .billing-btn { width: 100%; text-align: center; }
+  }
+  .plan-period-meta {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin: -2px 0 10px;
+    min-height: 1.2em;
+  }
+  .plan-featured .plan-period-meta { color: rgba(251, 246, 236, 0.7); }
+  .plans {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: stretch;
+  }
+  .plan {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 36px 28px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .plan:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .plan-featured {
+    background: var(--forest);
+    color: var(--cream);
+    border-color: var(--forest);
+  }
+  .plan-featured h3,
+  .plan-featured .plan-tagline,
+  .plan-featured .plan-price,
+  .plan-featured .plan-deposit,
+  .plan-featured .plan-features li { color: var(--cream); }
+  .plan-featured .plan-features li::before { color: var(--gold); }
+  .plan-badge {
+    position: absolute;
+    top: -12px;
+    right: 24px;
+    background: var(--gold);
+    color: var(--ink);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .plan h3 { font-size: 1.4rem; margin-bottom: 4px; }
+  .plan-tagline { color: var(--muted); font-size: 0.9rem; margin-bottom: 20px; }
+  .plan-price {
+    font-family: 'Fraunces', serif;
+    font-size: 2.4rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--ink);
+  }
+  .plan-price small {
+    font-size: 1rem;
+    color: var(--muted);
+    font-weight: 400;
+    font-family: 'Inter', sans-serif;
+  }
+  .plan-featured .plan-price small { color: rgba(251, 246, 236, 0.7); }
+  .plan-deposit { font-size: 0.85rem; color: var(--muted); margin-bottom: 24px; }
+  .plan-featured .plan-deposit { color: rgba(251, 246, 236, 0.7); }
+  .plan-features { list-style: none; padding: 0; margin: 0 0 28px; flex-grow: 1; }
+  .plan-features li {
+    padding: 8px 0 8px 26px;
+    position: relative;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  .plan-features li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    color: var(--rust);
+    font-weight: 700;
+  }
+  .plan .btn { width: 100%; }
+  .plan-featured .btn-primary { background: var(--gold); color: var(--ink); box-shadow: 0 4px 14px rgba(212, 164, 55, 0.3); }
+  .plan-featured .btn-primary:hover { background: #c39228; color: var(--ink); }
+  @media (max-width: 880px) { .plans { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; } }
+  .prepay-note { text-align: center; margin-top: 36px; color: var(--ink-soft); font-size: 0.95rem; }
+  .prepay-note strong { color: var(--rust); }
+
+  /* Founders */
+  .founders { background: linear-gradient(135deg, var(--forest), var(--forest-dark)); color: var(--cream); }
+  .founders .section-eyebrow { color: var(--gold); }
+  .founders h2 { color: var(--cream); }
+  .founders .section-head p { color: rgba(251, 246, 236, 0.85); }
+  .founders-card {
+    max-width: 720px;
+    margin: 0 auto;
+    background: rgba(251, 246, 236, 0.05);
+    border: 1px solid rgba(251, 246, 236, 0.15);
+    border-radius: var(--radius);
+    padding: 40px;
+    text-align: center;
+  }
+  .founders-price {
+    font-family: 'Fraunces', serif;
+    font-size: 3rem;
+    color: var(--gold);
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .founders-price small {
+    font-size: 1.1rem;
+    color: rgba(251, 246, 236, 0.7);
+    font-weight: 400;
+    font-family: 'Inter', sans-serif;
+    text-decoration: line-through;
+    margin-left: 10px;
+  }
+  .founders-perks {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px 24px;
+    margin: 28px 0;
+    text-align: left;
+  }
+  .founders-perks div { padding-left: 28px; position: relative; color: var(--cream); font-size: 0.95rem; }
+  .founders-perks div::before { content: '★'; position: absolute; left: 0; top: 0; color: var(--gold); }
+  .founders-spots {
+    background: rgba(212, 164, 55, 0.15);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 8px 16px;
+    border-radius: 999px;
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 600px) { .founders-card { padding: 28px 22px; } .founders-perks { grid-template-columns: 1fr; } }
+
+  /* FAQ */
+  .faq { background: var(--paper); }
+  .faq-list { max-width: 760px; margin: 0 auto; }
+  details {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  summary {
+    padding: 20px 24px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 1.05rem;
+    color: var(--ink);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.15s ease;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after {
+    content: '+';
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem;
+    color: var(--rust);
+    transition: transform 0.2s ease;
+    line-height: 1;
+  }
+  details[open] summary::after { transform: rotate(45deg); }
+  summary:hover { background: var(--paper); }
+  details p { padding: 0 24px 22px; color: var(--ink-soft); margin: 0; }
+
+  /* Contact */
+  .contact { background: var(--cream); }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .contact-info h2 { margin-bottom: 16px; }
+  .contact-info p { color: var(--ink-soft); font-size: 1.05rem; margin-bottom: 24px; }
+  .quick-signup {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .quick-signup-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--rust);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .quick-signup .btn { width: 100%; }
+  .quick-signup .btn + .btn { margin-top: 10px; }
+  .contact-meta {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .contact-meta p { margin: 0 0 6px; }
+  .contact-meta strong { color: var(--ink); }
+
+  form.signup-form {
+    background: var(--paper);
+    border-radius: var(--radius);
+    padding: 32px;
+    border: 1px solid var(--line);
+  }
+  .form-field { margin-bottom: 18px; }
+  .form-field label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+  .form-field input,
+  .form-field select,
+  .form-field textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--cream);
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    transition: border 0.15s ease;
+  }
+  .form-field input:focus,
+  .form-field select:focus,
+  .form-field textarea:focus { outline: none; border-color: var(--rust); }
+  .form-field textarea { min-height: 90px; resize: vertical; }
+  form.signup-form .btn { width: 100%; }
+  .form-success {
+    background: #e8f5e9;
+    border: 1px solid #4caf50;
+    color: #1b5e20;
+    padding: 14px;
+    border-radius: 8px;
+    margin-top: 14px;
+    display: none;
+    font-size: 0.95rem;
+  }
+  .form-divider {
+    text-align: center;
+    margin: 16px 0;
+    position: relative;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .form-divider::before,
+  .form-divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 38%;
+    height: 1px;
+    background: var(--line);
+  }
+  .form-divider::before { left: 0; }
+  .form-divider::after { right: 0; }
+  @media (max-width: 880px) { .contact-grid { grid-template-columns: 1fr; gap: 40px; } }
+
+  /* Marketing footer */
+  #view-marketing footer { background: var(--ink); color: var(--cream); padding: 40px 0 24px; }
+  #view-marketing .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  #view-marketing .footer-inner .logo { color: var(--cream); }
+  #view-marketing .footer-meta { color: rgba(251, 246, 236, 0.6); font-size: 0.9rem; }
+  #view-marketing footer a { color: var(--gold); }
+
+  /* Float WhatsApp */
+  .float-wa {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    background: #25d366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
+    z-index: 99;
+    transition: transform 0.15s ease;
+  }
+  .float-wa:hover { transform: scale(1.08); }
+  .float-wa svg { width: 30px; height: 30px; fill: white; }
+
+  /* ============================================
+     LOGIN VIEW
+     ============================================ */
+  #view-login .login-wrap { width: 100%; max-width: 420px; }
+  #view-login .login-header { text-align: center; margin-bottom: 32px; }
+  #view-login .login-header .logo { justify-content: center; margin-bottom: 8px; }
+  #view-login .login-tagline { color: var(--muted); font-size: 0.95rem; margin: 0; }
+  #view-login .card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 36px 32px;
+    box-shadow: var(--shadow);
+  }
+  #view-login h1 { font-size: 1.6rem; margin: 0 0 6px; }
+  #view-login .sub { color: var(--muted); font-size: 0.95rem; margin: 0 0 24px; }
+  #view-login .form-field { margin-bottom: 16px; }
+  #view-login label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+  #view-login input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--cream);
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    transition: border 0.15s ease;
+  }
+  #view-login input:focus { outline: none; border-color: var(--rust); }
+  #view-login .forgot { text-align: right; margin-bottom: 22px; }
+  #view-login .forgot a { color: var(--rust); font-size: 0.88rem; }
+  #view-login .forgot a:hover { text-decoration: underline; }
+  #view-login .btn { width: 100%; padding: 13px; }
+  #view-login .divider {
+    text-align: center;
+    margin: 22px 0;
+    position: relative;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  #view-login .divider::before,
+  #view-login .divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background: var(--line);
+  }
+  #view-login .divider::before { left: 0; }
+  #view-login .divider::after { right: 0; }
+  #view-login .signup-cta {
+    text-align: center;
+    margin-top: 22px;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  #view-login .signup-cta a { color: var(--rust); font-weight: 600; }
+  #view-login .signup-cta a:hover { text-decoration: underline; }
+  #view-login .back-link { text-align: center; margin-top: 28px; }
+  #view-login .back-link a { color: var(--muted); font-size: 0.88rem; }
+  #view-login .back-link a:hover { color: var(--ink); }
+
+  /* ============================================
+     DASHBOARD VIEW
+     ============================================ */
+  #view-dashboard .container { max-width: 1180px; }
+  #view-dashboard nav {
+    background: var(--cream);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  #view-dashboard .nav-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  #view-dashboard .logo { font-size: 1.45rem; }
+  #view-dashboard .logo-mark { width: 26px; height: 26px; }
+  #view-dashboard .logo-mark::after {
+    border-left: 13px solid var(--rust);
+    border-right: 13px solid var(--rust);
+    border-bottom: 7px solid transparent;
+    bottom: -7px;
+  }
+  #view-dashboard .nav-right { display: flex; align-items: center; gap: 24px; }
+  #view-dashboard .nav-link {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  #view-dashboard .nav-link:hover { color: var(--rust); }
+  #view-dashboard .user-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 6px 14px 6px 6px;
+    cursor: pointer;
+    color: var(--ink);
+    font-size: 0.92rem;
+    font-weight: 500;
+    transition: background 0.15s ease;
+  }
+  #view-dashboard .user-chip:hover { background: var(--cream); color: var(--ink); }
+  #view-dashboard .user-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--forest);
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  /* Welcome */
+  .welcome { background: linear-gradient(135deg, var(--forest), var(--forest-dark)); color: var(--cream); padding: 40px 0 50px; }
+  .welcome-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .welcome h1 { color: var(--cream); font-size: 2rem; margin: 0 0 6px; }
+  .welcome-sub { color: rgba(251, 246, 236, 0.75); margin: 0; font-size: 0.98rem; }
+  .plan-pill {
+    background: var(--gold);
+    color: var(--ink);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* Dashboard main */
+  #view-dashboard main { padding: 40px 0 60px; }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 40px;
+    margin-top: -30px;
+    position: relative;
+    z-index: 2;
+  }
+  .stat-card {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    box-shadow: var(--shadow);
+  }
+  .stat-label {
+    color: var(--muted);
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .stat-value {
+    font-family: 'Fraunces', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-value small {
+    font-size: 1rem;
+    color: var(--muted);
+    font-weight: 400;
+    font-family: 'Inter', sans-serif;
+  }
+  .stat-meta { color: var(--ink-soft); font-size: 0.88rem; margin: 0; }
+  @media (max-width: 720px) { .stats { grid-template-columns: 1fr; } }
+
+  .dash-section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .dash-section-head h2 { font-size: 1.4rem; margin: 0; }
+  .dash-section-head .link { color: var(--rust); font-size: 0.92rem; font-weight: 500; }
+  #view-dashboard section.row { margin-bottom: 44px; }
+
+  /* Book cards */
+  .books-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+  .book-card {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .book-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .book-cover {
+    aspect-ratio: 2 / 3;
+    border-radius: 6px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    text-align: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    color: var(--cream);
+    font-size: 0.95rem;
+    line-height: 1.2;
+    box-shadow: 0 4px 12px rgba(31, 42, 31, 0.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .book-cover::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 5px;
+    background: rgba(0, 0, 0, 0.18);
+  }
+  .cover-1 { background: linear-gradient(135deg, var(--rust), var(--rust-dark)); }
+  .cover-2 { background: linear-gradient(135deg, var(--forest), var(--forest-dark)); }
+  .cover-3 { background: linear-gradient(135deg, #4a6fa5, #2c4a7a); }
+  .cover-4 { background: linear-gradient(135deg, #8b5a8c, #5e3960); }
+  .cover-5 { background: linear-gradient(135deg, var(--gold), #a87d22); color: var(--ink); }
+  .cover-6 { background: linear-gradient(135deg, #5d7d4b, #3d5e2b); }
+  .book-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0 0 2px;
+    color: var(--ink);
+    line-height: 1.25;
+  }
+  .book-author { color: var(--muted); font-size: 0.85rem; margin: 0 0 10px; }
+  .book-meta {
+    color: var(--ink-soft);
+    font-size: 0.82rem;
+    margin: 0 0 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+  }
+  .book-swap {
+    background: transparent;
+    border: 1px solid var(--rust);
+    color: var(--rust);
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.15s ease, color 0.15s ease;
+    font-family: inherit;
+  }
+  .book-swap:hover { background: var(--rust); color: var(--cream); }
+  @media (max-width: 880px) { .books-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .books-grid { grid-template-columns: 1fr; } }
+
+  /* Action cards */
+  .actions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .action-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 26px;
+    color: var(--ink);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    display: block;
+  }
+  .action-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+    border-color: var(--rust);
+    color: var(--ink);
+  }
+  .action-icon {
+    width: 44px;
+    height: 44px;
+    background: var(--cream);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+    font-size: 1.4rem;
+  }
+  .action-card h3 { font-size: 1.1rem; margin: 0 0 6px; }
+  .action-card p { color: var(--ink-soft); font-size: 0.9rem; margin: 0; }
+  @media (max-width: 720px) { .actions-grid { grid-template-columns: 1fr; } }
+
+  /* Info cards (subscription, preferences) */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 24px;
+  }
+  .info-card {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 26px 28px;
+  }
+  .info-card h3 { font-size: 1.15rem; margin: 0 0 18px; }
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.95rem;
+  }
+  .info-row:last-of-type { border-bottom: none; padding-bottom: 0; }
+  .info-row span:first-child { color: var(--muted); }
+  .info-row span:last-child { color: var(--ink); font-weight: 500; }
+  .info-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+  .btn-sm {
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-decoration: none;
+    font-family: inherit;
+  }
+  .btn-sm:hover { background: var(--paper); border-color: var(--muted); color: var(--ink); }
+  .btn-sm.primary { background: var(--rust); color: var(--cream); border-color: var(--rust); }
+  .btn-sm.primary:hover { background: var(--rust-dark); color: var(--cream); border-color: var(--rust-dark); }
+  .tag {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    margin: 0 6px 6px 0;
+    display: inline-block;
+  }
+  .tag-section { margin-bottom: 16px; }
+  .tag-label {
+    color: var(--muted);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  @media (max-width: 880px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* Catalogue */
+  .catalogue-toolbar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+  .catalogue-search {
+    flex: 1;
+    min-width: 220px;
+    padding: 11px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--cream);
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--ink);
+  }
+  .catalogue-search:focus { outline: none; border-color: var(--rust); }
+  .genre-chip {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+  }
+  .genre-chip:hover { border-color: var(--rust); color: var(--ink); }
+  .genre-chip.active { background: var(--rust); color: var(--cream); border-color: var(--rust); }
+  .catalogue-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 18px;
+  }
+  .cat-book {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .cat-book:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .cat-cover {
+    aspect-ratio: 2 / 3;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    text-align: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    color: var(--cream);
+    font-size: 0.92rem;
+    line-height: 1.2;
+    box-shadow: 0 4px 12px rgba(31, 42, 31, 0.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .cat-cover::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: rgba(0, 0, 0, 0.18); }
+  .cover-orange { background: linear-gradient(135deg, var(--rust), var(--rust-dark)); }
+  .cover-orange-dark { background: linear-gradient(135deg, #8a3a18, #6b2b0e); }
+  .cover-forest { background: linear-gradient(135deg, var(--forest), var(--forest-dark)); }
+  .cover-blue { background: linear-gradient(135deg, #4a6fa5, #2c4a7a); }
+  .cover-purple { background: linear-gradient(135deg, #8b5a8c, #5e3960); }
+  .cover-green { background: linear-gradient(135deg, #5d7d4b, #3d5e2b); }
+  .cover-gold { background: linear-gradient(135deg, var(--gold), #a87d22); color: var(--ink); }
+  .cover-ink { background: linear-gradient(135deg, #3a3a3a, #1f1f1f); }
+  .cat-status-pill {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--cream);
+    color: var(--green);
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .cat-status-pill.out {
+    background: rgba(196, 73, 73, 0.15);
+    color: #8b3232;
+  }
+  .cat-status-pill .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .cat-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.98rem;
+    margin: 0 0 2px;
+    color: var(--ink);
+    line-height: 1.25;
+  }
+  .cat-author { color: var(--muted); font-size: 0.84rem; margin: 0 0 6px; }
+  .cat-genre {
+    display: inline-block;
+    background: var(--paper);
+    color: var(--ink-soft);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.74rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .cat-desc { color: var(--ink-soft); font-size: 0.85rem; margin: 0 0 12px; flex-grow: 1; }
+  .cat-action {
+    background: var(--rust);
+    color: var(--cream);
+    border: none;
+    padding: 9px 14px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.15s ease;
+    font-family: inherit;
+  }
+  .cat-action:hover { background: var(--rust-dark); }
+  .cat-action:disabled { background: var(--line); color: var(--muted); cursor: not-allowed; }
+
+  /* Modal (shared with member dashboard) */
+  .m-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(31, 42, 31, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    padding: 20px;
+  }
+  .m-modal-overlay.active { display: flex; }
+  .m-modal {
+    background: var(--cream);
+    border-radius: var(--radius);
+    max-width: 520px;
+    width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+  }
+  .m-modal-header {
+    padding: 22px 26px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .m-modal-header h2 { font-size: 1.2rem; margin: 0; }
+  .m-modal-header p { color: var(--muted); font-size: 0.9rem; margin: 4px 0 0; }
+  .m-modal-close {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 1.6rem;
+    padding: 0 4px;
+    line-height: 1;
+  }
+  .m-modal-close:hover { color: var(--ink); }
+  .m-modal-body { padding: 18px 26px 22px; }
+  .m-modal-body .form-field { margin-bottom: 14px; }
+  .m-modal-body .form-field label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+  .m-modal-body input,
+  .m-modal-body textarea,
+  .m-modal-body select {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: white;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--ink);
+  }
+  .m-modal-body input:focus,
+  .m-modal-body textarea:focus,
+  .m-modal-body select:focus { outline: none; border-color: var(--rust); }
+  .swap-current-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .swap-current-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    background: white;
+  }
+  .swap-current-item:hover { border-color: var(--rust); }
+  .swap-current-item.selected {
+    border-color: var(--rust);
+    background: rgba(184, 85, 43, 0.05);
+  }
+  .swap-current-radio {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--line);
+    flex-shrink: 0;
+    position: relative;
+  }
+  .swap-current-item.selected .swap-current-radio {
+    border-color: var(--rust);
+  }
+  .swap-current-item.selected .swap-current-radio::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    background: var(--rust);
+    border-radius: 50%;
+  }
+  .swap-mini-cover {
+    width: 32px;
+    height: 44px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .swap-current-meta { flex: 1; }
+  .swap-current-meta strong { display: block; font-size: 0.92rem; font-family: 'Fraunces', serif; color: var(--ink); }
+  .swap-current-meta span { display: block; font-size: 0.82rem; color: var(--muted); }
+  .m-modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    justify-content: flex-end;
+  }
+  .m-btn {
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+    font-family: inherit;
+  }
+  .m-btn-ghost { background: transparent; color: var(--ink-soft); border-color: var(--line); }
+  .m-btn-ghost:hover { background: var(--paper); }
+  .m-btn-primary { background: var(--rust); color: var(--cream); border-color: var(--rust); }
+  .m-btn-primary:hover { background: var(--rust-dark); border-color: var(--rust-dark); }
+  .m-btn-primary:disabled { background: var(--line); border-color: var(--line); color: var(--muted); cursor: not-allowed; }
+  .info-box {
+    background: var(--paper);
+    border-left: 3px solid var(--rust);
+    padding: 12px 14px;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+  }
+
+  /* History */
+  .history-list {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .history-row {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .history-row:last-child { border-bottom: none; }
+  .history-cover { width: 36px; height: 50px; border-radius: 4px; background: var(--forest); position: relative; }
+  .history-cover::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: rgba(0,0,0,0.18);
+    border-radius: 4px 0 0 4px;
+  }
+  .history-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.98rem;
+    margin: 0 0 2px;
+    color: var(--ink);
+  }
+  .history-author { color: var(--muted); font-size: 0.85rem; margin: 0; }
+  .history-meta { color: var(--ink-soft); font-size: 0.85rem; text-align: right; }
+  .history-meta .rating { color: var(--gold); font-size: 0.9rem; letter-spacing: 1px; }
+  @media (max-width: 600px) {
+    .history-row { grid-template-columns: 36px 1fr; }
+    .history-meta { grid-column: 2 / 3; text-align: left; margin-top: 4px; }
+  }
+
+  /* Dashboard footer */
+  #view-dashboard footer { background: var(--ink); color: var(--cream); padding: 30px 0; margin-top: 40px; }
+  #view-dashboard .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    color: rgba(251, 246, 236, 0.7);
+    font-size: 0.9rem;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  #view-dashboard .footer-inner a { color: var(--gold); }
+
+  @media (max-width: 600px) {
+    #view-dashboard .nav-right .nav-link { display: none; }
+    .welcome { padding: 30px 0 60px; }
+    .welcome h1 { font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     MARKETING VIEW
+     ============================================ -->
+<div id="view-marketing" class="view">
+
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="logo" onclick="goToView('marketing', event)">
+        <span class="logo-mark"></span>
+        mybookmark
+      </a>
+      <div class="nav-links">
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <a href="#login" onclick="goToView('login', event)">Member login</a>
+        <a href="#contact" class="nav-cta">Subscribe</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="hero-eyebrow">🌿 A curated library, delivered to your door</span>
+        <h1>The books you'll <em>actually</em> finish.</h1>
+        <p class="hero-sub">mybookmark is a subscription library in Bengaluru - for everyone who reads. Browse our catalogue, request any book you want, or get curated picks matched to your taste. All delivered to your door. Unlimited swaps. No late fees.</p>
+        <div class="hero-ctas">
+          <a href="#contact" class="btn btn-primary">Become a member</a>
+          <button class="btn btn-google" onclick="signInWithGoogle()">
+            <svg viewBox="0 0 24 24"><path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            Sign up with Google
+          </button>
+        </div>
+        <div class="hero-tertiary">
+          <a href="#how">See how it works ↓</a>
+        </div>
+        <div class="hero-trust">
+          <span class="hero-trust-dot"></span>
+          Free home delivery within Bengaluru · 1,000+ curated titles
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="book book-1"><div class="book-spine"></div>Sapiens</div>
+        <div class="book book-2"><div class="book-spine"></div>The Midnight Library</div>
+        <div class="book book-3"><div class="book-spine"></div>Wings of Fire</div>
+        <div class="floating-tag tag-1">📚 4 books at a time</div>
+        <div class="floating-tag tag-2">🚚 Doorstep delivery</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="problem">
+    <div class="container problem-quote">
+      <p>You finish a book and don't know what to read next. The algorithm keeps showing you the <span>same five authors</span>. Bookstores cost ₹500 a book. Half your shelf is paperbacks you started and abandoned. There has to be a better way.</p>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-eyebrow">How mybookmark works</div>
+        <h2>Three ways to find your next read.</h2>
+        <p>Browse, request, or be surprised. Then sit back and let the books come to you.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3>Tell us about you</h3>
+          <p>Favorite authors, genres you love, books you've finished recently. We build a reading profile.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3>Browse, request, or be recommended</h3>
+          <p>Pick titles from our catalogue, request any book we don't have, or get curated picks matched to your taste.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3>We deliver to your door</h3>
+          <p>Twice-weekly batched delivery across Bengaluru. WhatsApp by noon, books arrive by evening.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <h3>Read, swap, repeat</h3>
+          <p>Done with a book? WhatsApp us. No late fees, no rush, no limits.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background: var(--cream);">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-eyebrow">Why mybookmark</div>
+        <h2>Not a library. A reading partner.</h2>
+        <p>Most libraries hand you a catalogue and walk away. We give you the catalogue, take your requests, and a curator who knows your taste.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature">
+          <div class="feature-icon">🎯</div>
+          <h3>Choose, request, or be recommended</h3>
+          <p>Browse our full catalogue and pick exactly what you want. Request any book we don't have - we'll source it. Or share your taste and let our curator recommend. Your call, every time.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🚪</div>
+          <h3>Doorstep delivery, twice a week</h3>
+          <p>WhatsApp us by Tuesday or Friday noon. Books arrive Wednesday evening or Saturday morning. No driving, no parking.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📖</div>
+          <h3>Reading circles + community</h3>
+          <p>Monthly book clubs, author talks, and reading meetups for Bookworm members. Reading isn't just a habit - it becomes social.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonials">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-eyebrow">What members say</div>
+        <h2>Readers, in their own words.</h2>
+        <p>Stories from the people who've made mybookmark part of their reading life.</p>
+      </div>
+      <div class="testimonials-scroll-wrap">
+        <div class="testimonials-scroll">
+
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <blockquote>"[Testimonial 1 - a specific moment when mybookmark made reading easier or more delightful.]"</blockquote>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar">A</div>
+              <div>
+                <div class="testimonial-name">Member 1</div>
+                <div class="testimonial-context">Adult reader, Indiranagar</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <blockquote>"[Testimonial 2 - a parent talking about the kids' reading habit changing.]"</blockquote>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar alt-1">R</div>
+              <div>
+                <div class="testimonial-name">Member 2</div>
+                <div class="testimonial-context">Parent of 2, HSR Layout</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <blockquote>"[Testimonial 3 - a student or young reader who discovered a new genre.]"</blockquote>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar alt-2">S</div>
+              <div>
+                <div class="testimonial-name">Member 3</div>
+                <div class="testimonial-context">Student, Whitefield</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <blockquote>"[Testimonial 4 - someone praising the curation quality.]"</blockquote>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar alt-3">M</div>
+              <div>
+                <div class="testimonial-name">Member 4</div>
+                <div class="testimonial-context">Working professional, Koramangala</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <blockquote>"[Testimonial 5 - praise for doorstep delivery convenience.]"</blockquote>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar">P</div>
+              <div>
+                <div class="testimonial-name">Member 5</div>
+                <div class="testimonial-context">Parent, Sarjapur Road</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <blockquote>"[Testimonial 6 - someone who reads voraciously and loves unlimited swaps.]"</blockquote>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar alt-1">D</div>
+              <div>
+                <div class="testimonial-name">Member 6</div>
+                <div class="testimonial-context">Avid reader, Jayanagar</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <blockquote>"[Testimonial 7 - a book club organizer or community member.]"</blockquote>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar alt-2">N</div>
+              <div>
+                <div class="testimonial-name">Member 7</div>
+                <div class="testimonial-context">Book club organizer, Bellandur</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <blockquote>"[Testimonial 8 - a retiree or senior reader.]"</blockquote>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar alt-3">V</div>
+              <div>
+                <div class="testimonial-name">Member 8</div>
+                <div class="testimonial-context">Lifelong reader, Malleshwaram</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <blockquote>"[Testimonial 9 - someone who appreciates the human curation vs Kindle algorithm.]"</blockquote>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar">K</div>
+              <div>
+                <div class="testimonial-name">Member 9</div>
+                <div class="testimonial-context">Adult reader, JP Nagar</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial">
+            <div class="stars">★★★★★</div>
+            <blockquote>"[Testimonial 10 - a founding member sharing their story from the early days.]"</blockquote>
+            <div class="testimonial-meta">
+              <div class="testimonial-avatar alt-1">T</div>
+              <div>
+                <div class="testimonial-name">Member 10</div>
+                <div class="testimonial-context">Founding member, Indiranagar</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="scroll-hint">Swipe to read more <span>→</span></div>
+    </div>
+  </section>
+
+  <section class="pricing" id="pricing">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-eyebrow">Simple, honest pricing</div>
+        <h2>Pick the plan that fits how you read.</h2>
+        <p>All plans include doorstep delivery, curated picks, and unlimited swaps within your tier.</p>
+      </div>
+
+      <div class="billing-toggle-wrap">
+        <div class="billing-toggle" role="tablist">
+          <button class="billing-btn active" data-period="monthly" onclick="setBillingPeriod('monthly')">Monthly</button>
+          <button class="billing-btn" data-period="half" onclick="setBillingPeriod('half')">Half-yearly <span class="save-pill">1 mo free</span></button>
+          <button class="billing-btn" data-period="yearly" onclick="setBillingPeriod('yearly')">Yearly <span class="save-pill">2 mo free</span></button>
+        </div>
+      </div>
+
+      <div class="plans">
+
+        <div class="plan">
+          <h3>Starter</h3>
+          <p class="plan-tagline">For the occasional reader - 1-2 books a month</p>
+          <div class="plan-price"
+               data-monthly="349" data-monthly-suffix="/month"
+               data-half="1745" data-half-suffix="/6 months"
+               data-yearly="3490" data-yearly-suffix="/year">
+            ₹349<small>/month</small>
+          </div>
+          <p class="plan-period-meta"
+             data-monthly-meta="Billed every month"
+             data-half-meta="Pay 5, read 6. Save ₹349 (1 month free)"
+             data-yearly-meta="Pay 10, read 12. Save ₹698 (2 months free)">
+            Billed every month
+          </p>
+          <p class="plan-deposit">Refundable deposit: ₹500</p>
+          <ul class="plan-features">
+            <li>2 books at a time</li>
+            <li>Up to 4 swaps per month</li>
+            <li>Browse catalogue + curated picks</li>
+            <li>WhatsApp ordering</li>
+            <li>Pickup or local delivery</li>
+          </ul>
+          <button class="btn btn-secondary" onclick="subscribe('Starter')">Choose Starter</button>
+        </div>
+
+        <div class="plan plan-featured">
+          <span class="plan-badge">Most popular</span>
+          <h3>Reader</h3>
+          <p class="plan-tagline">For the reader who finishes books fast</p>
+          <div class="plan-price"
+               data-monthly="549" data-monthly-suffix="/month"
+               data-half="2745" data-half-suffix="/6 months"
+               data-yearly="5490" data-yearly-suffix="/year">
+            ₹549<small>/month</small>
+          </div>
+          <p class="plan-period-meta"
+             data-monthly-meta="Billed every month"
+             data-half-meta="Pay 5, read 6. Save ₹549 (1 month free)"
+             data-yearly-meta="Pay 10, read 12. Save ₹1,098 (2 months free)">
+            Billed every month
+          </p>
+          <p class="plan-deposit">Refundable deposit: ₹1,000</p>
+          <ul class="plan-features">
+            <li>4 books at a time</li>
+            <li>Unlimited swaps</li>
+            <li>Browse + request + curated picks</li>
+            <li>Doorstep delivery twice a week</li>
+            <li>Early access to new arrivals</li>
+          </ul>
+          <button class="btn btn-primary" onclick="subscribe('Reader')">Choose Reader</button>
+        </div>
+
+        <div class="plan">
+          <h3>Bookworm</h3>
+          <p class="plan-tagline">For voracious readers + multi-reader households</p>
+          <div class="plan-price"
+               data-monthly="849" data-monthly-suffix="/month"
+               data-half="4245" data-half-suffix="/6 months"
+               data-yearly="8490" data-yearly-suffix="/year">
+            ₹849<small>/month</small>
+          </div>
+          <p class="plan-period-meta"
+             data-monthly-meta="Billed every month"
+             data-half-meta="Pay 5, read 6. Save ₹849 (1 month free)"
+             data-yearly-meta="Pay 10, read 12. Save ₹1,698 (2 months free)">
+            Billed every month
+          </p>
+          <p class="plan-deposit">Refundable deposit: ₹1,500</p>
+          <ul class="plan-features">
+            <li>6 books at a time</li>
+            <li>Unlimited swaps</li>
+            <li>Browse + priority requests + curation, 2 profiles</li>
+            <li>First pick on new arrivals</li>
+            <li>Invite to monthly book clubs & author talks</li>
+          </ul>
+          <button class="btn btn-secondary" onclick="subscribe('Bookworm')">Choose Bookworm</button>
+        </div>
+
+      </div>
+      <p class="prepay-note">💡 <strong>Yearly = 2 months free.</strong> Half-yearly = 1 month free. All prepay plans are refundable pro-rata.</p>
+    </div>
+  </section>
+
+  <section class="founders">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-eyebrow">Founding member offer</div>
+        <h2>Help us start. Get rewarded for life.</h2>
+        <p>The first 20 readers who join get a permanent founder rate - plus perks money can't buy.</p>
+      </div>
+      <div class="founders-card">
+        <div class="founders-spots">Only 20 spots · Filling fast</div>
+        <div class="founders-price">₹400<small>₹549</small></div>
+        <p style="color: rgba(251,246,236,0.85);">per month, locked in for as long as you're a member</p>
+        <div class="founders-perks">
+          <div>Founder rate locked forever - never raised</div>
+          <div>First access to every new book</div>
+          <div>Your name on the founders' wall</div>
+          <div>Annual founders' dinner with the team</div>
+          <div>Help shape the collection - your picks matter</div>
+          <div>Priority on reading circles + events</div>
+        </div>
+        <a href="#contact" class="btn btn-primary">Claim my founder spot</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq" id="faq">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-eyebrow">Quick questions</div>
+        <h2>Things readers usually ask.</h2>
+      </div>
+      <div class="faq-list">
+        <details>
+          <summary>Who is mybookmark for?</summary>
+          <p>Everyone who reads. Kids, students, working professionals, retirees, families, book clubs. Our collection spans literary fiction, popular non-fiction, biographies, business and self-help, sci-fi and mystery, picture books, young-adult, and regional language titles. Tell us your taste and we'll find your sweet spot.</p>
+        </details>
+        <details>
+          <summary>Where in Bengaluru do you deliver?</summary>
+          <p>We currently serve Bengaluru-wide via batched twice-weekly delivery. Members in our anchor apartment communities get free delivery; for other locations, a small delivery fee may apply depending on distance. Drop us a WhatsApp with your locality and we'll confirm.</p>
+        </details>
+        <details>
+          <summary>How do I choose books? Do I have to browse or do you pick?</summary>
+          <p>It's your call. Three ways to find your next read: (1) Browse our catalogue and pick exactly what you want. (2) Share your reading profile and let our curator recommend titles matched to your taste. (3) Mix the two - pick some, let us surprise you with the rest. Most members do all three over time.</p>
+        </details>
+        <details>
+          <summary>What if you don't have a book I want?</summary>
+          <p>Request it. Send us the title and author on WhatsApp, and we'll source most books within a week and add them to your next delivery. If a book is rare or out of print and we genuinely can't get it, we'll tell you upfront and suggest close alternatives. The catalogue grows because of what members ask for.</p>
+        </details>
+        <details>
+          <summary>Can I see your catalogue before subscribing?</summary>
+          <p>Yes. WhatsApp us and we'll share the full catalogue link. You can browse by genre, author, or reading level before deciding if mybookmark is right for you.</p>
+        </details>
+        <details>
+          <summary>What if a book gets damaged?</summary>
+          <p>Books get read - we expect some wear and tear, and that's built into our model. For minor damage (small marks, slight bending), no charge. For serious damage (torn pages, lost books, water damage), we charge 50% of the cover price. We tell you upfront so there are no surprises.</p>
+        </details>
+        <details>
+          <summary>How does the refundable deposit work?</summary>
+          <p>The deposit is held as security against the books in your possession. It's not income - it's protection. When you cancel, we audit the returned books and refund the deposit within 7 working days.</p>
+        </details>
+        <details>
+          <summary>Can I cancel anytime?</summary>
+          <p>Yes. Monthly plans can be cancelled anytime. Quarterly and annual plans are pro-rated on cancellation with a small ₹500 admin fee. Your deposit is always returned in full.</p>
+        </details>
+        <details>
+          <summary>Do you have books in languages other than English?</summary>
+          <p>Currently our collection is primarily English, with a small Hindi and Kannada selection growing month by month. If you'd like books in a specific language, mention it during signup - your input shapes what we buy next.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="container contact-grid">
+      <div class="contact-info">
+        <div class="section-eyebrow">Get started</div>
+        <h2>Ready to start reading?</h2>
+        <p>Pick the fastest path that suits you. Sign up with Google in 30 seconds, chat with us on WhatsApp, or fill the form and we'll reach out within 2 hours.</p>
+
+        <div class="quick-signup">
+          <div class="quick-signup-label">⚡ Fastest signup</div>
+          <button class="btn btn-google" onclick="signInWithGoogle()">
+            <svg viewBox="0 0 24 24"><path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            Sign up with Google
+          </button>
+          <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I'd%20love%20to%20subscribe.%20Can%20you%20tell%20me%20more?" target="_blank" rel="noopener" class="btn btn-whatsapp">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Chat on WhatsApp
+          </a>
+        </div>
+
+        <div class="contact-meta">
+          <p><strong>📍 Service area:</strong> Bengaluru-wide</p>
+          <p><strong>📞 WhatsApp:</strong> +91 70221 65307</p>
+          <p><strong>✉️ Email:</strong> hello@mybookmark.in</p>
+          <p><strong>🌐 Website:</strong> mybookmark.in</p>
+          <p><strong>⏰ Replies within:</strong> 2 hours, 9 AM - 9 PM</p>
+        </div>
+      </div>
+
+      <form id="signupForm" class="signup-form" onsubmit="handleSignup(event)">
+        <div class="quick-signup-label" style="margin-bottom: 14px;">Or fill in your details</div>
+        <div class="form-field">
+          <label for="parentName">Your name</label>
+          <input type="text" id="parentName" required placeholder="e.g., Priya Sharma" />
+        </div>
+        <div class="form-field">
+          <label for="phone">WhatsApp number</label>
+          <input type="tel" id="phone" required placeholder="e.g., 98765 43210" />
+        </div>
+        <div class="form-field">
+          <label for="readerType">Who's the reader?</label>
+          <select id="readerType" required>
+            <option value="">Select</option>
+            <option>Just me - adult</option>
+            <option>Student (12-22)</option>
+            <option>Child (under 12)</option>
+            <option>Family - multiple readers</option>
+            <option>Book club</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="locality">Locality in Bengaluru</label>
+          <input type="text" id="locality" required placeholder="e.g., HSR Layout, Whitefield" />
+        </div>
+        <div class="form-field">
+          <label for="notes">What do you love reading? (optional)</label>
+          <textarea id="notes" placeholder="Favorite authors, genres, recent books you loved or hated..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send to mybookmark</button>
+        <div class="form-success" id="formSuccess">
+          ✅ Thanks! We've got your details. We'll WhatsApp you within 2 hours to walk you through plans and get you set up.
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="logo">
+        <span class="logo-mark"></span>
+        mybookmark
+      </div>
+      <div class="footer-meta">
+        A curated library for readers in Bengaluru · © 2026 mybookmark
+      </div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I'd%20like%20to%20know%20more" target="_blank" rel="noopener" class="float-wa" aria-label="Chat on WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+  </a>
+
+</div>
+
+<!-- ============================================
+     LOGIN VIEW
+     ============================================ -->
+<div id="view-login" class="view" style="display:none;">
+  <div class="login-wrap">
+    <div class="login-header">
+      <a href="#" class="logo" onclick="goToView('marketing', event)">
+        <span class="logo-mark"></span>
+        mybookmark
+      </a>
+      <p class="login-tagline">A curated library for readers in Bengaluru</p>
+    </div>
+
+    <div class="card">
+      <h1>Welcome back</h1>
+      <p class="sub">Sign in to manage your subscription and request books.</p>
+
+      <button type="button" class="btn btn-google" onclick="signInWithGoogle()" style="margin-bottom: 18px;">
+        <svg viewBox="0 0 24 24"><path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
+      </button>
+
+      <div class="divider">or sign in with email</div>
+
+      <form onsubmit="signIn(event)">
+        <div class="form-field">
+          <label for="loginEmail">Email or phone</label>
+          <input type="text" id="loginEmail" required placeholder="you@example.com or 98765 43210" />
+        </div>
+        <div class="form-field">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" required placeholder="Your password" />
+        </div>
+        <div class="forgot">
+          <a href="#">Forgot password?</a>
+        </div>
+        <button type="submit" class="btn btn-primary">Sign in</button>
+      </form>
+
+      <p class="signup-cta">New to mybookmark? <a href="#contact" onclick="goToView('marketing', event, 'contact')">Subscribe</a></p>
+    </div>
+
+    <div class="back-link">
+      <a href="#" onclick="goToView('marketing', event)">← Back to home</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================
+     DASHBOARD VIEW
+     ============================================ -->
+<div id="view-dashboard" class="view" style="display:none;">
+
+  <nav>
+    <div class="nav-inner">
+      <a href="#dashboard" class="logo" onclick="goToView('dashboard', event)">
+        <span class="logo-mark"></span>
+        mybookmark
+      </a>
+      <div class="nav-right">
+        <a href="#catalogue" class="nav-link">Catalogue</a>
+        <a href="#requests" class="nav-link">My requests</a>
+        <a href="#" class="user-chip" onclick="signOut(event)">
+          <span class="user-avatar">P</span>
+          Priya
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="welcome">
+    <div class="container welcome-inner">
+      <div>
+        <h1>Welcome back, Priya 👋</h1>
+        <p class="welcome-sub">Member since March 2026 · 12 books read so far</p>
+      </div>
+      <span class="plan-pill">Reader plan</span>
+    </div>
+  </section>
+
+  <main>
+    <div class="container">
+
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-label">Currently reading</div>
+          <div class="stat-value">4 <small>/ 4 books</small></div>
+          <p class="stat-meta">Limit reached - return one to add a new pick</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Next delivery</div>
+          <div class="stat-value">Wed</div>
+          <p class="stat-meta">May 27 · WhatsApp requests by Tue noon</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Next payment</div>
+          <div class="stat-value">₹549</div>
+          <p class="stat-meta">Due June 15 · 22 days from today</p>
+        </div>
+      </div>
+
+      <section class="row">
+        <div class="dash-section-head">
+          <h2>Currently reading</h2>
+          <a href="#dash-history" class="link">View reading history →</a>
+        </div>
+        <div class="books-grid">
+
+          <div class="book-card">
+            <div class="book-cover cover-1">The Midnight Library</div>
+            <h4 class="book-title">The Midnight Library</h4>
+            <p class="book-author">Matt Haig</p>
+            <p class="book-meta">Borrowed May 18 · 6 days</p>
+            <button class="book-swap" onclick="requestSwap('The Midnight Library')">Swap on next delivery</button>
+          </div>
+
+          <div class="book-card">
+            <div class="book-cover cover-2">Sapiens</div>
+            <h4 class="book-title">Sapiens</h4>
+            <p class="book-author">Yuval Noah Harari</p>
+            <p class="book-meta">Borrowed May 18 · 6 days</p>
+            <button class="book-swap" onclick="requestSwap('Sapiens')">Swap on next delivery</button>
+          </div>
+
+          <div class="book-card">
+            <div class="book-cover cover-3">Educated</div>
+            <h4 class="book-title">Educated</h4>
+            <p class="book-author">Tara Westover</p>
+            <p class="book-meta">Borrowed May 20 · 4 days</p>
+            <button class="book-swap" onclick="requestSwap('Educated')">Swap on next delivery</button>
+          </div>
+
+          <div class="book-card">
+            <div class="book-cover cover-4">Atomic Habits</div>
+            <h4 class="book-title">Atomic Habits</h4>
+            <p class="book-author">James Clear</p>
+            <p class="book-meta">Borrowed May 20 · 4 days</p>
+            <button class="book-swap" onclick="requestSwap('Atomic Habits')">Swap on next delivery</button>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="row">
+        <div class="dash-section-head">
+          <h2>Quick actions</h2>
+        </div>
+        <div class="actions-grid">
+          <a href="#dash-catalogue" class="action-card" onclick="scrollToCatalogue(event)">
+            <div class="action-icon">📚</div>
+            <h3>Browse catalogue</h3>
+            <p>Curated titles across fiction, non-fiction, business, kids, and more.</p>
+          </a>
+          <a href="#" class="action-card" onclick="openRequestModal(event)">
+            <div class="action-icon">🔍</div>
+            <h3>Request a book</h3>
+            <p>Not in our catalogue? Tell us and we'll source it within a week.</p>
+          </a>
+          <a href="#dash-catalogue" class="action-card" onclick="scrollToCatalogue(event)">
+            <div class="action-icon">✨</div>
+            <h3>Get recommendations</h3>
+            <p>Curator picks based on your taste, surfaced at the top of your catalogue.</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="row">
+        <div class="two-col">
+
+          <div class="info-card">
+            <h3>Subscription</h3>
+            <div class="info-row">
+              <span>Plan</span>
+              <span>Reader · ₹549/month</span>
+            </div>
+            <div class="info-row">
+              <span>Billing cycle</span>
+              <span>Monthly</span>
+            </div>
+            <div class="info-row">
+              <span>Next payment</span>
+              <span>June 15, 2026</span>
+            </div>
+            <div class="info-row">
+              <span>Refundable deposit</span>
+              <span>₹1,000 held</span>
+            </div>
+            <div class="info-row">
+              <span>Status</span>
+              <span style="color: #2c7a3d;">● Active</span>
+            </div>
+            <div class="info-actions">
+              <a href="#upgrade" class="btn-sm primary">Upgrade to Bookworm</a>
+              <button class="btn-sm" onclick="switchToAnnual()">Switch to annual (save ₹1,188)</button>
+              <button class="btn-sm" onclick="pauseSubscription()">Pause</button>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <h3>Reading preferences</h3>
+            <div class="tag-section">
+              <div class="tag-label">Favorite genres</div>
+              <span class="tag">Literary fiction</span>
+              <span class="tag">Non-fiction</span>
+              <span class="tag">Memoir</span>
+              <span class="tag">Psychology</span>
+            </div>
+            <div class="tag-section">
+              <div class="tag-label">Avoiding</div>
+              <span class="tag">Horror</span>
+              <span class="tag">Romance</span>
+            </div>
+            <div class="tag-section">
+              <div class="tag-label">Currently into</div>
+              <p style="margin: 0; color: var(--ink-soft); font-size: 0.95rem;">"Books that make me think about how to live better."</p>
+            </div>
+            <div class="info-actions">
+              <button class="btn-sm primary" onclick="alert('Open preferences editor')">Edit preferences</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="row" id="dash-catalogue">
+        <div class="dash-section-head">
+          <h2>Browse the catalogue</h2>
+          <button class="m-btn m-btn-ghost" onclick="openRequestModal()">+ Request a book not listed</button>
+        </div>
+
+        <div class="catalogue-toolbar">
+          <input type="text" class="catalogue-search" id="catSearch" placeholder="🔍 Search by title, author, or genre..." oninput="renderCatalogue()">
+        </div>
+
+        <div id="genreChips" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px;">
+          <!-- Filled by JS -->
+        </div>
+
+        <div id="catalogueGrid" class="catalogue-grid">
+          <!-- Filled by JS -->
+        </div>
+
+        <p style="text-align: center; color: var(--muted); font-size: 0.88rem; margin-top: 24px;">
+          Don't see what you're looking for? <a href="#" onclick="openRequestModal(event)" style="color: var(--rust); font-weight: 600;">Request a book</a> and we'll source it within a week.
+        </p>
+      </section>
+
+      <section class="row" id="dash-history">
+        <div class="dash-section-head">
+          <h2>Reading history</h2>
+          <a href="#" class="link">See all 12 books →</a>
+        </div>
+        <div class="history-list">
+          <div class="history-row">
+            <div class="history-cover" style="background: linear-gradient(135deg, var(--gold), #a87d22);"></div>
+            <div>
+              <h4 class="history-title">The Alchemist</h4>
+              <p class="history-author">Paulo Coelho</p>
+            </div>
+            <div class="history-meta">
+              <div>May 12 → May 17</div>
+              <div class="rating">★★★★★</div>
+            </div>
+          </div>
+          <div class="history-row">
+            <div class="history-cover" style="background: linear-gradient(135deg, #8b5a8c, #5e3960);"></div>
+            <div>
+              <h4 class="history-title">When Breath Becomes Air</h4>
+              <p class="history-author">Paul Kalanithi</p>
+            </div>
+            <div class="history-meta">
+              <div>May 12 → May 17</div>
+              <div class="rating">★★★★★</div>
+            </div>
+          </div>
+          <div class="history-row">
+            <div class="history-cover" style="background: linear-gradient(135deg, var(--rust), var(--rust-dark));"></div>
+            <div>
+              <h4 class="history-title">Wings of Fire</h4>
+              <p class="history-author">APJ Abdul Kalam</p>
+            </div>
+            <div class="history-meta">
+              <div>May 1 → May 12</div>
+              <div class="rating">★★★★☆</div>
+            </div>
+          </div>
+          <div class="history-row">
+            <div class="history-cover" style="background: linear-gradient(135deg, #5d7d4b, #3d5e2b);"></div>
+            <div>
+              <h4 class="history-title">Born a Crime</h4>
+              <p class="history-author">Trevor Noah</p>
+            </div>
+            <div class="history-meta">
+              <div>May 1 → May 12</div>
+              <div class="rating">★★★★★</div>
+            </div>
+          </div>
+          <div class="history-row">
+            <div class="history-cover" style="background: linear-gradient(135deg, #4a6fa5, #2c4a7a);"></div>
+            <div>
+              <h4 class="history-title">The Psychology of Money</h4>
+              <p class="history-author">Morgan Housel</p>
+            </div>
+            <div class="history-meta">
+              <div>Apr 20 → May 5</div>
+              <div class="rating">★★★★☆</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div>mybookmark · A curated library for readers in Bengaluru</div>
+      <div>
+        <a href="#">Help</a> · <a href="#">Privacy</a> · <a href="#" onclick="signOut(event)">Sign out</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== Swap modal ===== -->
+  <div class="m-modal-overlay" id="swapModal" onclick="closeSwapModal(event)">
+    <div class="m-modal" onclick="event.stopPropagation()">
+      <div class="m-modal-header">
+        <div>
+          <h2>Swap into <span id="swapTargetTitle">a book</span></h2>
+          <p>Pick which of your current books to return on the next delivery.</p>
+        </div>
+        <button class="m-modal-close" onclick="closeSwapModal()">×</button>
+      </div>
+      <div class="m-modal-body">
+        <div class="info-box" id="swapInfoBox">
+          You're on the <strong>Reader</strong> plan (4 books at a time). Choose one to swap out.
+        </div>
+        <div class="swap-current-list" id="swapCurrentList">
+          <!-- Filled by JS -->
+        </div>
+        <div class="m-modal-actions">
+          <button class="m-btn m-btn-ghost" onclick="closeSwapModal()">Cancel</button>
+          <button class="m-btn m-btn-primary" id="swapConfirmBtn" onclick="confirmSwap()" disabled>Confirm swap</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Request book modal ===== -->
+  <div class="m-modal-overlay" id="requestModal" onclick="closeRequestModal(event)">
+    <div class="m-modal" onclick="event.stopPropagation()">
+      <div class="m-modal-header">
+        <div>
+          <h2>Request a book</h2>
+          <p>If it's not in our catalogue, we'll source it within a week. Sujay will confirm on WhatsApp.</p>
+        </div>
+        <button class="m-modal-close" onclick="closeRequestModal()">×</button>
+      </div>
+      <div class="m-modal-body">
+        <form onsubmit="submitRequest(event)">
+          <div class="form-field">
+            <label for="reqTitle">Book title *</label>
+            <input type="text" id="reqTitle" required placeholder="e.g., A Brief History of Time">
+          </div>
+          <div class="form-field">
+            <label for="reqAuthor">Author *</label>
+            <input type="text" id="reqAuthor" required placeholder="e.g., Stephen Hawking">
+          </div>
+          <div class="form-field">
+            <label for="reqIsbn">ISBN (optional, helps us find the right edition)</label>
+            <input type="text" id="reqIsbn" placeholder="e.g., 978-0553380163">
+          </div>
+          <div class="form-field">
+            <label for="reqWhy">Why this book? (optional)</label>
+            <textarea id="reqWhy" rows="2" placeholder="Any context that helps us prioritize — for a book club, gift, recommended by a friend, etc."></textarea>
+          </div>
+          <div class="info-box">
+            ⏱ <strong>Turnaround:</strong> Most requests are confirmed within 2 hours and sourced within 5-7 days. Rare or out-of-print books may take longer or be unavailable.
+          </div>
+          <div class="m-modal-actions">
+            <button type="button" class="m-btn m-btn-ghost" onclick="closeRequestModal()">Cancel</button>
+            <button type="submit" class="m-btn m-btn-primary">Submit request</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ============================================
+  // View routing (hash-based SPA)
+  // ============================================
+  function showView(name) {
+    const views = ['marketing', 'login', 'dashboard'];
+    views.forEach(v => {
+      const el = document.getElementById('view-' + v);
+      if (el) el.style.display = (v === name) ? '' : 'none';
+    });
+    document.body.className = 'view-' + name;
+    window.scrollTo(0, 0);
+  }
+
+  function handleHashChange() {
+    const hash = window.location.hash.replace('#', '').toLowerCase();
+    if (hash === 'login') {
+      showView('login');
+    } else if (hash === 'dashboard') {
+      showView('dashboard');
+    } else {
+      showView('marketing');
+      // If hash matches a marketing section, browser handles scroll natively.
+    }
+  }
+
+  function goToView(name, event, scrollTo) {
+    if (event) event.preventDefault();
+    if (name === 'marketing') {
+      // Use replaceState to clean URL when going home
+      history.pushState({}, '', window.location.pathname + (scrollTo ? '#' + scrollTo : ''));
+    } else {
+      history.pushState({}, '', '#' + name);
+    }
+    showView(name);
+    if (scrollTo) {
+      setTimeout(() => {
+        const target = document.getElementById(scrollTo);
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
+    }
+  }
+
+  window.addEventListener('hashchange', handleHashChange);
+  window.addEventListener('DOMContentLoaded', handleHashChange);
+
+  // ============================================
+  // Authentication (mocked - wire up to real auth backend later)
+  // ============================================
+  function signInWithGoogle() {
+    // PRODUCTION: Replace with Google Identity Services (Sign In With Google).
+    // Requires a Google Cloud OAuth Client ID. See:
+    // https://developers.google.com/identity/gsi/web/guides/overview
+    //
+    // Example real implementation:
+    //   1. Load script: <script src="https://accounts.google.com/gsi/client" async defer></script>
+    //   2. Configure: <div id="g_id_onload" data-client_id="YOUR_CLIENT_ID" data-callback="handleGoogleCallback"></div>
+    //   3. Add button: <div class="g_id_signin"></div>
+    //   4. Handle callback: function handleGoogleCallback(response) { /* verify token, sign user in */ }
+    //
+    // For now, this mock goes straight to the dashboard.
+    goToView('dashboard');
+  }
+
+  function signIn(e) {
+    e.preventDefault();
+    // PRODUCTION: validate email/password against your auth backend.
+    // For now, any input goes to the dashboard.
+    goToView('dashboard');
+  }
+
+  function signOut(e) {
+    if (e) e.preventDefault();
+    // PRODUCTION: clear auth tokens, call backend signout.
+    goToView('marketing');
+  }
+
+  // ============================================
+  // Billing period toggle
+  // ============================================
+  let currentBillingPeriod = 'monthly';
+
+  function setBillingPeriod(period) {
+    currentBillingPeriod = period;
+    document.querySelectorAll('.billing-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.period === period);
+    });
+    document.querySelectorAll('.plan-price').forEach(el => {
+      const amount = el.dataset[period];
+      const suffix = el.dataset[period + 'Suffix'];
+      el.innerHTML = '₹' + Number(amount).toLocaleString('en-IN') + '<small>' + suffix + '</small>';
+    });
+    document.querySelectorAll('.plan-period-meta').forEach(el => {
+      el.textContent = el.dataset[period + 'Meta'];
+    });
+  }
+
+  // ============================================
+  // Razorpay subscribe flow
+  // ============================================
+  // PRODUCTION SETUP:
+  //   1. Add this script tag to <head>:
+  //      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  //   2. Replace RAZORPAY_KEY_ID below with your real Key ID (rzp_live_xxx or rzp_test_xxx).
+  //   3. Set up Plans in your Razorpay dashboard for each tier x period combination,
+  //      then replace the plan_id values in PLAN_IDS below with your real plan IDs.
+  //   4. Subscription creation must happen on your backend (requires Key Secret).
+  //      The subscribe() function below shows how to call your backend, which then
+  //      returns a subscription_id that the frontend passes to Razorpay Checkout.
+  //   5. See backend-razorpay.js (provided alongside this file) for the Node.js
+  //      reference implementation.
+  const RAZORPAY_KEY_ID = 'rzp_test_REPLACE_ME';
+  const PLAN_PRICES = {
+    Starter:  { monthly: 349,  half: 1745, yearly: 3490 },
+    Reader:   { monthly: 549,  half: 2745, yearly: 5490 },
+    Bookworm: { monthly: 849,  half: 4245, yearly: 8490 }
+  };
+  const DEPOSITS = { Starter: 500, Reader: 1000, Bookworm: 1500 };
+
+  async function subscribe(planName) {
+    const period = currentBillingPeriod;
+    const amount = PLAN_PRICES[planName][period];
+    const deposit = DEPOSITS[planName];
+    const total = amount + deposit;
+
+    const periodLabel = { monthly: 'monthly', half: 'half-yearly', yearly: 'yearly' }[period];
+
+    if (!confirm(
+      `Subscribe to ${planName} (${periodLabel})?\n\n` +
+      `Subscription: ₹${amount.toLocaleString('en-IN')}\n` +
+      `Refundable deposit: ₹${deposit.toLocaleString('en-IN')}\n` +
+      `Total today: ₹${total.toLocaleString('en-IN')}\n\n` +
+      `You'll be taken to Razorpay's secure checkout.`
+    )) return;
+
+    // ----- PRODUCTION FLOW -----
+    // const res = await fetch('/api/create-subscription', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ plan: planName, period: period, member_email: 'user@example.com' })
+    // });
+    // const { subscription_id, key_id } = await res.json();
+    //
+    // const rzp = new Razorpay({
+    //   key: key_id,
+    //   subscription_id: subscription_id,
+    //   name: 'mybookmark',
+    //   description: planName + ' plan (' + periodLabel + ')',
+    //   image: '/logo.png',
+    //   theme: { color: '#b8552b' },
+    //   handler: function(response) {
+    //     // response contains: razorpay_payment_id, razorpay_subscription_id, razorpay_signature
+    //     // Verify signature on backend, then redirect to dashboard
+    //     window.location.hash = 'dashboard';
+    //   },
+    //   modal: { ondismiss: function() { console.log('Checkout dismissed'); } }
+    // });
+    // rzp.open();
+    // ----- END PRODUCTION FLOW -----
+
+    // MOCK: simulate successful checkout and route to dashboard.
+    alert(`✅ [Demo] Razorpay checkout would open here.\nIn production: integrates with Razorpay Subscriptions API.\nRedirecting to your dashboard...`);
+    goToView('dashboard');
+  }
+
+  // ============================================
+  // Marketing form handler
+  // ============================================
+  function handleSignup(e) {
+    e.preventDefault();
+    const name = document.getElementById('parentName').value;
+    const phone = document.getElementById('phone').value;
+    const readerType = document.getElementById('readerType').value;
+    const locality = document.getElementById('locality').value;
+    const notes = document.getElementById('notes').value;
+
+    const message = `Hi mybookmark - I'd like to subscribe.%0A%0AName: ${name}%0APhone: ${phone}%0AReader: ${readerType}%0ALocality: ${locality}%0A%0ANotes: ${notes || 'None'}`;
+    window.open(`https://wa.me/917022165307?text=${message}`, '_blank');
+
+    document.getElementById('formSuccess').style.display = 'block';
+    document.getElementById('signupForm').reset();
+  }
+
+  // ============================================
+  // Dashboard actions
+  // ============================================
+  function requestSwap(bookTitle) {
+    const message = `Hi mybookmark - I'd like to swap "${bookTitle}" on my next delivery.`;
+    const url = `https://wa.me/917022165307?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  }
+
+  function switchToAnnual() {
+    if (confirm('Switch to annual billing? You\'ll pay ₹5,490 upfront and save ₹1,188 over the year.')) {
+      alert('Redirecting to payment...');
+    }
+  }
+
+  function pauseSubscription() {
+    if (confirm('Pause your subscription? You can resume anytime. Your deposit stays held while paused.')) {
+      alert('Subscription paused. Resume from this dashboard anytime.');
+    }
+  }
+
+  // ============================================
+  // CATALOGUE + SWAP + REQUEST
+  // (Member's current books and plan would come from your backend.)
+  // ============================================
+  const MEMBER = {
+    name: 'Priya',
+    plan: 'Reader',
+    bookLimit: 4,
+    currentBooks: [
+      { title: 'The Midnight Library', author: 'Matt Haig', cover: 'cover-orange' },
+      { title: 'Sapiens', author: 'Yuval Noah Harari', cover: 'cover-forest' },
+      { title: 'Educated', author: 'Tara Westover', cover: 'cover-blue' },
+      { title: 'Atomic Habits', author: 'James Clear', cover: 'cover-purple' }
+    ]
+  };
+
+  let activeGenre = 'All';
+  let selectedSwapBookIndex = null;
+  let swapTargetBookId = null;
+
+  function getGenres() {
+    const set = new Set(['All']);
+    CATALOGUE.forEach(b => set.add(b.genre));
+    return Array.from(set);
+  }
+
+  function renderGenreChips() {
+    const wrap = document.getElementById('genreChips');
+    if (!wrap) return;
+    wrap.innerHTML = getGenres().map(g =>
+      `<button class="genre-chip ${g === activeGenre ? 'active' : ''}" onclick="setGenre('${g.replace(/'/g, "\\'")}')">${g}</button>`
+    ).join('');
+  }
+
+  function setGenre(g) {
+    activeGenre = g;
+    renderGenreChips();
+    renderCatalogue();
+  }
+
+  function renderCatalogue() {
+    const grid = document.getElementById('catalogueGrid');
+    if (!grid) return;
+    const q = (document.getElementById('catSearch')?.value || '').toLowerCase();
+
+    const filtered = CATALOGUE.filter(b => {
+      const matchGenre = activeGenre === 'All' || b.genre === activeGenre;
+      const matchQ = !q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q) || b.genre.toLowerCase().includes(q);
+      return matchGenre && matchQ;
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--muted);"><p>No books match. <a href="#" onclick="openRequestModal(event)">Request this book</a> and we\'ll source it.</p></div>';
+      return;
+    }
+
+    grid.innerHTML = filtered.map(b => {
+      const isOut = b.status === 'checked-out';
+      return `
+        <div class="cat-book">
+          <div class="cat-cover ${b.coverGradient}">
+            <span class="cat-status-pill ${isOut ? 'out' : ''}"><span class="dot"></span>${isOut ? 'On loan' : 'Available'}</span>
+            ${b.title}
+          </div>
+          <h4 class="cat-title">${b.title}</h4>
+          <p class="cat-author">${b.author}</p>
+          <span class="cat-genre">${b.genre}</span>
+          <p class="cat-desc">${b.description}</p>
+          <button class="cat-action" ${isOut ? 'disabled' : ''} onclick="openSwapModal('${b.id}')">${isOut ? 'On loan - notify me' : 'Request swap'}</button>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function scrollToCatalogue(e) {
+    if (e) e.preventDefault();
+    const el = document.getElementById('dash-catalogue');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ----- Swap modal -----
+  function openSwapModal(bookId) {
+    const target = CATALOGUE.find(b => b.id === bookId);
+    if (!target) return;
+    if (target.status === 'checked-out') {
+      alert('This book is currently with another member. We\'ll notify you when it\'s back.');
+      return;
+    }
+    swapTargetBookId = bookId;
+    selectedSwapBookIndex = null;
+    document.getElementById('swapTargetTitle').textContent = '"' + target.title + '"';
+    document.getElementById('swapInfoBox').innerHTML = `You're on the <strong>${MEMBER.plan}</strong> plan (${MEMBER.bookLimit} books at a time). Choose one to swap out for <em>${target.title}</em>.`;
+    document.getElementById('swapCurrentList').innerHTML = MEMBER.currentBooks.map((b, i) => `
+      <div class="swap-current-item" data-idx="${i}" onclick="selectSwapBook(${i})">
+        <div class="swap-current-radio"></div>
+        <div class="swap-mini-cover ${b.cover}"></div>
+        <div class="swap-current-meta">
+          <strong>${b.title}</strong>
+          <span>${b.author}</span>
+        </div>
+      </div>
+    `).join('');
+    document.getElementById('swapConfirmBtn').disabled = true;
+    document.getElementById('swapModal').classList.add('active');
+  }
+
+  function selectSwapBook(idx) {
+    selectedSwapBookIndex = idx;
+    document.querySelectorAll('#swapCurrentList .swap-current-item').forEach((el, i) => {
+      el.classList.toggle('selected', i === idx);
+    });
+    document.getElementById('swapConfirmBtn').disabled = false;
+  }
+
+  function confirmSwap() {
+    if (selectedSwapBookIndex === null || !swapTargetBookId) return;
+    const target = CATALOGUE.find(b => b.id === swapTargetBookId);
+    const returning = MEMBER.currentBooks[selectedSwapBookIndex];
+
+    // PRODUCTION: POST to /api/swap-request { member_id, returning_book_id, requested_book_id }
+    // Backend creates a swap request, notifies admin, schedules on next delivery.
+    const msg = `Hi mybookmark - I'd like to swap "${returning.title}" for "${target.title}" on my next delivery.`;
+    window.open(`https://wa.me/917022165307?text=${encodeURIComponent(msg)}`, '_blank');
+
+    closeSwapModal();
+    alert(`✅ Swap request submitted!\n\nReturning: "${returning.title}"\nReceiving: "${target.title}"\n\nWe'll bring it on your next delivery (Wed May 27).`);
+  }
+
+  function closeSwapModal(e) {
+    if (e && e.target.id !== 'swapModal' && !e.target.classList.contains('m-modal-close')) return;
+    document.getElementById('swapModal').classList.remove('active');
+    selectedSwapBookIndex = null;
+    swapTargetBookId = null;
+  }
+
+  // ----- Request a book -----
+  function openRequestModal(e) {
+    if (e) e.preventDefault();
+    document.getElementById('requestModal').classList.add('active');
+  }
+
+  function closeRequestModal(e) {
+    if (e && e.target.id !== 'requestModal' && !e.target.classList.contains('m-modal-close')) return;
+    document.getElementById('requestModal').classList.remove('active');
+  }
+
+  function submitRequest(e) {
+    e.preventDefault();
+    const title = document.getElementById('reqTitle').value;
+    const author = document.getElementById('reqAuthor').value;
+    const isbn = document.getElementById('reqIsbn').value;
+    const why = document.getElementById('reqWhy').value;
+
+    // PRODUCTION: POST to /api/book-request { member_id, title, author, isbn, why }
+    // Goes into admin's Requests queue for manual confirmation.
+    const msg = `Hi mybookmark - I'd like to request a book:\n\nTitle: ${title}\nAuthor: ${author}${isbn ? '\nISBN: ' + isbn : ''}${why ? '\n\nWhy: ' + why : ''}`;
+    window.open(`https://wa.me/917022165307?text=${encodeURIComponent(msg)}`, '_blank');
+
+    closeRequestModal();
+    alert(`✅ Request submitted!\n\n"${title}" by ${author}\n\nSujay will confirm within 2 hours on WhatsApp.`);
+    document.querySelector('#requestModal form').reset();
+  }
+
+  // Render the catalogue when the dashboard view loads
+  window.addEventListener('DOMContentLoaded', () => {
+    renderGenreChips();
+    renderCatalogue();
+  });
+</script>
+
+</body>
+</html>
