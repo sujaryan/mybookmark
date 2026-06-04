@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>mybookmark — Payment Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+  :root {
+    --cream: #fbf6ec;
+    --paper: #f4ecd8;
+    --ink: #1f2a1f;
+    --ink-soft: #3a4a3a;
+    --muted: #6b6358;
+    --rust: #b8552b;
+    --rust-dark: #963f1c;
+    --forest: #2c4a35;
+    --line: #d9cdb2;
+    --gold: #d4a437;
+    --radius: 14px;
+    --shadow: 0 8px 24px rgba(31,42,31,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 32px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .logo-mark {
+    width: 26px; height: 26px;
+    background: var(--rust);
+    border-radius: 4px 4px 0 0;
+    position: relative;
+    transform: rotate(-3deg);
+  }
+  .logo-mark::after {
+    content: '';
+    position: absolute;
+    bottom: -7px; left: 0;
+    border-left: 13px solid var(--rust);
+    border-right: 13px solid var(--rust);
+    border-bottom: 7px solid transparent;
+  }
+
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 36px 32px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: var(--shadow);
+  }
+
+  .card-header { margin-bottom: 28px; }
+  .card-header h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.55rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .card-header p { color: var(--muted); font-size: 0.92rem; }
+
+  .plan-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  .plan-opt {
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    background: var(--cream);
+  }
+  .plan-opt:hover { border-color: var(--rust); }
+  .plan-opt.selected { border-color: var(--rust); background: rgba(184,85,43,0.06); }
+  .plan-opt input { display: none; }
+  .plan-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .plan-price { font-size: 0.82rem; color: var(--muted); }
+  .plan-price strong { color: var(--rust); font-size: 1rem; }
+
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+  .field input {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--cream);
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--ink);
+    transition: border 0.15s ease;
+  }
+  .field input:focus { outline: none; border-color: var(--rust); }
+
+  .pay-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--rust);
+    color: var(--cream);
+    border: none;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.12s ease;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .pay-btn:hover { background: var(--rust-dark); transform: translateY(-1px); }
+  .pay-btn:disabled { background: var(--line); color: var(--muted); cursor: not-allowed; transform: none; }
+
+  .amount-preview {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.92rem;
+  }
+  .amount-preview span { color: var(--muted); }
+  .amount-preview strong {
+    font-family: 'Fraunces', serif;
+    font-size: 1.3rem;
+    color: var(--ink);
+  }
+  .amount-preview .deposit-note {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-align: right;
+    line-height: 1.4;
+  }
+
+  .result-box {
+    display: none;
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .result-box.error {
+    display: block;
+    background: #fff0ed;
+    border: 1px solid #f5c6b8;
+    color: #7a2b10;
+  }
+  .result-box.success {
+    display: block;
+    background: #e8f5e9;
+    border: 1px solid #a5d6a7;
+    color: #1b5e20;
+  }
+  .result-box strong { display: block; margin-bottom: 4px; }
+
+  .meta-note {
+    text-align: center;
+    margin-top: 18px;
+    color: var(--muted);
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+  .meta-note a { color: var(--rust); }
+
+  .debug-panel {
+    margin-top: 28px;
+    background: #1f2a1f;
+    border-radius: 10px;
+    padding: 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    color: #8bc34a;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .debug-panel .debug-line { margin-bottom: 4px; opacity: 0.85; }
+  .debug-panel .debug-line.err { color: #ef9a9a; }
+  .debug-panel .debug-line.ok { color: #a5d6a7; }
+  .debug-panel .debug-line.info { color: #90caf9; }
+  .debug-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 6px;
+  }
+</style>
+</head>
+<body>
+
+<a href="/" class="logo">
+  <span class="logo-mark"></span>
+  mybookmark
+</a>
+
+<div class="card">
+  <div class="card-header">
+    <h1>Payment Demo</h1>
+    <p>Demonstrates Razorpay checkout from <strong>mybookmark.in</strong> — domain whitelist validation</p>
+  </div>
+
+  <!-- Plan selection -->
+  <div class="plan-selector" id="planSelector">
+    <label class="plan-opt selected">
+      <input type="radio" name="plan" value="Kids" data-monthly="249" data-deposit="400" checked>
+      <div class="plan-name">Kids</div>
+      <div class="plan-price"><strong>₹249</strong>/mo</div>
+    </label>
+    <label class="plan-opt">
+      <input type="radio" name="plan" value="Reader" data-monthly="549" data-deposit="1000">
+      <div class="plan-name">Reader</div>
+      <div class="plan-price"><strong>₹549</strong>/mo</div>
+    </label>
+    <label class="plan-opt">
+      <input type="radio" name="plan" value="Bookworm" data-monthly="849" data-deposit="1500">
+      <div class="plan-name">Bookworm</div>
+      <div class="plan-price"><strong>₹849</strong>/mo</div>
+    </label>
+  </div>
+
+  <div class="amount-preview">
+    <span>First charge</span>
+    <div style="text-align:right">
+      <strong id="totalDisplay">₹649</strong>
+      <div class="deposit-note" id="depositNote">₹249 subscription + ₹400 deposit</div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Name</label>
+    <input type="text" id="custName" placeholder="Priya Sharma" value="Test User">
+  </div>
+  <div class="field">
+    <label>Email</label>
+    <input type="email" id="custEmail" placeholder="priya@example.com" value="test@mybookmark.in">
+  </div>
+  <div class="field">
+    <label>Phone</label>
+    <input type="tel" id="custPhone" placeholder="+91 98765 43210" value="+919999999999">
+  </div>
+
+  <button class="pay-btn" id="payBtn" onclick="openCheckout()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+    Pay with Razorpay
+  </button>
+
+  <div class="result-box" id="resultBox"></div>
+
+  <p class="meta-note">
+    This page attempts a <strong>live</strong> Razorpay checkout.<br>
+    If mybookmark.in is not whitelisted, the checkout will surface a domain/MID error.
+  </p>
+
+  <div class="debug-label">Console log</div>
+  <div class="debug-panel" id="debugPanel">
+    <div class="debug-line info">[ready] Demo page loaded on <span id="originDisplay"></span></div>
+  </div>
+</div>
+
+<script>
+  // ─── Config ──────────────────────────────────────────────────
+  // KEY ID is the public Razorpay identifier — safe for frontend.
+  // Replace with your key ID if testing locally with a different account.
+  const RAZORPAY_KEY_ID = 'rzp_live_sg_dliMITSTxqxl8O';
+
+  // Plan amounts (INR)
+  const PLANS = {
+    Kids:     { monthly: 249, deposit: 400 },
+    Reader:   { monthly: 549, deposit: 1000 },
+    Bookworm: { monthly: 849, deposit: 1500 }
+  };
+
+  // ─── Init ────────────────────────────────────────────────────
+  document.getElementById('originDisplay').textContent = window.location.origin;
+
+  // Plan selector UI
+  document.querySelectorAll('#planSelector .plan-opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('#planSelector .plan-opt').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      updateAmount();
+    });
+  });
+
+  function selectedPlan() {
+    const checked = document.querySelector('#planSelector input[type=radio]:checked');
+    return checked ? checked.value : 'Kids';
+  }
+
+  function updateAmount() {
+    // Re-sync checked state from selected class
+    document.querySelectorAll('#planSelector .plan-opt').forEach(opt => {
+      opt.querySelector('input').checked = opt.classList.contains('selected');
+    });
+    const plan = selectedPlan();
+    const { monthly, deposit } = PLANS[plan];
+    const total = monthly + deposit;
+    document.getElementById('totalDisplay').textContent = `₹${total.toLocaleString('en-IN')}`;
+    document.getElementById('depositNote').textContent = `₹${monthly} subscription + ₹${deposit} deposit`;
+  }
+
+  // ─── Debug logger ────────────────────────────────────────────
+  function log(msg, type = '') {
+    const panel = document.getElementById('debugPanel');
+    const line = document.createElement('div');
+    line.className = `debug-line ${type}`;
+    line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+    panel.appendChild(line);
+    panel.scrollTop = panel.scrollHeight;
+    console.log(msg);
+  }
+
+  // ─── Checkout ────────────────────────────────────────────────
+  function openCheckout() {
+    const plan = selectedPlan();
+    const { monthly, deposit } = PLANS[plan];
+    const total = (monthly + deposit) * 100; // paise
+
+    const name   = document.getElementById('custName').value.trim()  || 'Test User';
+    const email  = document.getElementById('custEmail').value.trim() || 'test@mybookmark.in';
+    const phone  = document.getElementById('custPhone').value.trim() || '+919999999999';
+
+    document.getElementById('resultBox').className = 'result-box';
+    document.getElementById('resultBox').innerHTML = '';
+
+    log(`Initiating checkout — plan: ${plan}, amount: ₹${(total/100).toLocaleString('en-IN')}`, 'info');
+    log(`Origin: ${window.location.origin}`, 'info');
+    log(`Key ID: ${RAZORPAY_KEY_ID}`, 'info');
+
+    const options = {
+      key: RAZORPAY_KEY_ID,
+      amount: total,
+      currency: 'INR',
+      name: 'mybookmark',
+      description: `${plan} plan — ₹${monthly}/mo + ₹${deposit} deposit`,
+      image: 'https://mybookmark.in/favicon.ico',
+      theme: { color: '#b8552b' },
+      prefill: { name, email, contact: phone },
+      notes: { plan, demo: 'true', domain: window.location.hostname },
+      modal: {
+        ondismiss: () => {
+          log('Checkout modal dismissed by user', 'info');
+        }
+      },
+      handler: function(response) {
+        log(`Payment captured: ${response.razorpay_payment_id}`, 'ok');
+        showResult('success',
+          'Payment captured',
+          `Payment ID: ${response.razorpay_payment_id}\n` +
+          `This means mybookmark.in IS whitelisted for this MID.`
+        );
+      }
+    };
+
+    try {
+      log('Creating Razorpay instance…');
+      const rzp = new Razorpay(options);
+
+      rzp.on('payment.failed', function(resp) {
+        const err = resp.error;
+        log(`payment.failed — code: ${err.code}`, 'err');
+        log(`reason: ${err.reason}`, 'err');
+        log(`description: ${err.description}`, 'err');
+        log(`source: ${err.source}`, 'err');
+        showResult('error',
+          `Payment failed — ${err.code || err.reason}`,
+          `Description: ${err.description}\nSource: ${err.source}\nStep: ${err.step}\n\n` +
+          `This error confirms mybookmark.in is NOT whitelisted for this MID.`
+        );
+      });
+
+      log('Opening Razorpay checkout…');
+      rzp.open();
+    } catch (e) {
+      log(`Exception: ${e.message}`, 'err');
+      showResult('error', 'Could not open checkout', e.message);
+    }
+  }
+
+  function showResult(type, title, body) {
+    const box = document.getElementById('resultBox');
+    box.className = `result-box ${type}`;
+    box.innerHTML = `<strong>${title}</strong><pre style="white-space:pre-wrap;font-size:0.84rem;font-family:inherit">${body}</pre>`;
+  }
+</script>
+</body>
+</html>
