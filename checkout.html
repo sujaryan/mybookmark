@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>mybookmark — Checkout</title>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f5f5;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 40px 36px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  .brand {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+  }
+  .brand span { color: #b8552b; }
+  .subtitle {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 28px;
+  }
+
+  .plans {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .plan {
+    border: 2px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 14px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .plan:hover { border-color: #b8552b; }
+  .plan.active { border-color: #b8552b; background: #fff5f2; }
+  .plan-name { font-weight: 600; font-size: 0.9rem; color: #1a1a1a; }
+  .plan-amt { font-size: 0.82rem; color: #888; margin-top: 2px; }
+
+  .summary {
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .summary-label { font-size: 0.9rem; color: #555; }
+  .summary-amt { font-size: 1.4rem; font-weight: 700; color: #1a1a1a; }
+  .summary-note { font-size: 0.75rem; color: #aaa; text-align: right; }
+
+  label { display: block; font-size: 0.85rem; font-weight: 500; color: #444; margin-bottom: 5px; }
+  input {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1.5px solid #e5e5e5;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: #1a1a1a;
+    margin-bottom: 14px;
+    transition: border 0.15s;
+  }
+  input:focus { outline: none; border-color: #b8552b; }
+
+  button {
+    width: 100%;
+    padding: 14px;
+    background: #b8552b;
+    color: white;
+    border: none;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+  }
+  button:hover { background: #963f1c; }
+
+  .result {
+    display: none;
+    margin-top: 16px;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+  .result.error { display: block; background: #fff0ed; border: 1px solid #f5c6b8; color: #7a2b10; }
+  .result.success { display: block; background: #e8f5e9; border: 1px solid #a5d6a7; color: #1b5e20; }
+  .result b { display: block; margin-bottom: 4px; font-size: 0.95rem; }
+
+  .log {
+    margin-top: 20px;
+    background: #1a1a1a;
+    border-radius: 10px;
+    padding: 14px;
+    font-family: monospace;
+    font-size: 0.78rem;
+    color: #aaa;
+    max-height: 160px;
+    overflow-y: auto;
+  }
+  .log div { margin-bottom: 3px; }
+  .log .e { color: #f48fb1; }
+  .log .s { color: #a5d6a7; }
+  .log .i { color: #90caf9; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="brand">my<span>bookmark</span></div>
+  <div class="subtitle">Subscription checkout demo</div>
+
+  <div class="plans" id="plans">
+    <div class="plan active" data-plan="Kids" data-sub="249" data-dep="400">
+      <div class="plan-name">Kids</div>
+      <div class="plan-amt">₹249/mo</div>
+    </div>
+    <div class="plan" data-plan="Reader" data-sub="549" data-dep="1000">
+      <div class="plan-name">Reader</div>
+      <div class="plan-amt">₹549/mo</div>
+    </div>
+    <div class="plan" data-plan="Bookworm" data-sub="849" data-dep="1500">
+      <div class="plan-name">Bookworm</div>
+      <div class="plan-amt">₹849/mo</div>
+    </div>
+  </div>
+
+  <div class="summary">
+    <div class="summary-label">First charge</div>
+    <div>
+      <div class="summary-amt" id="total">₹649</div>
+      <div class="summary-note" id="breakdown">₹249 + ₹400 deposit</div>
+    </div>
+  </div>
+
+  <label>Name</label>
+  <input id="name" type="text" value="Test User" />
+
+  <label>Email</label>
+  <input id="email" type="email" value="test@example.com" />
+
+  <label>Phone</label>
+  <input id="phone" type="tel" value="+919999999999" />
+
+  <button onclick="pay()">Pay with Razorpay</button>
+
+  <div class="result" id="result"></div>
+
+  <div class="log" id="log">
+    <div class="i">origin: <span id="origin"></span></div>
+  </div>
+</div>
+
+<script>
+  const KEY = 'rzp_live_sg_dliMITSTxqxl8O';
+  document.getElementById('origin').textContent = location.origin;
+
+  let selected = { plan: 'Kids', sub: 249, dep: 400 };
+
+  document.querySelectorAll('.plan').forEach(el => {
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.plan').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      selected = { plan: el.dataset.plan, sub: +el.dataset.sub, dep: +el.dataset.dep };
+      const t = selected.sub + selected.dep;
+      document.getElementById('total').textContent = '₹' + t.toLocaleString('en-IN');
+      document.getElementById('breakdown').textContent = `₹${selected.sub} + ₹${selected.dep} deposit`;
+    });
+  });
+
+  function log(msg, cls = '') {
+    const d = document.createElement('div');
+    if (cls) d.className = cls;
+    d.textContent = msg;
+    const el = document.getElementById('log');
+    el.appendChild(d);
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function pay() {
+    document.getElementById('result').className = 'result';
+
+    const amount = (selected.sub + selected.dep) * 100;
+    log(`opening checkout — ${selected.plan} ₹${amount/100}`, 'i');
+
+    const rzp = new Razorpay({
+      key: KEY,
+      amount,
+      currency: 'INR',
+      name: 'mybookmark',
+      description: `${selected.plan} plan`,
+      theme: { color: '#b8552b' },
+      prefill: {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        contact: document.getElementById('phone').value
+      },
+      handler(r) {
+        log('payment captured: ' + r.razorpay_payment_id, 's');
+        show('success', 'Payment successful', `Payment ID: ${r.razorpay_payment_id}\nDomain IS whitelisted for this MID.`);
+      },
+      modal: { ondismiss: () => log('modal dismissed') }
+    });
+
+    rzp.on('payment.failed', r => {
+      const e = r.error;
+      log(`FAILED — ${e.code}: ${e.description}`, 'e');
+      show('error', `Failed — ${e.code || e.reason}`,
+        `Description: ${e.description}\nSource: ${e.source}\nStep: ${e.step}\n\nDomain NOT whitelisted for this MID.`);
+    });
+
+    rzp.open();
+  }
+
+  function show(type, title, body) {
+    const el = document.getElementById('result');
+    el.className = 'result ' + type;
+    el.innerHTML = `<b>${title}</b><pre style="white-space:pre-wrap;font-family:inherit">${body}</pre>`;
+  }
+</script>
+</body>
+</html>
