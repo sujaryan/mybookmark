@@ -133,25 +133,25 @@
   <div class="subtitle">Subscription checkout demo</div>
 
   <div class="plans" id="plans">
-    <div class="plan active" data-plan="Kids" data-sub="249" data-dep="400">
+    <div class="plan active" data-plan="Kids" data-sub="1" data-dep="99">
       <div class="plan-name">Kids</div>
-      <div class="plan-amt">₹249/mo</div>
+      <div class="plan-amt">₹1/mo</div>
     </div>
-    <div class="plan" data-plan="Reader" data-sub="549" data-dep="1000">
+    <div class="plan" data-plan="Reader" data-sub="1" data-dep="99">
       <div class="plan-name">Reader</div>
-      <div class="plan-amt">₹549/mo</div>
+      <div class="plan-amt">₹1/mo</div>
     </div>
-    <div class="plan" data-plan="Bookworm" data-sub="849" data-dep="1500">
+    <div class="plan" data-plan="Bookworm" data-sub="1" data-dep="99">
       <div class="plan-name">Bookworm</div>
-      <div class="plan-amt">₹849/mo</div>
+      <div class="plan-amt">₹1/mo</div>
     </div>
   </div>
 
   <div class="summary">
     <div class="summary-label">First charge</div>
     <div>
-      <div class="summary-amt" id="total">₹649</div>
-      <div class="summary-note" id="breakdown">₹249 + ₹400 deposit</div>
+      <div class="summary-amt" id="total">₹100</div>
+      <div class="summary-note" id="breakdown">₹1 + ₹99 deposit</div>
     </div>
   </div>
 
@@ -177,7 +177,7 @@
   const KEY = 'rzp_live_sg_dliMITSTxqxl8O';
   document.getElementById('origin').textContent = location.origin;
 
-  let selected = { plan: 'Kids', sub: 249, dep: 400 };
+  let selected = { plan: 'Kids', sub: 1, dep: 99 };
 
   document.querySelectorAll('.plan').forEach(el => {
     el.addEventListener('click', () => {
