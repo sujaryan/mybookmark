@@ -10,4 +10,4 @@ jobs:
       - uses: actions/checkout@v4
       - uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ cfat_y5bcmVBR1GlI8YYc1orLclN9H1rPMXDnsMVdkrKq5ce96eb5 }}
+          apiToken: ${{ secrets.CF_API_TOKEN }}
