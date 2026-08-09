@@ -811,6 +811,300 @@
   #view-marketing .footer-meta { color: rgba(251, 246, 236, 0.6); font-size: 0.9rem; }
   #view-marketing footer a { color: var(--gold); }
 
+  /* Announcement bar */
+  .announcement-bar {
+    background: linear-gradient(90deg, #1a1a2e, #16213e);
+    color: #fff;
+    text-align: center;
+    padding: 10px 24px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .announcement-bar:hover { background: linear-gradient(90deg, #222244, #1a2a4e); }
+  .announcement-bar .announcement-badge {
+    background: #e63946;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .announcement-bar a {
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .announcement-bar .announcement-arrow {
+    font-size: 1.1rem;
+    transition: transform 0.2s ease;
+  }
+  .announcement-bar:hover .announcement-arrow { transform: translateX(4px); }
+
+  /* ============================================
+     PS RENTAL VIEW
+     ============================================ */
+  #view-ps-rental {
+    background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #0d1b2a 100%);
+    min-height: 100vh;
+    color: #e0e0e0;
+  }
+  #view-ps-rental nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10, 10, 26, 0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  #view-ps-rental .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+  #view-ps-rental .logo { color: #fff; }
+  #view-ps-rental .logo-mark { background: #006FCD; }
+  #view-ps-rental .logo-mark::after { border-left-color: #006FCD; border-right-color: #006FCD; }
+  #view-ps-rental .nav-links {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+  }
+  #view-ps-rental .nav-links a {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  #view-ps-rental .nav-links a:hover { color: #fff; }
+  #view-ps-rental .nav-cta {
+    background: #006FCD;
+    color: #fff !important;
+    padding: 9px 18px;
+    border-radius: 999px;
+    font-weight: 500 !important;
+  }
+  #view-ps-rental .nav-cta:hover { background: #0058a6; }
+  @media (max-width: 720px) {
+    #view-ps-rental .nav-links { gap: 14px; }
+    #view-ps-rental .nav-links a:not(.nav-cta) { display: none; }
+  }
+
+  .ps-hero {
+    padding: 80px 0 60px;
+    text-align: center;
+  }
+  .ps-hero h1 {
+    color: #fff;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    margin-bottom: 0.3em;
+  }
+  .ps-hero h1 em {
+    color: #006FCD;
+    font-style: normal;
+  }
+  .ps-hero .ps-sub {
+    font-size: 1.15rem;
+    color: rgba(255,255,255,0.7);
+    max-width: 640px;
+    margin: 0 auto 32px;
+    line-height: 1.7;
+  }
+  .ps-hero-ctas {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-ps {
+    background: #006FCD;
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(0, 111, 205, 0.4);
+  }
+  .btn-ps:hover {
+    background: #0058a6;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(0, 111, 205, 0.5);
+  }
+  .btn-ps-outline {
+    background: transparent;
+    color: #fff;
+    border: 1.5px solid rgba(255,255,255,0.3);
+  }
+  .btn-ps-outline:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+  }
+
+  .ps-consoles {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 50px;
+    flex-wrap: wrap;
+  }
+  .ps-console-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 40px 32px;
+    text-align: center;
+    width: 280px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .ps-console-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0, 111, 205, 0.4);
+  }
+  .ps-console-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+  }
+  .ps-console-card h3 {
+    color: #fff;
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+  }
+  .ps-console-card .ps-price {
+    color: #006FCD;
+    font-size: 1.8rem;
+    font-weight: 700;
+    font-family: 'Fraunces', Georgia, serif;
+    margin: 12px 0 4px;
+  }
+  .ps-console-card .ps-price-period {
+    color: rgba(255,255,255,0.5);
+    font-size: 0.85rem;
+  }
+  .ps-console-card .ps-includes {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 0;
+    text-align: left;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.65);
+  }
+  .ps-console-card .ps-includes li {
+    padding: 6px 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .ps-console-card .ps-includes li::before {
+    content: '✓ ';
+    color: #006FCD;
+    font-weight: 600;
+  }
+
+  .ps-section {
+    padding: 60px 0;
+  }
+  .ps-section h2 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .ps-how-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  @media (max-width: 720px) {
+    .ps-how-grid { grid-template-columns: 1fr; }
+    .ps-consoles { gap: 20px; }
+    .ps-console-card { width: 100%; max-width: 320px; }
+  }
+  .ps-how-step {
+    text-align: center;
+    padding: 24px;
+  }
+  .ps-how-num {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #006FCD;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 14px;
+  }
+  .ps-how-step h3 {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+  .ps-how-step p {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.9rem;
+  }
+
+  .ps-faq {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .ps-faq details {
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 18px 0;
+  }
+  .ps-faq summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: #fff;
+    font-size: 1rem;
+    list-style: none;
+  }
+  .ps-faq summary::-webkit-details-marker { display: none; }
+  .ps-faq summary::before {
+    content: '+';
+    margin-right: 12px;
+    font-size: 1.2rem;
+    color: #006FCD;
+  }
+  .ps-faq details[open] summary::before { content: '-'; }
+  .ps-faq details p {
+    margin-top: 10px;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .ps-cta-section {
+    text-align: center;
+    padding: 80px 0;
+  }
+  .ps-cta-section h2 {
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  .ps-cta-section p {
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 24px;
+  }
+
+  #view-ps-rental footer {
+    background: rgba(0,0,0,0.3);
+    color: rgba(255,255,255,0.5);
+    padding: 24px 0;
+    text-align: center;
+    font-size: 0.85rem;
+  }
+  #view-ps-rental footer a { color: #006FCD; }
+
   /* Float WhatsApp */
   .float-wa {
     position: fixed;
@@ -1593,6 +1887,14 @@
      ============================================ -->
 <div id="view-marketing" class="view">
 
+  <div class="announcement-bar" onclick="goToView('ps-rental', event)">
+    <a href="#ps-rental">
+      <span class="announcement-badge">New</span>
+      PlayStation rentals now available in Bengaluru - PS4 &amp; PS5 delivered to your door
+      <span class="announcement-arrow">→</span>
+    </a>
+  </div>
+
   <nav>
     <div class="nav-inner">
       <a href="#" class="logo" onclick="goToView('marketing', event)">
@@ -2087,6 +2389,151 @@
 </div>
 
 <!-- ============================================
+     PS RENTAL VIEW
+     ============================================ -->
+<div id="view-ps-rental" class="view" style="display:none;">
+
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="logo" onclick="goToView('marketing', event)">
+        <span class="logo-mark"></span>
+        mybookmark
+      </a>
+      <div class="nav-links">
+        <a href="#" onclick="goToView('marketing', event)">Books</a>
+        <a href="#ps-plans">Plans</a>
+        <a href="#ps-faq">FAQ</a>
+        <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I'm%20interested%20in%20renting%20a%20PlayStation.%20Can%20you%20tell%20me%20more?" target="_blank" rel="noopener" class="nav-cta">Rent now</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="ps-hero">
+    <div class="container">
+      <h1>Rent a <em>PlayStation</em>.<br>Play without the price tag.</h1>
+      <p class="ps-sub">PS4 and PS5 consoles delivered to your doorstep in Bengaluru. No long-term commitment, no heavy investment. Just plug in and play.</p>
+      <div class="ps-hero-ctas">
+        <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I'm%20interested%20in%20renting%20a%20PlayStation.%20Can%20you%20tell%20me%20more?" target="_blank" rel="noopener" class="btn btn-ps">Rent a console</a>
+        <a href="#ps-plans" class="btn btn-ps-outline">View plans</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="ps-section" id="ps-plans">
+    <div class="container">
+      <h2>Pick your console</h2>
+      <div class="ps-consoles">
+
+        <div class="ps-console-card">
+          <div class="ps-console-icon">🎮</div>
+          <h3>PlayStation 4</h3>
+          <p style="color:rgba(255,255,255,0.5); font-size:0.9rem;">Great for casual gaming</p>
+          <div class="ps-price">&#8377;1,500</div>
+          <div class="ps-price-period">per week</div>
+          <ul class="ps-includes">
+            <li>PS4 console + 1 controller</li>
+            <li>HDMI &amp; power cables</li>
+            <li>2 games of your choice</li>
+            <li>Free delivery &amp; pickup</li>
+            <li>Setup assistance</li>
+          </ul>
+        </div>
+
+        <div class="ps-console-card">
+          <div class="ps-console-icon">🕹️</div>
+          <h3>PlayStation 5</h3>
+          <p style="color:rgba(255,255,255,0.5); font-size:0.9rem;">Next-gen gaming experience</p>
+          <div class="ps-price">&#8377;2,500</div>
+          <div class="ps-price-period">per week</div>
+          <ul class="ps-includes">
+            <li>PS5 console + 1 DualSense controller</li>
+            <li>HDMI 2.1 &amp; power cables</li>
+            <li>2 games of your choice</li>
+            <li>Free delivery &amp; pickup</li>
+            <li>Setup assistance</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="ps-section">
+    <div class="container">
+      <h2>How it works</h2>
+      <div class="ps-how-grid">
+        <div class="ps-how-step">
+          <div class="ps-how-num">1</div>
+          <h3>Choose your console</h3>
+          <p>Pick PS4 or PS5, select your rental period, and tell us which games you want.</p>
+        </div>
+        <div class="ps-how-step">
+          <div class="ps-how-num">2</div>
+          <h3>We deliver &amp; set up</h3>
+          <p>We bring the console to your door, plug it in, and make sure everything works.</p>
+        </div>
+        <div class="ps-how-step">
+          <div class="ps-how-num">3</div>
+          <h3>Play &amp; return</h3>
+          <p>Game to your heart's content. When you're done, we pick it up. No hassle.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ps-section" id="ps-faq">
+    <div class="container">
+      <h2>Frequently asked questions</h2>
+      <div class="ps-faq">
+        <details>
+          <summary>Do I need to pay a security deposit?</summary>
+          <p>Yes, a refundable security deposit is required at the time of delivery. The amount depends on the console - details shared over WhatsApp.</p>
+        </details>
+        <details>
+          <summary>What games are available?</summary>
+          <p>We have a growing library of 50+ popular titles across genres - FIFA, GTA, God of War, Spider-Man, Uncharted, and more. Tell us what you like and we'll match you.</p>
+        </details>
+        <details>
+          <summary>Can I extend my rental?</summary>
+          <p>Absolutely. Just message us on WhatsApp before your rental period ends and we'll extend it seamlessly.</p>
+        </details>
+        <details>
+          <summary>What if something breaks?</summary>
+          <p>Normal wear and tear is on us. For accidental damage, the security deposit covers repairs. We'll walk you through the specifics at the time of delivery.</p>
+        </details>
+        <details>
+          <summary>Where do you deliver?</summary>
+          <p>All across Bengaluru. Same service area as our book library - if we deliver books to your area, we deliver consoles too.</p>
+        </details>
+        <details>
+          <summary>Can I swap games during my rental?</summary>
+          <p>Yes, game swaps are available for a small fee. We'll deliver the new games and pick up the old ones.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="ps-cta-section">
+    <div class="container">
+      <h2>Ready to game?</h2>
+      <p>Message us on WhatsApp to book your console. Available for delivery within 24 hours.</p>
+      <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I'm%20interested%20in%20renting%20a%20PlayStation.%20Can%20you%20tell%20me%20more?" target="_blank" rel="noopener" class="btn btn-ps">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Book on WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <a href="#" onclick="goToView('marketing', event)" style="color: #006FCD;">← Back to mybookmark books</a>
+      &nbsp;&middot;&nbsp; A mybookmark venture &middot; &copy; 2026 mybookmark
+    </div>
+  </footer>
+
+</div>
+
+<!-- ============================================
      LOGIN VIEW
      ============================================ -->
 <div id="view-login" class="view" style="display:none;">
@@ -2476,7 +2923,7 @@
   // View routing (hash-based SPA)
   // ============================================
   function showView(name) {
-    const views = ['marketing', 'login', 'dashboard'];
+    const views = ['marketing', 'login', 'dashboard', 'ps-rental'];
     views.forEach(v => {
       const el = document.getElementById('view-' + v);
       if (el) el.style.display = (v === name) ? '' : 'none';
@@ -2491,6 +2938,8 @@
       showView('login');
     } else if (hash === 'dashboard') {
       showView('dashboard');
+    } else if (hash === 'ps-rental') {
+      showView('ps-rental');
     } else {
       showView('marketing');
       // If hash matches a marketing section, browser handles scroll natively.
