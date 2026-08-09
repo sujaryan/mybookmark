@@ -2957,11 +2957,10 @@
       showView('login');
     } else if (hash === 'dashboard') {
       showView('dashboard');
-    } else if (hash === 'ps-rental') {
+    } else if (hash === 'ps-rental' || hash.startsWith('ps-')) {
       showView('ps-rental');
     } else {
       showView('marketing');
-      // If hash matches a marketing section, browser handles scroll natively.
     }
   }
 
