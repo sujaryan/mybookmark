@@ -254,13 +254,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 0;
     text-align: center;
     font-family: 'Fraunces', serif;
     font-weight: 600;
     color: var(--cream);
     font-size: 0.95rem;
     line-height: 1.2;
+    overflow: hidden;
+  }
+  .book img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
   }
   .book-1 { width: 200px; height: 280px; background: linear-gradient(135deg, var(--rust), var(--rust-dark)); top: 20px; left: 30px; transform: rotate(-8deg); }
   .book-2 { width: 200px; height: 280px; background: linear-gradient(135deg, var(--forest), var(--forest-dark)); top: 80px; left: 180px; transform: rotate(6deg); }
@@ -1067,6 +1074,14 @@
     position: relative;
     overflow: hidden;
   }
+  .book-cover img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+  }
   .book-cover::before {
     content: '';
     position: absolute;
@@ -1588,7 +1603,7 @@
         <a href="#how">How it works</a>
         <a href="#pricing">Pricing</a>
         <a href="#faq">FAQ</a>
-        <a href="#login" onclick="goToView('login', event)">Member login</a>
+        <!-- <a href="#login" onclick="goToView('login', event)">Member login</a> -->
         <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I'd%20love%20to%20subscribe.%20Can%20you%20tell%20me%20more?" target="_blank" rel="noopener" class="nav-cta">Subscribe</a>
       </div>
     </div>
@@ -1612,9 +1627,9 @@
         </div>
       </div>
       <div class="hero-visual">
-        <div class="book book-1"><div class="book-spine"></div>Sapiens</div>
-        <div class="book book-2"><div class="book-spine"></div>The Midnight Library</div>
-        <div class="book book-3"><div class="book-spine"></div>Wings of Fire</div>
+        <div class="book book-1"><img src="https://covers.openlibrary.org/b/isbn/9780062316097-M.jpg" alt="Sapiens"></div>
+        <div class="book book-2"><img src="https://covers.openlibrary.org/b/isbn/9780525559474-M.jpg" alt="The Midnight Library"></div>
+        <div class="book book-3"><img src="https://covers.openlibrary.org/b/isbn/9780735211292-M.jpg" alt="Atomic Habits"></div>
         <div class="floating-tag tag-1">📚 4 books at a time</div>
         <div class="floating-tag tag-2">🚚 Doorstep delivery</div>
       </div>
@@ -2177,7 +2192,7 @@
         <div class="books-grid">
 
           <div class="book-card">
-            <div class="book-cover cover-1">The Midnight Library</div>
+            <div class="book-cover cover-1"><img src="https://covers.openlibrary.org/b/isbn/9780525559474-M.jpg" alt="The Midnight Library"></div>
             <h4 class="book-title">The Midnight Library</h4>
             <p class="book-author">Matt Haig</p>
             <p class="book-meta">Borrowed May 18 · 6 days</p>
@@ -2185,7 +2200,7 @@
           </div>
 
           <div class="book-card">
-            <div class="book-cover cover-2">Sapiens</div>
+            <div class="book-cover cover-2"><img src="https://covers.openlibrary.org/b/isbn/9780062316097-M.jpg" alt="Sapiens"></div>
             <h4 class="book-title">Sapiens</h4>
             <p class="book-author">Yuval Noah Harari</p>
             <p class="book-meta">Borrowed May 18 · 6 days</p>
@@ -2193,7 +2208,7 @@
           </div>
 
           <div class="book-card">
-            <div class="book-cover cover-3">Educated</div>
+            <div class="book-cover cover-3"><img src="https://covers.openlibrary.org/b/isbn/9780399590504-M.jpg" alt="Educated"></div>
             <h4 class="book-title">Educated</h4>
             <p class="book-author">Tara Westover</p>
             <p class="book-meta">Borrowed May 20 · 4 days</p>
@@ -2201,7 +2216,7 @@
           </div>
 
           <div class="book-card">
-            <div class="book-cover cover-4">Atomic Habits</div>
+            <div class="book-cover cover-4"><img src="https://covers.openlibrary.org/b/isbn/9780735211292-M.jpg" alt="Atomic Habits"></div>
             <h4 class="book-title">Atomic Habits</h4>
             <p class="book-author">James Clear</p>
             <p class="book-meta">Borrowed May 20 · 4 days</p>
