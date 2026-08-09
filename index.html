@@ -1283,6 +1283,18 @@
     position: relative;
     overflow: hidden;
   }
+  .cat-cover img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+  .cat-cover .cat-cover-title {
+    position: relative;
+    z-index: 1;
+  }
   .cat-cover::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: rgba(0, 0, 0, 0.18); }
   .cover-orange { background: linear-gradient(135deg, var(--rust), var(--rust-dark)); }
   .cover-orange-dark { background: linear-gradient(135deg, #8a3a18, #6b2b0e); }
@@ -2703,8 +2715,9 @@
       return `
         <div class="cat-book">
           <div class="cat-cover ${b.coverGradient}">
+            ${b.coverImage ? '<img src="' + b.coverImage + '" alt="' + b.title + '" onerror="this.remove()">' : ''}
             <span class="cat-status-pill ${isOut ? 'out' : ''}"><span class="dot"></span>${isOut ? 'On loan' : 'Available'}</span>
-            ${b.title}
+            <span class="cat-cover-title">${b.coverImage ? '' : b.title}</span>
           </div>
           <h4 class="cat-title">${b.title}</h4>
           <p class="cat-author">${b.author}</p>
