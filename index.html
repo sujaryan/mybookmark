@@ -2528,9 +2528,9 @@
     // https://developers.google.com/identity/gsi/web/guides/overview
     //
     // Example real implementation:
-    //   1. Load script: <script src="https://accounts.google.com/gsi/client" async defer></script>
-    //   2. Configure: <div id="g_id_onload" data-client_id="YOUR_CLIENT_ID" data-callback="handleGoogleCallback"></div>
-    //   3. Add button: <div class="g_id_signin"></div>
+    //   1. Load the Google Identity Services script in your HTML head.
+    //   2. Configure a g_id_onload element with your OAuth Client ID and callback.
+    //   3. Add a g_id_signin element for the sign-in button.
     //   4. Handle callback: function handleGoogleCallback(response) { /* verify token, sign user in */ }
     //
     // For now, this mock goes straight to the dashboard.
@@ -2574,8 +2574,7 @@
   // Razorpay subscribe flow
   // ============================================
   // PRODUCTION SETUP:
-  //   1. Add this script tag to <head>:
-  //      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  //   1. Add the Razorpay checkout script tag to the head element.
   //   2. Replace RAZORPAY_KEY_ID below with your real Key ID (rzp_live_xxx or rzp_test_xxx).
   //   3. Set up Plans in your Razorpay dashboard for each tier x period combination,
   //      then replace the plan_id values in PLAN_IDS below with your real plan IDs.
