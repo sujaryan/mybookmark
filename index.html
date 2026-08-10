@@ -3297,6 +3297,7 @@
       var data = await res.json();
       if (data.ok) {
         data.member.picture = picture;
+        data.member.authMethod = 'google';
         currentMember = data.member;
         localStorage.setItem('mybookmark_member', JSON.stringify(data.member));
         loadDashboardData(data.member);
@@ -3634,11 +3635,52 @@
     if (saved) {
       try {
         currentMember = JSON.parse(saved);
-        loadDashboardData(currentMember);
-        goToView('dashboard');
+        if (currentMember.authMethod === 'google') {
+          verifyGoogleSession();
+        } else {
+          loadDashboardData(currentMember);
+          goToView('dashboard');
+        }
       } catch(e) {}
     }
   })();
+
+  function verifyGoogleSession() {
+    function tryVerify() {
+      if (typeof google === 'undefined' || !google.accounts) {
+        setTimeout(tryVerify, 300);
+        return;
+      }
+      google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: function(response) {
+          var payload = decodeJwtPayload(response.credential);
+          currentMember.picture = payload.picture || currentMember.picture;
+          localStorage.setItem('mybookmark_member', JSON.stringify(currentMember));
+          loadDashboardData(currentMember);
+          goToView('dashboard');
+        },
+        auto_select: true
+      });
+      google.accounts.id.prompt(function(notification) {
+        if (notification.isNotDisplayed()) {
+          var reason = notification.getNotDisplayedReason();
+          if (reason === 'opt_out_or_no_session' || reason === 'suppressed_by_user') {
+            currentMember = null;
+            localStorage.removeItem('mybookmark_member');
+            goToView('marketing');
+          } else {
+            loadDashboardData(currentMember);
+            goToView('dashboard');
+          }
+        } else if (notification.isSkippedMoment()) {
+          loadDashboardData(currentMember);
+          goToView('dashboard');
+        }
+      });
+    }
+    tryVerify();
+  }
 
   // ============================================
   // Billing period toggle
