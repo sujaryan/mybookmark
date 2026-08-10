@@ -68,6 +68,7 @@ function doPost(e) {
     if (action === 'record_payment') return handleRecordPayment(body);
     if (action === 'forgot_password') return handleForgotPassword(body);
     if (action === 'google_signin') return handleGoogleSignin(body);
+    if (action === 'update_profile') return handleUpdateProfile(body);
     if (action === 'form_signup') return handleFormSignup(body);
 
     return jsonResponse({ ok: false, error: 'Unknown action' });
@@ -338,6 +339,27 @@ function handleGoogleSignin(body) {
     ok: true,
     member: { email: email, name: name, phone: '', idType: '', locality: '', plan: '', status: 'active', joinedAt: now }
   });
+}
+
+// ---- UPDATE PROFILE ----
+function handleUpdateProfile(body) {
+  var sheet = getSheet('Members');
+  if (!sheet) return jsonResponse({ ok: false, error: 'Members sheet not found' });
+
+  var email = (body.email || '').toLowerCase().trim();
+  if (!email) return jsonResponse({ ok: false, error: 'Email is required' });
+
+  var data = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0].toLowerCase().trim() === email) {
+      if (body.phone) sheet.getRange(i + 1, 4).setValue(body.phone);
+      if (body.idType) sheet.getRange(i + 1, 5).setValue(body.idType);
+      if (body.locality) sheet.getRange(i + 1, 6).setValue(body.locality);
+      return jsonResponse({ ok: true, message: 'Profile updated' });
+    }
+  }
+
+  return jsonResponse({ ok: false, error: 'Member not found' });
 }
 
 // ---- FORM SIGNUP (existing form - backward compatible) ----
