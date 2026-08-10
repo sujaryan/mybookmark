@@ -1107,6 +1107,7 @@
         var data = await res.json();
         if (data.ok) {
           data.member.picture = picture;
+          data.member.authMethod = 'google';
           setUser(data.member);
           closeAuthModal();
           updateNav();
@@ -1412,6 +1413,38 @@
     document.getElementById('auth-modal').addEventListener('click', function(e) {
       if (e.target === this) closeAuthModal();
     });
+
+    (function checkGoogleSession() {
+      var user = getUser();
+      if (user && user.authMethod === 'google') {
+        function tryVerify() {
+          if (typeof google === 'undefined' || !google.accounts) {
+            setTimeout(tryVerify, 300);
+            return;
+          }
+          google.accounts.id.initialize({
+            client_id: GOOGLE_CLIENT_ID,
+            callback: function(response) {
+              var payload = decodeJwtPayload(response.credential);
+              user.picture = payload.picture || user.picture;
+              setUser(user);
+              updateNav();
+            },
+            auto_select: true
+          });
+          google.accounts.id.prompt(function(notification) {
+            if (notification.isNotDisplayed()) {
+              var reason = notification.getNotDisplayedReason();
+              if (reason === 'opt_out_or_no_session' || reason === 'suppressed_by_user') {
+                clearUser();
+                updateNav();
+              }
+            }
+          });
+        }
+        tryVerify();
+      }
+    })();
 
     updateNav();
   </script>
