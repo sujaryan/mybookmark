@@ -3399,12 +3399,34 @@
     document.querySelector('#view-dashboard .user-chip').lastChild.textContent = ' ' + firstName;
     document.querySelector('#view-dashboard .welcome h1').textContent = 'Welcome back, ' + firstName + ' 👋';
     document.querySelector('#view-dashboard .welcome-sub').textContent = 'Member since ' + memberSince;
-    var planPrices = { Kids: '₹249/mo', Reader: '₹549/mo', Bookworm: '₹849/mo' };
+    var planAmounts = { Kids: 249, Reader: 549, Bookworm: 849, Founder: 400 };
+    var planLimits = { Kids: 2, Reader: 4, Bookworm: 6, Founder: 4 };
     if (member.plan) {
       document.querySelector('#view-dashboard .plan-pill').textContent = member.plan + ' plan';
-      document.getElementById('dash-plan-name').textContent = member.plan + ' · ' + (planPrices[member.plan] || '');
+      document.getElementById('dash-plan-name').textContent = member.plan + ' · ₹' + (planAmounts[member.plan] || 0) + '/mo';
       document.getElementById('statDeliveryCard').style.display = '';
       document.getElementById('statPaymentCard').style.display = '';
+
+      var today = new Date();
+      var dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      var monthNames2 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      var daysUntilWed = (3 - today.getDay() + 7) % 7;
+      if (daysUntilWed === 0) daysUntilWed = 7;
+      var nextWed = new Date(today);
+      nextWed.setDate(today.getDate() + daysUntilWed);
+      document.getElementById('statDelivery').textContent = dayNames[nextWed.getDay()];
+      var reqDay = new Date(nextWed);
+      reqDay.setDate(nextWed.getDate() - 1);
+      document.getElementById('statDeliveryMeta').textContent = monthNames2[nextWed.getMonth()] + ' ' + nextWed.getDate() + ' · Request by ' + dayNames[reqDay.getDay()] + ' noon';
+
+      var amt = planAmounts[member.plan] || 0;
+      document.getElementById('statPayment').textContent = '₹' + amt;
+      var joinDate2 = member.joinedAt ? new Date(member.joinedAt) : new Date();
+      var payDay = new Date(joinDate2);
+      payDay.setMonth(payDay.getMonth() + 1);
+      while (payDay < today) { payDay.setMonth(payDay.getMonth() + 1); }
+      var daysLeft = Math.ceil((payDay - today) / 86400000);
+      document.getElementById('statPaymentMeta').textContent = 'Due ' + monthNames2[payDay.getMonth()] + ' ' + payDay.getDate() + ' · ' + daysLeft + ' days from today';
     } else {
       document.querySelector('#view-dashboard .plan-pill').textContent = 'New member';
       document.getElementById('dash-plan-name').textContent = 'No plan selected';
