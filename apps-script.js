@@ -36,6 +36,13 @@ function setupSheets() {
     psRentals.getRange(1, 1, 1, 8).setFontWeight('bold');
   }
 
+  var payments = ss.getSheetByName('Payments');
+  if (!payments) {
+    payments = ss.insertSheet('Payments');
+    payments.appendRow(['timestamp', 'email', 'name', 'phone', 'plan', 'amount', 'deposit', 'total', 'method', 'site', 'status']);
+    payments.getRange(1, 1, 1, 11).setFontWeight('bold');
+  }
+
   return 'Setup complete';
 }
 
@@ -58,6 +65,7 @@ function doPost(e) {
     if (action === 'get_member') return handleGetMember(body);
     if (action === 'get_issuances') return handleGetIssuances(body);
     if (action === 'get_ps_rentals') return handleGetPSRentals(body);
+    if (action === 'record_payment') return handleRecordPayment(body);
     if (action === 'form_signup') return handleFormSignup(body);
 
     return jsonResponse({ ok: false, error: 'Unknown action' });
@@ -227,6 +235,34 @@ function handleGetPSRentals(body) {
   }
 
   return jsonResponse({ ok: true, active: active, history: history });
+}
+
+// ---- RECORD PAYMENT ----
+function handleRecordPayment(body) {
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var sheet = ss.getSheetByName('Payments');
+  if (!sheet) {
+    sheet = ss.insertSheet('Payments');
+    sheet.appendRow(['timestamp', 'email', 'name', 'phone', 'plan', 'amount', 'deposit', 'total', 'method', 'site', 'status']);
+    sheet.getRange(1, 1, 1, 11).setFontWeight('bold');
+  }
+
+  var now = new Date().toISOString();
+  sheet.appendRow([
+    now,
+    (body.email || '').toLowerCase().trim(),
+    body.name || '',
+    body.phone || '',
+    body.plan || '',
+    body.amount || 0,
+    body.deposit || 0,
+    body.total || 0,
+    body.method || 'UPI',
+    body.site || '',
+    'pending_verification'
+  ]);
+
+  return jsonResponse({ ok: true, message: 'Payment recorded' });
 }
 
 // ---- FORM SIGNUP (existing form - backward compatible) ----
