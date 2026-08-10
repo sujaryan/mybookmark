@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="books.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <style>
   :root {
     --cream: #fbf6ec;
@@ -2995,6 +2995,50 @@
     </div>
   </div>
 
+  <!-- ===== UPI Payment modal ===== -->
+  <div class="m-modal-overlay" id="upiPayModal" onclick="closeUpiModal(event)">
+    <div class="m-modal" onclick="event.stopPropagation()" style="max-width: 420px;">
+      <div class="m-modal-header">
+        <div>
+          <h2>Pay via UPI</h2>
+          <p id="upiModalPlan">Plan</p>
+        </div>
+        <button class="m-modal-close" onclick="closeUpiModal()">×</button>
+      </div>
+      <div class="m-modal-body" style="text-align: center;">
+        <div style="background: var(--paper); border-radius: 10px; padding: 16px; margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.92rem; margin-bottom: 6px;">
+            <span>Subscription</span><strong id="upiModalRental">₹549</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.92rem; margin-bottom: 6px;">
+            <span>Refundable deposit</span><strong id="upiModalDeposit">₹1,000</strong>
+          </div>
+          <div style="border-top: 1px solid var(--line); margin-top: 8px; padding-top: 8px; display: flex; justify-content: space-between; font-size: 1.05rem; font-weight: 700;">
+            <span>Total</span><span id="upiModalTotal" style="color: var(--rust);">₹1,549</span>
+          </div>
+        </div>
+
+        <p style="font-size: 0.88rem; color: var(--muted); margin-bottom: 12px;">Scan this QR code with any UPI app</p>
+        <img id="upiModalQR" src="" alt="UPI QR Code" style="width: 220px; height: 220px; border-radius: 8px; border: 1px solid var(--line); background: #fff; padding: 8px;">
+
+        <div style="margin-top: 14px; background: var(--paper); border-radius: 8px; padding: 12px;">
+          <p style="font-size: 0.82rem; color: var(--muted); margin: 0 0 4px;">Or pay manually to UPI ID</p>
+          <p style="font-size: 1rem; font-weight: 700; margin: 0; color: var(--ink); user-select: all;" id="upiModalId">sujaykabs@oksbi</p>
+          <p style="font-size: 0.82rem; color: var(--muted); margin: 4px 0 0;">Name: Sujay Kumar</p>
+        </div>
+
+        <a id="upiModalDeepLink" href="#" style="display: inline-block; margin-top: 14px; background: var(--rust); color: var(--cream); padding: 11px 28px; border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 0.95rem;">Open UPI app</a>
+
+        <div style="margin-top: 16px; background: linear-gradient(135deg, #e8f4ea, #f0f7e8); border: 1px solid #c5e1c0; border-radius: 8px; padding: 12px;">
+          <p style="font-size: 0.85rem; color: #2d6a30; margin: 0; font-weight: 600;">🚀 Razorpay payment gateway coming soon!</p>
+          <p style="font-size: 0.8rem; color: #4a8a4d; margin: 4px 0 0;">Seamless one-tap payments are on the way. Until then, scan &amp; pay above.</p>
+        </div>
+
+        <p style="font-size: 0.78rem; color: var(--muted); margin-top: 12px;">After payment, send a screenshot on <a href="https://wa.me/917022165307" target="_blank" style="color: var(--rust); font-weight: 600;">WhatsApp</a> and we'll activate your plan within 30 minutes.</p>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -3380,12 +3424,39 @@
   // ============================================
   // UPI Payment (dummy - will be replaced with Razorpay)
   // ============================================
+  const BOOK_PLAN_PRICES = {
+    'Kids': { amount: 249, deposit: 500, label: 'Kids · 2 books' },
+    'Reader': { amount: 549, deposit: 1000, label: 'Reader · 4 books' },
+    'Bookworm': { amount: 849, deposit: 1500, label: 'Bookworm · 6 books' },
+    'Founder': { amount: 400, deposit: 1000, label: 'Founding Member' }
+  };
+
   function dummyPay(planName) {
     if (!currentMember) {
       goToView('login');
       return;
     }
-    alert('UPI payment for ' + planName + ' plan coming soon! We are setting up our payment gateway. You will be able to pay via UPI shortly.');
+    var plan = BOOK_PLAN_PRICES[planName];
+    if (!plan) { alert('Unknown plan'); return; }
+    var total = plan.amount + plan.deposit;
+    var upiId = 'sujaykabs@oksbi';
+    var upiName = 'Sujay Kumar';
+    var upiLink = 'upi://pay?pa=' + upiId + '&pn=' + encodeURIComponent(upiName) + '&am=' + total + '&cu=INR&tn=' + encodeURIComponent('mybookmark ' + planName + ' plan');
+    var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(upiLink);
+
+    document.getElementById('upiModalPlan').textContent = plan.label;
+    document.getElementById('upiModalRental').textContent = '₹' + plan.amount.toLocaleString('en-IN');
+    document.getElementById('upiModalDeposit').textContent = '₹' + plan.deposit.toLocaleString('en-IN');
+    document.getElementById('upiModalTotal').textContent = '₹' + total.toLocaleString('en-IN');
+    document.getElementById('upiModalQR').src = qrUrl;
+    document.getElementById('upiModalId').textContent = upiId;
+    document.getElementById('upiModalDeepLink').href = upiLink;
+    document.getElementById('upiPayModal').classList.add('active');
+  }
+
+  function closeUpiModal(e) {
+    if (e && e.target.id !== 'upiPayModal' && !e.target.classList.contains('m-modal-close')) return;
+    document.getElementById('upiPayModal').classList.remove('active');
   }
 
   // Dashboard actions
@@ -3528,13 +3599,11 @@
     const target = CATALOGUE.find(b => b.id === swapTargetBookId);
     const returning = MEMBER.currentBooks[selectedSwapBookIndex];
 
-    // PRODUCTION: POST to /api/swap-request { member_id, returning_book_id, requested_book_id }
-    // Backend creates a swap request, notifies admin, schedules on next delivery.
     const msg = `Hi mybookmark - I'd like to swap "${returning.title}" for "${target.title}" on my next delivery.`;
     window.open(`https://wa.me/917022165307?text=${encodeURIComponent(msg)}`, '_blank');
 
     closeSwapModal();
-    alert(`✅ Swap request submitted!\n\nReturning: "${returning.title}"\nReceiving: "${target.title}"\n\nWe'll bring it on your next delivery (Wed May 27).`);
+    alert(`Swap request submitted!\n\nReturning: "${returning.title}"\nReceiving: "${target.title}"\n\nWe'll bring it on your next delivery.`);
   }
 
   function closeSwapModal(e) {
