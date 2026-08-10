@@ -2365,6 +2365,17 @@
           <input type="text" id="locality" required placeholder="e.g., HSR Layout, Whitefield" />
         </div>
         <div class="form-field">
+          <label for="idType">Government ID type</label>
+          <select id="idType" required>
+            <option value="">Select ID type</option>
+            <option>Aadhaar card</option>
+            <option>Driving licence</option>
+            <option>Passport</option>
+            <option>Voter ID</option>
+          </select>
+          <span style="font-size: 0.78rem; color: var(--muted); margin-top: 4px; display: block;">You'll share a photo of your ID on WhatsApp. Used only for verification - kept confidential.</span>
+        </div>
+        <div class="form-field">
           <label for="notes">What do you love reading? (optional)</label>
           <textarea id="notes" placeholder="Favorite authors, genres, recent books you loved or hated..."></textarea>
         </div>
@@ -3103,6 +3114,7 @@
     const name = document.getElementById('parentName').value;
     const phone = document.getElementById('phone').value;
     const readerType = document.getElementById('readerType').value;
+    const idType = document.getElementById('idType').value;
     const locality = document.getElementById('locality').value;
     const notes = document.getElementById('notes').value;
 
@@ -3110,10 +3122,10 @@
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, phone, readerType, locality, notes })
+      body: JSON.stringify({ name, phone, readerType, idType, locality, notes })
     });
 
-    const message = `Hi mybookmark - I'd like to subscribe.%0A%0AName: ${name}%0APhone: ${phone}%0AReader: ${readerType}%0ALocality: ${locality}%0A%0ANotes: ${notes || 'None'}`;
+    const message = `Hi mybookmark - I'd like to subscribe.%0A%0AName: ${name}%0APhone: ${phone}%0AReader: ${readerType}%0AID type: ${idType}%0ALocality: ${locality}%0ANotes: ${notes || 'None'}%0A%0A(I'll share a photo of my ${idType} in this chat)`;
     window.open(`https://wa.me/917022165307?text=${message}`, '_blank');
 
     document.getElementById('formSuccess').style.display = 'block';
