@@ -2993,7 +2993,7 @@
       <section class="row" id="dash-history">
         <div class="dash-section-head">
           <h2>Reading history</h2>
-          <a href="#" class="link">See all 12 books →</a>
+          <a href="javascript:void(0)" class="link" onclick="scrollToDash('dash-history')">See all books →</a>
         </div>
         <div class="history-list">
           <div class="history-row">
@@ -3223,6 +3223,11 @@
       }
     } else if (hash === 'ps-rental' || hash.startsWith('ps-')) {
       showView('ps-rental');
+    } else if (hash.startsWith('dash-')) {
+      if (currentMember) {
+        loadDashboardData(currentMember);
+        showView('dashboard');
+      }
     } else {
       showView('marketing');
     }
