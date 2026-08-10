@@ -1161,18 +1161,34 @@
       updateNav();
     }
 
+    var PS_PLAN_PRICES = {
+      'PS5 Weekend': { amount: 3500, deposit: 10000, label: 'PS5 Weekend · Fri-Sun' },
+      'PS5 Weekly': { amount: 5500, deposit: 10000, label: 'PS5 Weekly · 7 days' },
+      'PS5 Monthly': { amount: 15000, deposit: 10000, label: 'PS5 Monthly · 30 days' }
+    };
+
     function dummyPay(planName) {
       if (!getUser()) { openAuthModal(planName); return; }
-      var prices = { 'PS5 Weekend': '3,500', 'PS5 Weekly': '5,500', 'PS5 Monthly': '15,000' };
-      var totals = { 'PS5 Weekend': '13,500', 'PS5 Weekly': '15,500', 'PS5 Monthly': '25,000' };
-      alert(
-        'UPI Payment (Coming Soon)\n\n' +
-        'Plan: ' + planName + '\n' +
-        'Rental: ₹' + prices[planName] + '\n' +
-        'Refundable Deposit: ₹10,000\n' +
-        'Total: ₹' + totals[planName] + '\n\n' +
-        'Razorpay UPI payment integration is being set up.\nYou will be notified once payments go live!'
-      );
+      var plan = PS_PLAN_PRICES[planName];
+      if (!plan) { alert('Unknown plan'); return; }
+      var total = plan.amount + plan.deposit;
+      var upiId = 'sujaykabs@oksbi';
+      var upiName = 'Sujay Kumar';
+      var upiLink = 'upi://pay?pa=' + upiId + '&pn=' + encodeURIComponent(upiName) + '&am=' + total + '&cu=INR&tn=' + encodeURIComponent('mybookmark ' + planName);
+      var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(upiLink);
+
+      document.getElementById('upiModalPlan').textContent = plan.label;
+      document.getElementById('upiModalRental').textContent = '₹' + plan.amount.toLocaleString('en-IN');
+      document.getElementById('upiModalDeposit').textContent = '₹' + plan.deposit.toLocaleString('en-IN');
+      document.getElementById('upiModalTotal').textContent = '₹' + total.toLocaleString('en-IN');
+      document.getElementById('upiModalQR').src = qrUrl;
+      document.getElementById('upiModalId').textContent = upiId;
+      document.getElementById('upiModalDeepLink').href = upiLink;
+      document.getElementById('upiPayModal').style.display = 'flex';
+    }
+
+    function closeUpiModal() {
+      document.getElementById('upiPayModal').style.display = 'none';
     }
 
     function formatDate(d) {
@@ -1233,6 +1249,50 @@
 
     updateNav();
   </script>
+
+  <!-- ===== UPI Payment modal ===== -->
+  <div id="upiPayModal" onclick="if(event.target===this)closeUpiModal()" style="display:none; position:fixed; inset:0; z-index:10000; background:rgba(0,0,0,0.55); display:none; align-items:center; justify-content:center; padding:20px;">
+    <div onclick="event.stopPropagation()" style="background:#fff; border-radius:16px; max-width:420px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:18px 22px 0;">
+        <div>
+          <h3 style="margin:0; font-size:1.15rem;">Pay via UPI</h3>
+          <p id="upiModalPlan" style="margin:2px 0 0; font-size:0.88rem; color:#888;">Plan</p>
+        </div>
+        <button onclick="closeUpiModal()" style="background:none; border:none; font-size:1.6rem; cursor:pointer; color:#888; line-height:1;">&times;</button>
+      </div>
+      <div style="padding:16px 22px 22px; text-align:center;">
+        <div style="background:#f5f5f5; border-radius:10px; padding:14px; margin-bottom:14px; text-align:left;">
+          <div style="display:flex; justify-content:space-between; font-size:0.92rem; margin-bottom:5px;">
+            <span>Rental</span><strong id="upiModalRental">₹5,500</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:0.92rem; margin-bottom:5px;">
+            <span>Refundable deposit</span><strong id="upiModalDeposit">₹10,000</strong>
+          </div>
+          <div style="border-top:1px solid #ddd; margin-top:8px; padding-top:8px; display:flex; justify-content:space-between; font-size:1.05rem; font-weight:700;">
+            <span>Total</span><span id="upiModalTotal" style="color:#0066ff;">₹15,500</span>
+          </div>
+        </div>
+
+        <p style="font-size:0.88rem; color:#888; margin-bottom:10px;">Scan this QR code with any UPI app</p>
+        <img id="upiModalQR" src="" alt="UPI QR Code" style="width:220px; height:220px; border-radius:8px; border:1px solid #eee; background:#fff; padding:8px;">
+
+        <div style="margin-top:14px; background:#f5f5f5; border-radius:8px; padding:12px;">
+          <p style="font-size:0.82rem; color:#888; margin:0 0 4px;">Or pay manually to UPI ID</p>
+          <p id="upiModalId" style="font-size:1rem; font-weight:700; margin:0; user-select:all;">sujaykabs@oksbi</p>
+          <p style="font-size:0.82rem; color:#888; margin:4px 0 0;">Name: Sujay Kumar</p>
+        </div>
+
+        <a id="upiModalDeepLink" href="#" style="display:inline-block; margin-top:14px; background:#0066ff; color:#fff; padding:11px 28px; border-radius:999px; text-decoration:none; font-weight:600; font-size:0.95rem;">Open UPI app</a>
+
+        <div style="margin-top:14px; background:linear-gradient(135deg, #e8f4ea, #f0f7e8); border:1px solid #c5e1c0; border-radius:8px; padding:12px;">
+          <p style="font-size:0.85rem; color:#2d6a30; margin:0; font-weight:600;">🚀 Razorpay payment gateway coming soon!</p>
+          <p style="font-size:0.8rem; color:#4a8a4d; margin:4px 0 0;">Seamless one-tap payments are on the way. Until then, scan &amp; pay above.</p>
+        </div>
+
+        <p style="font-size:0.78rem; color:#888; margin-top:12px;">After payment, send a screenshot on <a href="https://wa.me/917022165307" target="_blank" style="color:#0066ff; font-weight:600;">WhatsApp</a> and we'll activate your rental within 30 minutes.</p>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>
