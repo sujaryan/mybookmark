@@ -67,6 +67,7 @@ function doPost(e) {
     if (action === 'get_ps_rentals') return handleGetPSRentals(body);
     if (action === 'record_payment') return handleRecordPayment(body);
     if (action === 'forgot_password') return handleForgotPassword(body);
+    if (action === 'google_signin') return handleGoogleSignin(body);
     if (action === 'form_signup') return handleFormSignup(body);
 
     return jsonResponse({ ok: false, error: 'Unknown action' });
@@ -299,6 +300,44 @@ function handleForgotPassword(body) {
   }
 
   return jsonResponse({ ok: false, error: 'No account found with this email' });
+}
+
+// ---- GOOGLE SIGN-IN ----
+function handleGoogleSignin(body) {
+  var sheet = getSheet('Members');
+  if (!sheet) return jsonResponse({ ok: false, error: 'Members sheet not found. Visit ?action=setup first.' });
+
+  var email = (body.email || '').toLowerCase().trim();
+  var name = body.name || '';
+
+  if (!email) return jsonResponse({ ok: false, error: 'Email is required' });
+
+  var data = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0].toLowerCase().trim() === email) {
+      return jsonResponse({
+        ok: true,
+        member: {
+          email: data[i][0],
+          name: data[i][2],
+          phone: data[i][3],
+          idType: data[i][4],
+          locality: data[i][5],
+          plan: data[i][6],
+          status: data[i][7],
+          joinedAt: data[i][8]
+        }
+      });
+    }
+  }
+
+  var now = new Date().toISOString();
+  sheet.appendRow([email, 'google_oauth', name, '', '', '', '', 'active', now]);
+
+  return jsonResponse({
+    ok: true,
+    member: { email: email, name: name, phone: '', idType: '', locality: '', plan: '', status: 'active', joinedAt: now }
+  });
 }
 
 // ---- FORM SIGNUP (existing form - backward compatible) ----
