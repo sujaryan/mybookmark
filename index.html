@@ -2674,6 +2674,12 @@
           <input type="text" id="signupLocality" required placeholder="e.g., HSR Layout, Whitefield" />
         </div>
         <button type="submit" class="btn btn-primary" id="signupBtn">Create account</button>
+        <div style="display:flex; align-items:center; margin:18px 0 14px; gap:12px;">
+          <div style="flex:1; height:1px; background:var(--line);"></div>
+          <span style="color:var(--muted); font-size:0.85rem;">or sign up with</span>
+          <div style="flex:1; height:1px; background:var(--line);"></div>
+        </div>
+        <div id="googleSignUpBtn" style="display:flex; justify-content:center;"></div>
       </form>
     </div>
 
@@ -2714,6 +2720,32 @@
       <span class="plan-pill">Reader plan</span>
     </div>
   </section>
+
+  <div id="profileBanner" style="display:none; background:#fff8e6; border:1px solid #e6c54f; border-radius:10px; padding:20px 24px; margin:0 auto 24px; max-width:1180px;">
+    <h3 style="margin:0 0 12px; font-size:1.05rem; color:#8a6d00;">Complete your profile</h3>
+    <p style="margin:0 0 14px; font-size:0.9rem; color:var(--muted);">We need a few more details for delivery & KYC. You can update these anytime.</p>
+    <form id="profileForm" onsubmit="updateProfile(event)" style="display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end;">
+      <div style="flex:1; min-width:180px;">
+        <label style="font-size:0.8rem; color:var(--muted); display:block; margin-bottom:4px;">WhatsApp number</label>
+        <input type="tel" id="profPhone" placeholder="e.g., 98765 43210" style="width:100%; padding:8px 12px; border:1px solid var(--line); border-radius:6px; font-size:0.9rem;" />
+      </div>
+      <div style="flex:1; min-width:140px;">
+        <label style="font-size:0.8rem; color:var(--muted); display:block; margin-bottom:4px;">Government ID type</label>
+        <select id="profIdType" style="width:100%; padding:8px 12px; border:1px solid var(--line); border-radius:6px; font-size:0.9rem;">
+          <option value="">Select ID type</option>
+          <option>Aadhaar card</option>
+          <option>Driving licence</option>
+          <option>Passport</option>
+          <option>Voter ID</option>
+        </select>
+      </div>
+      <div style="flex:1; min-width:180px;">
+        <label style="font-size:0.8rem; color:var(--muted); display:block; margin-bottom:4px;">Locality in Bengaluru</label>
+        <input type="text" id="profLocality" placeholder="e.g., HSR Layout" style="width:100%; padding:8px 12px; border:1px solid var(--line); border-radius:6px; font-size:0.9rem;" />
+      </div>
+      <button type="submit" class="btn btn-primary" id="profSaveBtn" style="padding:8px 24px; font-size:0.9rem;">Save</button>
+    </form>
+  </div>
 
   <main>
     <div class="container">
@@ -3171,6 +3203,10 @@
       document.getElementById('googleSignInBtn'),
       { theme: 'outline', size: 'large', width: 300, text: 'signin_with', shape: 'rectangular' }
     );
+    google.accounts.id.renderButton(
+      document.getElementById('googleSignUpBtn'),
+      { theme: 'outline', size: 'large', width: 300, text: 'signup_with', shape: 'rectangular' }
+    );
   }
 
   function decodeJwtPayload(token) {
@@ -3364,9 +3400,48 @@
       document.getElementById('dash-plan-status').innerHTML = '<span style="color:var(--muted);">● No active plan</span>';
     }
 
+    var banner = document.getElementById('profileBanner');
+    if (!member.phone && !member.locality) {
+      banner.style.display = 'block';
+    } else {
+      banner.style.display = 'none';
+    }
+
     if (API_URL) {
       loadIssuances(member.email);
     }
+  }
+
+  async function updateProfile(e) {
+    e.preventDefault();
+    var btn = document.getElementById('profSaveBtn');
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+    var phone = document.getElementById('profPhone').value.trim();
+    var idType = document.getElementById('profIdType').value;
+    var locality = document.getElementById('profLocality').value.trim();
+    if (!phone) { btn.textContent = 'Save'; btn.disabled = false; alert('Please enter your WhatsApp number.'); return; }
+    try {
+      var res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: 'update_profile', email: currentMember.email, phone: phone, idType: idType, locality: locality })
+      });
+      var data = await res.json();
+      if (data.ok) {
+        currentMember.phone = phone;
+        currentMember.idType = idType;
+        currentMember.locality = locality;
+        localStorage.setItem('mybookmark_member', JSON.stringify(currentMember));
+        document.getElementById('profileBanner').style.display = 'none';
+      } else {
+        alert(data.error || 'Could not update profile.');
+      }
+    } catch (err) {
+      alert('Connection error. Please try again.');
+    }
+    btn.textContent = 'Save';
+    btn.disabled = false;
   }
 
   async function loadIssuances(email) {
