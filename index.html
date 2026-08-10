@@ -3635,6 +3635,7 @@
       try {
         currentMember = JSON.parse(saved);
         loadDashboardData(currentMember);
+        goToView('dashboard');
       } catch(e) {}
     }
   })();
