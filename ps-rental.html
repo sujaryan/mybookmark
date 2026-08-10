@@ -1041,6 +1041,7 @@
           <label>Password</label>
           <input type="password" id="li-password" required placeholder="Your password" />
         </div>
+        <p style="text-align:right; margin: -4px 0 12px;"><a href="#" onclick="forgotPassword(event)" style="color:#0066ff; font-size:0.85rem;">Forgot password?</a></p>
         <button type="submit" class="btn-auth" id="btn-login">Sign in</button>
       </form>
     </div>
@@ -1148,6 +1149,29 @@
         if (pendingPlan) { dummyPay(pendingPlan); pendingPlan = null; }
       } catch(err) { showError('Network error. Please try again.'); }
       finally { btn.disabled = false; btn.textContent = 'Create account'; }
+    }
+
+    async function forgotPassword(e) {
+      if (e) e.preventDefault();
+      var email = document.getElementById('li-email').value.trim();
+      if (!email) { showError('Enter your email above, then click Forgot password.'); return; }
+      showError('');
+      document.getElementById('btn-login').textContent = 'Sending...';
+      try {
+        var res = await fetch(API_URL, {
+          method: 'POST', redirect: 'follow',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({ action: 'forgot_password', email: email })
+        });
+        var data = await res.json();
+        if (data.ok) {
+          showError('');
+          alert('A temporary password has been sent to ' + email + '. Check your inbox and sign in with it.');
+        } else {
+          showError(data.error || 'Could not reset password.');
+        }
+      } catch (err) { showError('Connection error. Please try again.'); }
+      finally { document.getElementById('btn-login').textContent = 'Sign in'; }
     }
 
     async function handleLogin(e) {
