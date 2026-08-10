@@ -15,6 +15,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="books.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   :root {
     --cream: #fbf6ec;
@@ -2632,6 +2633,12 @@
         </div>
         <p style="text-align:right; margin: -8px 0 14px;"><a href="#" onclick="forgotPassword(event)" style="color:var(--rust); font-size:0.85rem;">Forgot password?</a></p>
         <button type="submit" class="btn btn-primary" id="loginBtn">Sign in</button>
+        <div style="display:flex; align-items:center; margin:18px 0 14px; gap:12px;">
+          <div style="flex:1; height:1px; background:var(--line);"></div>
+          <span style="color:var(--muted); font-size:0.85rem;">or</span>
+          <div style="flex:1; height:1px; background:var(--line);"></div>
+        </div>
+        <div id="googleSignInBtn" style="display:flex; justify-content:center;"></div>
       </form>
 
       <form id="signupForm2" onsubmit="signUp(event)" style="display:none;">
@@ -3147,8 +3154,58 @@
   // Authentication (mocked - wire up to real auth backend later)
   // ============================================
 
-  var API_URL = 'https://script.google.com/macros/s/AKfycbz-sEu_EEr9oIZfQYUbQaT97GQVBDffQ4wP8zLoxc6J_fJU5SJNGBUZHP3JFykIA5cDzw/exec';
+  var API_URL = 'https://script.google.com/macros/s/AKfycbxksPxrsLRKTDY-fqEi4QXBevSiFrIzoKMrboyEgAwzjAG3GL6WfZYHGDB0ZzVMERZQkg/exec';
+  var GOOGLE_CLIENT_ID = '746562962059-a2hfr3dfsk4142uehda7oporrag9e4ru.apps.googleusercontent.com';
   var currentMember = null;
+
+  function initGoogleSignIn() {
+    if (typeof google === 'undefined' || !google.accounts) {
+      setTimeout(initGoogleSignIn, 300);
+      return;
+    }
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleGoogleCredential
+    });
+    google.accounts.id.renderButton(
+      document.getElementById('googleSignInBtn'),
+      { theme: 'outline', size: 'large', width: 300, text: 'signin_with', shape: 'rectangular' }
+    );
+  }
+
+  function decodeJwtPayload(token) {
+    var base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join('')));
+  }
+
+  async function handleGoogleCredential(response) {
+    var payload = decodeJwtPayload(response.credential);
+    var email = payload.email;
+    var name = payload.name || '';
+    showAuthSuccess('Signing in with Google...');
+    try {
+      var res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: 'google_signin', email: email, name: name, idToken: response.credential })
+      });
+      var data = await res.json();
+      if (data.ok) {
+        currentMember = data.member;
+        localStorage.setItem('mybookmark_member', JSON.stringify(data.member));
+        loadDashboardData(data.member);
+        goToView('dashboard');
+      } else {
+        showAuthError(data.error || 'Google sign-in failed');
+      }
+    } catch (err) {
+      showAuthError('Connection error. Please try again.');
+    }
+  }
+
+  window.addEventListener('load', initGoogleSignIn);
 
   function switchAuthTab(tab) {
     document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
