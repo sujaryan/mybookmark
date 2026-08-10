@@ -2750,21 +2750,21 @@
   <main>
     <div class="container">
 
-      <div class="stats">
+      <div class="stats" id="dashStats">
         <div class="stat-card">
           <div class="stat-label">Currently reading</div>
-          <div class="stat-value">4 <small>/ 4 books</small></div>
-          <p class="stat-meta">Limit reached - return one to add a new pick</p>
+          <div class="stat-value" id="statReading">0 <small>books</small></div>
+          <p class="stat-meta" id="statReadingMeta">Browse the catalogue to get started</p>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" id="statDeliveryCard" style="display:none;">
           <div class="stat-label">Next delivery</div>
-          <div class="stat-value">Wed</div>
-          <p class="stat-meta">May 27 · Request by Tue noon</p>
+          <div class="stat-value" id="statDelivery">—</div>
+          <p class="stat-meta" id="statDeliveryMeta"></p>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" id="statPaymentCard" style="display:none;">
           <div class="stat-label">Next payment</div>
-          <div class="stat-value">₹549</div>
-          <p class="stat-meta">Due June 15 · 22 days from today</p>
+          <div class="stat-value" id="statPayment">—</div>
+          <p class="stat-meta" id="statPaymentMeta"></p>
         </div>
       </div>
 
@@ -3403,10 +3403,16 @@
     if (member.plan) {
       document.querySelector('#view-dashboard .plan-pill').textContent = member.plan + ' plan';
       document.getElementById('dash-plan-name').textContent = member.plan + ' · ' + (planPrices[member.plan] || '');
+      document.getElementById('statDeliveryCard').style.display = '';
+      document.getElementById('statPaymentCard').style.display = '';
     } else {
       document.querySelector('#view-dashboard .plan-pill').textContent = 'New member';
       document.getElementById('dash-plan-name').textContent = 'No plan selected';
       document.getElementById('dash-plan-status').innerHTML = '<span style="color:var(--muted);">● No active plan</span>';
+      document.getElementById('statDeliveryCard').style.display = 'none';
+      document.getElementById('statPaymentCard').style.display = 'none';
+      document.getElementById('statReading').innerHTML = '0 <small>books</small>';
+      document.getElementById('statReadingMeta').textContent = 'Choose a plan to get started';
     }
 
     var banner = document.getElementById('profileBanner');
