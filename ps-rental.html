@@ -1030,6 +1030,12 @@
           <input type="password" id="su-password" required minlength="6" placeholder="Min 6 characters" />
         </div>
         <button type="submit" class="btn-auth" id="btn-signup">Create account</button>
+        <div style="display:flex; align-items:center; margin:18px 0 14px; gap:12px;">
+          <div style="flex:1; height:1px; background:#ddd;"></div>
+          <span style="color:#888; font-size:0.85rem;">or sign up with</span>
+          <div style="flex:1; height:1px; background:#ddd;"></div>
+        </div>
+        <div id="googleSignUpBtn" style="display:flex; justify-content:center;"></div>
       </form>
 
       <!-- Login Form -->
@@ -1072,6 +1078,10 @@
       google.accounts.id.renderButton(
         document.getElementById('googleSignInBtn'),
         { theme: 'outline', size: 'large', width: 300, text: 'signin_with', shape: 'rectangular' }
+      );
+      google.accounts.id.renderButton(
+        document.getElementById('googleSignUpBtn'),
+        { theme: 'outline', size: 'large', width: 300, text: 'signup_with', shape: 'rectangular' }
       );
     }
 
