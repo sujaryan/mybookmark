@@ -1294,6 +1294,55 @@
     transition: background 0.15s ease;
   }
   #view-dashboard .user-chip:hover { background: var(--cream); color: var(--ink); }
+  .user-menu-wrap { position: relative; }
+  .user-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    min-width: 240px;
+    padding: 8px 0;
+    z-index: 1000;
+  }
+  .user-dropdown.open { display: block; }
+  .dropdown-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+  .dropdown-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--forest);
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .dropdown-name { font-weight: 600; font-size: 0.95rem; color: var(--ink); }
+  .dropdown-email { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+  .dropdown-divider { height: 1px; background: var(--line); margin: 4px 0; }
+  .dropdown-item {
+    display: block;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: background 0.1s;
+  }
+  .dropdown-item:hover { background: var(--cream); color: var(--ink); }
+  .dropdown-signout { color: #b91c1c; }
+  .dropdown-signout:hover { background: #fef2f2; color: #991b1b; }
   #view-dashboard .user-avatar {
     width: 30px;
     height: 30px;
@@ -2701,12 +2750,32 @@
         mybookmark
       </a>
       <div class="nav-right">
-        <a href="#catalogue" class="nav-link">Catalogue</a>
-        <a href="#requests" class="nav-link">My requests</a>
-        <a href="#" class="user-chip" onclick="signOut(event)">
-          <span class="user-avatar">P</span>
-          Priya
-        </a>
+        <div class="user-menu-wrap" id="userMenuWrap">
+          <div class="user-chip" onclick="toggleUserMenu(event)">
+            <span class="user-avatar">P</span>
+            <span class="user-chip-name">Priya</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="margin-left:2px;opacity:0.6;"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="user-dropdown" id="userDropdown">
+            <div class="dropdown-user-info" id="dropdownUserInfo">
+              <div class="dropdown-avatar" id="dropdownAvatar">P</div>
+              <div>
+                <div class="dropdown-name" id="dropdownName">Priya</div>
+                <div class="dropdown-email" id="dropdownEmail">priya@example.com</div>
+              </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a href="#catalogue" class="dropdown-item" onclick="closeUserMenu()">📚 Browse catalogue</a>
+            <a href="#requests" class="dropdown-item" onclick="closeUserMenu()">📋 My requests</a>
+            <a href="#dash-history" class="dropdown-item" onclick="closeUserMenu()">📖 Reading history</a>
+            <a href="#dash-plan" class="dropdown-item" onclick="closeUserMenu()">💳 My plan</a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item" onclick="goToView('marketing', event); closeUserMenu();">🏠 Home</a>
+            <a href="ps-rental" class="dropdown-item" onclick="closeUserMenu()">🎮 PS5 Rentals</a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item dropdown-signout" onclick="signOut(event); closeUserMenu();">Sign out</a>
+          </div>
+        </div>
       </div>
     </div>
   </nav>
@@ -3245,6 +3314,18 @@
 
   window.addEventListener('load', initGoogleSignIn);
 
+  function toggleUserMenu(e) {
+    if (e) e.stopPropagation();
+    document.getElementById('userDropdown').classList.toggle('open');
+  }
+  function closeUserMenu() {
+    document.getElementById('userDropdown').classList.remove('open');
+  }
+  document.addEventListener('click', function(e) {
+    var wrap = document.getElementById('userMenuWrap');
+    if (wrap && !wrap.contains(e.target)) closeUserMenu();
+  });
+
   function switchAuthTab(tab) {
     document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
     document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
@@ -3389,14 +3470,21 @@
     var memberSince = monthNames[joinDate.getMonth()] + ' ' + joinDate.getFullYear();
 
     var avatarEl = document.querySelector('#view-dashboard .user-avatar');
+    var dropdownAvatarEl = document.getElementById('dropdownAvatar');
     if (member.picture) {
-      avatarEl.innerHTML = '<img src="' + member.picture + '" alt="" style="width:30px;height:30px;border-radius:50%;object-fit:cover;" referrerpolicy="no-referrer" />';
+      var imgTag = '<img src="' + member.picture + '" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" referrerpolicy="no-referrer" />';
+      avatarEl.innerHTML = imgTag;
       avatarEl.style.background = 'none';
       avatarEl.style.padding = '0';
+      dropdownAvatarEl.innerHTML = imgTag;
+      dropdownAvatarEl.style.background = 'none';
     } else {
       avatarEl.textContent = firstName.charAt(0).toUpperCase();
+      dropdownAvatarEl.textContent = firstName.charAt(0).toUpperCase();
     }
-    document.querySelector('#view-dashboard .user-chip').lastChild.textContent = ' ' + firstName;
+    document.querySelector('#view-dashboard .user-chip-name').textContent = firstName;
+    document.getElementById('dropdownName').textContent = member.name || firstName;
+    document.getElementById('dropdownEmail').textContent = member.email || '';
     document.querySelector('#view-dashboard .welcome h1').textContent = 'Welcome back, ' + firstName + ' 👋';
     document.querySelector('#view-dashboard .welcome-sub').textContent = 'Member since ' + memberSince;
     var planAmounts = { Kids: 249, Reader: 549, Bookworm: 849, Founder: 400 };
