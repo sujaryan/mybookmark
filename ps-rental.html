@@ -104,7 +104,7 @@
       "name": "Can I extend my PS5 rental period?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Absolutely. Just message us on WhatsApp before your rental period ends and we'll extend it seamlessly."
+        "text": "Absolutely. Just reach out to us before your rental period ends and we'll extend it seamlessly. You can extend directly from your dashboard or contact our support team."
       }
     },
     {
@@ -141,7 +141,7 @@
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "name": "mybookmark",
-  "description": "PS5 rental and book subscription library in Bengaluru with doorstep delivery",
+  "description": "PS5 rental in Bengaluru with doorstep delivery, 4 controllers, and PS Plus subscription",
   "url": "https://mybookmark.in",
   "telephone": "+917022165307",
   "email": "sales@mybookmark.in",
@@ -526,6 +526,212 @@
   }
   .float-wa:hover { transform: scale(1.08); }
   .float-wa svg { width: 30px; height: 30px; fill: white; }
+
+  /* Auth Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: #1a1a2e;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 36px 32px;
+    width: 100%;
+    max-width: 420px;
+    margin: 16px;
+    position: relative;
+  }
+  .modal-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 4px 8px;
+  }
+  .modal-close:hover { color: #fff; }
+  .modal h2 {
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+  }
+  .modal p.modal-sub {
+    color: rgba(255,255,255,0.5);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+  }
+  .auth-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .auth-tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    font-family: inherit;
+  }
+  .auth-tab.active {
+    color: #006FCD;
+    border-bottom-color: #006FCD;
+  }
+  .auth-form { display: none; }
+  .auth-form.active { display: block; }
+  .form-group {
+    margin-bottom: 14px;
+  }
+  .form-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  .form-group input, .form-group select {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-group input:focus, .form-group select:focus {
+    border-color: #006FCD;
+  }
+  .form-group select option { background: #1a1a2e; color: #fff; }
+  .auth-error {
+    color: #f87171;
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+    display: none;
+  }
+  .auth-error.show { display: block; }
+  .btn-auth {
+    width: 100%;
+    padding: 12px;
+    border-radius: 999px;
+    background: #006FCD;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+  }
+  .btn-auth:hover { background: #0058a6; }
+  .btn-auth:disabled { opacity: 0.6; cursor: not-allowed; }
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .nav-user-name {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  .nav-signout {
+    color: rgba(255,255,255,0.5) !important;
+    font-size: 0.85rem !important;
+    cursor: pointer;
+  }
+  .nav-signout:hover { color: #f87171 !important; }
+
+  /* Dashboard */
+  #view-dashboard { display: none; padding: 60px 0 80px; }
+  #view-dashboard.active { display: block; }
+  #view-marketing.hidden { display: none; }
+  .dash-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .dash-header h1 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin: 0; }
+  .dash-back {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+  }
+  .dash-back:hover { color: #006FCD; }
+
+  .dash-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 28px 24px;
+    margin-bottom: 28px;
+  }
+  .dash-card h3 { margin-bottom: 16px; font-size: 1.1rem; }
+
+  .active-rental {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .active-rental-icon { font-size: 2.8rem; }
+  .active-rental-info { flex: 1; min-width: 180px; }
+  .active-rental-plan {
+    font-family: 'Fraunces', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .active-rental-dates {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.55);
+  }
+  .active-rental-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .status-active { background: rgba(74,222,128,0.15); color: #4ade80; }
+  .status-returned { background: rgba(148,163,184,0.15); color: #94a3b8; }
+
+  .no-rentals {
+    text-align: center;
+    padding: 40px 20px;
+    color: rgba(255,255,255,0.4);
+  }
+  .no-rentals p { margin-bottom: 16px; }
+
+  .dash-loading {
+    text-align: center;
+    padding: 40px;
+    color: rgba(255,255,255,0.4);
+  }
 </style>
 </head>
 <body>
@@ -536,23 +742,29 @@
         <span class="logo-mark"></span>
         mybookmark
       </a>
-      <div class="nav-links">
-        <a href="/">Books</a>
+      <div class="nav-links" id="nav-links-guest">
         <a href="#plans">Plans</a>
         <a href="#faq">FAQ</a>
-        <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I'm%20interested%20in%20renting%20a%20PS5.%20Can%20you%20tell%20me%20more?" target="_blank" rel="noopener" class="nav-cta">Rent now</a>
+        <a href="javascript:void(0)" onclick="openAuthModal()" class="nav-cta">Sign up</a>
+      </div>
+      <div class="nav-user" id="nav-links-user" style="display:none;">
+        <a href="javascript:void(0)" onclick="showView('dashboard')">My Rentals</a>
+        <a href="javascript:void(0)" onclick="showView('marketing')">Plans</a>
+        <span class="nav-user-name" id="nav-user-name"></span>
+        <a href="javascript:void(0)" onclick="signOut()" class="nav-signout">Sign out</a>
       </div>
     </div>
   </nav>
 
   <main>
 
+  <div id="view-marketing">
   <section class="ps-hero">
     <div class="container">
       <h1>Rent a <em>PS5</em>.<br>Play without the price tag.</h1>
       <p class="ps-sub">PS5 console delivered to your doorstep in Bengaluru. No long-term commitment, no heavy investment. Just plug in and play.</p>
       <div class="ps-hero-ctas">
-        <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I'm%20interested%20in%20renting%20a%20PS5.%20Can%20you%20tell%20me%20more?" target="_blank" rel="noopener" class="btn btn-ps">Rent a console</a>
+        <a href="javascript:void(0)" onclick="openAuthModal()" class="btn btn-ps" id="hero-cta">Sign up &amp; Rent</a>
         <a href="#plans" class="btn btn-ps-outline">View plans</a>
       </div>
     </div>
@@ -577,6 +789,7 @@
             <li>Free delivery &amp; pickup</li>
             <li>Setup assistance</li>
           </ul>
+          <button class="btn btn-ps" style="margin-top:20px; width:100%;" onclick="dummyPay('PS5 Weekend')">Rent now</button>
         </div>
 
         <div class="ps-console-card" style="border-color: rgba(0, 111, 205, 0.4); position: relative;">
@@ -594,6 +807,7 @@
             <li>Free delivery &amp; pickup</li>
             <li>Setup assistance</li>
           </ul>
+          <button class="btn btn-ps" style="margin-top:20px; width:100%;" onclick="dummyPay('PS5 Weekly')">Rent now</button>
         </div>
 
         <div class="ps-console-card">
@@ -611,6 +825,7 @@
             <li>Setup assistance</li>
             <li>Priority support</li>
           </ul>
+          <button class="btn btn-ps" style="margin-top:20px; width:100%;" onclick="dummyPay('PS5 Monthly')">Rent now</button>
         </div>
 
       </div>
@@ -623,8 +838,8 @@
       <div class="ps-how-grid">
         <div class="ps-how-step">
           <div class="ps-how-num">1</div>
-          <h3>Choose your plan</h3>
-          <p>Pick your rental period - weekend, weekly, or monthly. Pay the rental fee and a refundable security deposit.</p>
+          <h3>Sign up &amp; choose</h3>
+          <p>Create an account on mybookmark, pick your rental period, and pay the rental fee + refundable deposit via UPI.</p>
         </div>
         <div class="ps-how-step">
           <div class="ps-how-num">2</div>
@@ -654,7 +869,7 @@
         </details>
         <details>
           <summary>Can I extend my rental?</summary>
-          <p>Absolutely. Just message us on WhatsApp before your rental period ends and we'll extend it seamlessly.</p>
+          <p>Absolutely. Just reach out to us before your rental period ends and we'll extend it seamlessly. You can extend directly from your dashboard or contact our support team.</p>
         </details>
         <details>
           <summary>What if something breaks?</summary>
@@ -675,11 +890,29 @@
   <section class="ps-cta-section">
     <div class="container">
       <h2>Ready to game?</h2>
-      <p>Message us on WhatsApp to book your PS5. Available for delivery within 24 hours.</p>
-      <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I'm%20interested%20in%20renting%20a%20PS5.%20Can%20you%20tell%20me%20more?" target="_blank" rel="noopener" class="btn btn-ps">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-        Book on WhatsApp
-      </a>
+      <p>Sign up, pick a plan, pay via UPI, and we'll deliver your PS5 within 24 hours.</p>
+      <a href="javascript:void(0)" onclick="openAuthModal()" class="btn btn-ps" id="bottom-cta">Sign up &amp; Rent now</a>
+      <p style="margin-top:20px; font-size:0.85rem; color:rgba(255,255,255,0.45);">Have questions? <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I%20have%20a%20question%20about%20PS5%20rental." target="_blank" rel="noopener">Chat with us on WhatsApp</a></p>
+    </div>
+  </section>
+  </div>
+
+  <!-- Dashboard View -->
+  <section id="view-dashboard">
+    <div class="container">
+      <div class="dash-header">
+        <h1>My Rentals</h1>
+        <a href="javascript:void(0)" onclick="showView('marketing')" class="dash-back">← Browse plans</a>
+      </div>
+
+      <div id="dash-loading" class="dash-loading">Loading your rentals...</div>
+
+      <div id="dash-content" style="display:none;">
+        <div class="dash-card" id="dash-active">
+          <h3>Active Rental</h3>
+          <div id="active-rental-content"></div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -687,14 +920,284 @@
 
   <footer>
     <div class="container">
-      <a href="/">← Back to mybookmark books</a>
-      &nbsp;&middot;&nbsp; A mybookmark venture &middot; &copy; 2026 mybookmark
+      &copy; 2026 mybookmark &middot; <a href="mailto:sales@mybookmark.in">sales@mybookmark.in</a>
     </div>
   </footer>
 
-  <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I'm%20interested%20in%20renting%20a%20PS5.%20Can%20you%20tell%20me%20more?" target="_blank" rel="noopener" class="float-wa" aria-label="Chat on WhatsApp">
+  <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I%20have%20a%20question%20about%20PS5%20rental." target="_blank" rel="noopener" class="float-wa" aria-label="Support on WhatsApp">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
   </a>
+
+  <!-- Auth Modal -->
+  <div class="modal-overlay" id="auth-modal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+      <h2 id="modal-title">Get started</h2>
+      <p class="modal-sub">Sign up to rent a PS5 in Bengaluru</p>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('signup')">Create account</button>
+        <button class="auth-tab" onclick="switchTab('login')">Sign in</button>
+      </div>
+
+      <div class="auth-error" id="auth-error"></div>
+
+      <!-- Signup Form -->
+      <form class="auth-form active" id="form-signup" onsubmit="handleSignup(event)">
+        <div class="form-group">
+          <label>Full name</label>
+          <input type="text" id="su-name" required placeholder="Your full name" />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="su-email" required placeholder="you@example.com" />
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="tel" id="su-phone" required placeholder="10-digit mobile number" pattern="[0-9]{10}" />
+        </div>
+        <div class="form-group">
+          <label>Government ID (for KYC)</label>
+          <select id="su-id-type">
+            <option value="">Select ID type</option>
+            <option value="Aadhaar">Aadhaar Card</option>
+            <option value="PAN">PAN Card</option>
+            <option value="Driving License">Driving License</option>
+            <option value="Passport">Passport</option>
+            <option value="Voter ID">Voter ID</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Locality in Bengaluru</label>
+          <input type="text" id="su-locality" placeholder="e.g. Koramangala, Indiranagar" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="su-password" required minlength="6" placeholder="Min 6 characters" />
+        </div>
+        <button type="submit" class="btn-auth" id="btn-signup">Create account</button>
+      </form>
+
+      <!-- Login Form -->
+      <form class="auth-form" id="form-login" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="li-email" required placeholder="you@example.com" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="li-password" required placeholder="Your password" />
+        </div>
+        <button type="submit" class="btn-auth" id="btn-login">Sign in</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    var API_URL = 'https://script.google.com/macros/s/AKfycbz9WiFhvVM413EFhLu5IJgeODtrWu5rDlIMAF2SubmYIab-zLjrp3KFqL0zBzh9J2oQaw/exec';
+    var pendingPlan = null;
+    var currentView = 'marketing';
+
+    function getUser() {
+      try { return JSON.parse(localStorage.getItem('ps_user')); } catch(e) { return null; }
+    }
+    function setUser(u) { localStorage.setItem('ps_user', JSON.stringify(u)); }
+    function clearUser() { localStorage.removeItem('ps_user'); }
+
+    function showView(view) {
+      currentView = view;
+      var marketing = document.getElementById('view-marketing');
+      var dashboard = document.getElementById('view-dashboard');
+      if (view === 'dashboard') {
+        marketing.classList.add('hidden');
+        dashboard.classList.add('active');
+        window.scrollTo(0, 0);
+        loadPSRentals();
+      } else {
+        marketing.classList.remove('hidden');
+        dashboard.classList.remove('active');
+      }
+    }
+
+    function updateNav() {
+      var user = getUser();
+      if (user) {
+        document.getElementById('nav-links-guest').style.display = 'none';
+        document.getElementById('nav-links-user').style.display = 'flex';
+        document.getElementById('nav-user-name').textContent = user.name.split(' ')[0];
+        document.getElementById('hero-cta').textContent = 'My Rentals';
+        document.getElementById('hero-cta').setAttribute('href', 'javascript:void(0)');
+        document.getElementById('hero-cta').setAttribute('onclick', "showView('dashboard')");
+        document.getElementById('bottom-cta').textContent = 'My Rentals';
+        document.getElementById('bottom-cta').setAttribute('href', 'javascript:void(0)');
+        document.getElementById('bottom-cta').setAttribute('onclick', "showView('dashboard')");
+      } else {
+        document.getElementById('nav-links-guest').style.display = 'flex';
+        document.getElementById('nav-links-user').style.display = 'none';
+        document.getElementById('hero-cta').textContent = 'Sign up & Rent';
+        document.getElementById('hero-cta').setAttribute('href', 'javascript:void(0)');
+        document.getElementById('hero-cta').setAttribute('onclick', 'openAuthModal()');
+        document.getElementById('bottom-cta').textContent = 'Sign up & Rent now';
+        document.getElementById('bottom-cta').setAttribute('href', 'javascript:void(0)');
+        document.getElementById('bottom-cta').setAttribute('onclick', 'openAuthModal()');
+        if (currentView === 'dashboard') showView('marketing');
+      }
+    }
+
+    function openAuthModal(plan) {
+      if (plan) pendingPlan = plan;
+      document.getElementById('auth-modal').classList.add('active');
+      document.getElementById('auth-error').classList.remove('show');
+    }
+    function closeAuthModal() {
+      document.getElementById('auth-modal').classList.remove('active');
+      pendingPlan = null;
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.auth-tab').forEach(function(t, i) {
+        t.classList.toggle('active', (tab === 'signup' && i === 0) || (tab === 'login' && i === 1));
+      });
+      document.getElementById('form-signup').classList.toggle('active', tab === 'signup');
+      document.getElementById('form-login').classList.toggle('active', tab === 'login');
+      document.getElementById('auth-error').classList.remove('show');
+    }
+
+    function showError(msg) {
+      var el = document.getElementById('auth-error');
+      el.textContent = msg;
+      el.classList.add('show');
+    }
+
+    async function handleSignup(e) {
+      e.preventDefault();
+      var btn = document.getElementById('btn-signup');
+      btn.disabled = true; btn.textContent = 'Creating account...';
+      try {
+        var res = await fetch(API_URL, {
+          method: 'POST', redirect: 'follow',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            action: 'signup',
+            name: document.getElementById('su-name').value.trim(),
+            email: document.getElementById('su-email').value.trim(),
+            phone: document.getElementById('su-phone').value.trim(),
+            idType: document.getElementById('su-id-type').value,
+            locality: document.getElementById('su-locality').value.trim(),
+            password: document.getElementById('su-password').value
+          })
+        });
+        var data = await res.json();
+        if (!data.ok) { showError(data.error); return; }
+        setUser(data.member);
+        closeAuthModal();
+        updateNav();
+        if (pendingPlan) { dummyPay(pendingPlan); pendingPlan = null; }
+      } catch(err) { showError('Network error. Please try again.'); }
+      finally { btn.disabled = false; btn.textContent = 'Create account'; }
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      var btn = document.getElementById('btn-login');
+      btn.disabled = true; btn.textContent = 'Signing in...';
+      try {
+        var res = await fetch(API_URL, {
+          method: 'POST', redirect: 'follow',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            action: 'login',
+            email: document.getElementById('li-email').value.trim(),
+            password: document.getElementById('li-password').value
+          })
+        });
+        var data = await res.json();
+        if (!data.ok) { showError(data.error); return; }
+        setUser(data.member);
+        closeAuthModal();
+        updateNav();
+        if (pendingPlan) { dummyPay(pendingPlan); pendingPlan = null; }
+      } catch(err) { showError('Network error. Please try again.'); }
+      finally { btn.disabled = false; btn.textContent = 'Sign in'; }
+    }
+
+    function signOut() {
+      clearUser();
+      updateNav();
+    }
+
+    function dummyPay(planName) {
+      if (!getUser()) { openAuthModal(planName); return; }
+      var prices = { 'PS5 Weekend': '3,500', 'PS5 Weekly': '5,500', 'PS5 Monthly': '15,000' };
+      var totals = { 'PS5 Weekend': '13,500', 'PS5 Weekly': '15,500', 'PS5 Monthly': '25,000' };
+      alert(
+        'UPI Payment (Coming Soon)\n\n' +
+        'Plan: ' + planName + '\n' +
+        'Rental: ₹' + prices[planName] + '\n' +
+        'Refundable Deposit: ₹10,000\n' +
+        'Total: ₹' + totals[planName] + '\n\n' +
+        'Razorpay UPI payment integration is being set up.\nYou will be notified once payments go live!'
+      );
+    }
+
+    function formatDate(d) {
+      if (!d) return '—';
+      var dt = new Date(d);
+      return dt.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    async function loadPSRentals() {
+      var user = getUser();
+      if (!user) return;
+      document.getElementById('dash-loading').style.display = 'block';
+      document.getElementById('dash-content').style.display = 'none';
+      try {
+        var res = await fetch(API_URL, {
+          method: 'POST', redirect: 'follow',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({ action: 'get_ps_rentals', email: user.email })
+        });
+        var data = await res.json();
+        if (!data.ok) { document.getElementById('dash-loading').textContent = 'Could not load rentals.'; return; }
+        renderDashboard(data.active);
+      } catch(err) {
+        document.getElementById('dash-loading').textContent = 'Network error. Please try again.';
+      }
+    }
+
+    function renderDashboard(active) {
+      document.getElementById('dash-loading').style.display = 'none';
+      document.getElementById('dash-content').style.display = 'block';
+
+      var activeEl = document.getElementById('active-rental-content');
+      if (active) {
+        activeEl.innerHTML =
+          '<div class="active-rental">' +
+            '<div class="active-rental-icon">🎮</div>' +
+            '<div class="active-rental-info">' +
+              '<div class="active-rental-plan">' + active.plan + '</div>' +
+              '<div class="active-rental-dates">' + formatDate(active.startDate) + ' → ' + formatDate(active.endDate) + '</div>' +
+              '<div style="margin-top:6px;font-size:0.85rem;color:rgba(255,255,255,0.5);">' +
+                'Deposit: ₹' + (active.deposit || '10,000') + ' · ' + (active.depositStatus || 'Held') +
+              '</div>' +
+            '</div>' +
+            '<span class="active-rental-status status-active">Active</span>' +
+          '</div>';
+      } else {
+        activeEl.innerHTML =
+          '<div class="no-rentals">' +
+            '<p>No active rental right now.</p>' +
+            '<a href="javascript:void(0)" onclick="showView(\'marketing\')" class="btn btn-ps" style="padding:10px 24px;font-size:0.9rem;">Browse plans</a>' +
+          '</div>';
+      }
+    }
+
+    document.getElementById('auth-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeAuthModal();
+    });
+
+    updateNav();
+  </script>
 
 </body>
 </html>
