@@ -66,6 +66,7 @@ function doPost(e) {
     if (action === 'get_issuances') return handleGetIssuances(body);
     if (action === 'get_ps_rentals') return handleGetPSRentals(body);
     if (action === 'record_payment') return handleRecordPayment(body);
+    if (action === 'forgot_password') return handleForgotPassword(body);
     if (action === 'form_signup') return handleFormSignup(body);
 
     return jsonResponse({ ok: false, error: 'Unknown action' });
@@ -263,6 +264,41 @@ function handleRecordPayment(body) {
   ]);
 
   return jsonResponse({ ok: true, message: 'Payment recorded' });
+}
+
+// ---- FORGOT PASSWORD ----
+function handleForgotPassword(body) {
+  var sheet = getSheet('Members');
+  if (!sheet) return jsonResponse({ ok: false, error: 'Members sheet not found' });
+
+  var email = (body.email || '').toLowerCase().trim();
+  var data = sheet.getDataRange().getValues();
+
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0].toLowerCase().trim() === email) {
+      var tempPass = 'mb' + Math.random().toString(36).substring(2, 8);
+      var hashed = hashPassword(tempPass);
+      sheet.getRange(i + 1, 2).setValue(hashed);
+
+      MailApp.sendEmail({
+        to: email,
+        subject: 'mybookmark - Your temporary password',
+        htmlBody: '<div style="font-family:sans-serif; max-width:480px; margin:0 auto; padding:20px;">' +
+          '<h2 style="color:#b85c38;">mybookmark</h2>' +
+          '<p>Hi ' + data[i][2] + ',</p>' +
+          '<p>Your temporary password is:</p>' +
+          '<p style="font-size:1.4rem; font-weight:bold; background:#f5f0e6; padding:12px 20px; border-radius:8px; text-align:center; letter-spacing:2px;">' + tempPass + '</p>' +
+          '<p>Use this to sign in at <a href="https://mybookmark.in">mybookmark.in</a>. We recommend changing it after logging in.</p>' +
+          '<p style="color:#888; font-size:0.85rem;">If you didn\'t request this, you can ignore this email.</p>' +
+          '<p>— mybookmark team</p>' +
+          '</div>'
+      });
+
+      return jsonResponse({ ok: true, message: 'Temporary password sent to ' + email });
+    }
+  }
+
+  return jsonResponse({ ok: false, error: 'No account found with this email' });
 }
 
 // ---- FORM SIGNUP (existing form - backward compatible) ----
