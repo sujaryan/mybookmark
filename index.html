@@ -2770,28 +2770,38 @@
             <h3>Subscription</h3>
             <div class="info-row">
               <span>Plan</span>
-              <span>Reader · ₹549/month</span>
-            </div>
-            <div class="info-row">
-              <span>Billing cycle</span>
-              <span>Monthly</span>
-            </div>
-            <div class="info-row">
-              <span>Next payment</span>
-              <span>June 15, 2026</span>
-            </div>
-            <div class="info-row">
-              <span>Refundable deposit</span>
-              <span>₹1,000 held</span>
+              <span id="dash-plan-name">—</span>
             </div>
             <div class="info-row">
               <span>Status</span>
-              <span style="color: #2c7a3d;">● Active</span>
+              <span id="dash-plan-status" style="color: #2c7a3d;">● Active</span>
             </div>
-            <div class="info-actions">
-              <a href="#upgrade" class="btn-sm primary">Upgrade to Bookworm</a>
-              <button class="btn-sm" onclick="switchToAnnual()">Switch to annual (save ₹1,188)</button>
-              <button class="btn-sm" onclick="pauseSubscription()">Pause</button>
+          </div>
+
+          <div class="info-card">
+            <h3>Change or upgrade plan</h3>
+            <div style="display:flex; flex-direction:column; gap:12px; margin-top:8px;">
+              <div class="info-row" style="align-items:center;">
+                <div>
+                  <strong>Kids</strong>
+                  <span style="color:var(--muted);font-size:0.85rem;"> · 3 books · ₹249/mo</span>
+                </div>
+                <button class="btn-sm primary" onclick="dummyPay('Kids')">Pay</button>
+              </div>
+              <div class="info-row" style="align-items:center;">
+                <div>
+                  <strong>Reader</strong>
+                  <span style="color:var(--muted);font-size:0.85rem;"> · 4 books · ₹549/mo</span>
+                </div>
+                <button class="btn-sm primary" onclick="dummyPay('Reader')">Pay</button>
+              </div>
+              <div class="info-row" style="align-items:center;">
+                <div>
+                  <strong>Bookworm</strong>
+                  <span style="color:var(--muted);font-size:0.85rem;"> · 6 books · ₹849/mo</span>
+                </div>
+                <button class="btn-sm primary" onclick="dummyPay('Bookworm')">Pay</button>
+              </div>
             </div>
           </div>
 
@@ -3172,10 +3182,14 @@
     document.querySelector('#view-dashboard .user-chip').lastChild.textContent = ' ' + firstName;
     document.querySelector('#view-dashboard .welcome h1').textContent = 'Welcome back, ' + firstName + ' 👋';
     document.querySelector('#view-dashboard .welcome-sub').textContent = 'Member since ' + memberSince;
+    var planPrices = { Kids: '₹249/mo', Reader: '₹549/mo', Bookworm: '₹849/mo' };
     if (member.plan) {
       document.querySelector('#view-dashboard .plan-pill').textContent = member.plan + ' plan';
+      document.getElementById('dash-plan-name').textContent = member.plan + ' · ' + (planPrices[member.plan] || '');
     } else {
       document.querySelector('#view-dashboard .plan-pill').textContent = 'New member';
+      document.getElementById('dash-plan-name').textContent = 'No plan selected';
+      document.getElementById('dash-plan-status').innerHTML = '<span style="color:var(--muted);">● No active plan</span>';
     }
 
     if (API_URL) {
