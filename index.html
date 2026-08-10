@@ -2766,13 +2766,12 @@
               </div>
             </div>
             <div class="dropdown-divider"></div>
-            <a href="#catalogue" class="dropdown-item" onclick="closeUserMenu()">📚 Browse catalogue</a>
-            <a href="#requests" class="dropdown-item" onclick="closeUserMenu()">📋 My requests</a>
-            <a href="#dash-history" class="dropdown-item" onclick="closeUserMenu()">📖 Reading history</a>
-            <a href="#dash-plan" class="dropdown-item" onclick="closeUserMenu()">💳 My plan</a>
+            <a href="javascript:void(0)" class="dropdown-item" onclick="scrollToDash('dash-catalogue')">📚 Browse catalogue</a>
+            <a href="javascript:void(0)" class="dropdown-item" onclick="scrollToDash('dash-history')">📖 Reading history</a>
+            <a href="javascript:void(0)" class="dropdown-item" onclick="scrollToDash('dash-plan-section')">💳 My plan</a>
             <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item" onclick="goToView('marketing', event); closeUserMenu();">🏠 Home</a>
-            <a href="ps-rental" class="dropdown-item" onclick="closeUserMenu()">🎮 PS5 Rentals</a>
+            <a href="javascript:void(0)" class="dropdown-item" onclick="goToView('marketing', event); closeUserMenu();">🏠 Home</a>
+            <a href="ps-rental" class="dropdown-item">🎮 PS5 Rentals</a>
             <div class="dropdown-divider"></div>
             <a href="#" class="dropdown-item dropdown-signout" onclick="signOut(event); closeUserMenu();">Sign out</a>
           </div>
@@ -2903,7 +2902,7 @@
         </div>
       </section>
 
-      <section class="row">
+      <section class="row" id="dash-plan-section">
         <div class="two-col">
 
           <div class="info-card">
@@ -3314,6 +3313,12 @@
   }
 
   window.addEventListener('load', initGoogleSignIn);
+
+  function scrollToDash(id) {
+    closeUserMenu();
+    var el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
   function toggleUserMenu(e) {
     if (e) e.stopPropagation();
