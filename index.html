@@ -1199,6 +1199,42 @@
   #view-login .back-link { text-align: center; margin-top: 28px; }
   #view-login .back-link a { color: var(--muted); font-size: 0.88rem; }
   #view-login .back-link a:hover { color: var(--ink); }
+  #view-login select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--cream);
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+  }
+  #view-login select:focus { outline: none; border-color: var(--rust); }
+  .auth-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 24px;
+    border-bottom: 2px solid var(--line);
+  }
+  .auth-tab {
+    flex: 1;
+    padding: 12px;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .auth-tab:hover { color: var(--ink); }
+  .auth-tab.active {
+    color: var(--rust);
+    border-bottom-color: var(--rust);
+  }
 
   /* ============================================
      DASHBOARD VIEW
@@ -1911,7 +1947,7 @@
         <a href="#how">How it works</a>
         <a href="#pricing">Pricing</a>
         <a href="#faq">FAQ</a>
-        <!-- <a href="#login" onclick="goToView('login', event)">Member login</a> -->
+        <a href="#login" onclick="goToView('login', event)">Member login</a>
         <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I'd%20love%20to%20subscribe.%20Can%20you%20tell%20me%20more?" target="_blank" rel="noopener" class="nav-cta">Subscribe</a>
       </div>
     </div>
@@ -2584,27 +2620,61 @@
     </div>
 
     <div class="card">
-      <h1>Welcome back</h1>
-      <p class="sub">Sign in to manage your subscription and request books.</p>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Sign in</button>
+        <button class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">Create account</button>
+      </div>
 
-      <div class="divider">Sign in with email</div>
+      <div id="authError" style="display:none; background:#fef2f2; color:#b91c1c; padding:10px 14px; border-radius:8px; font-size:0.88rem; margin-bottom:16px;"></div>
+      <div id="authSuccess" style="display:none; background:#f0fdf4; color:#166534; padding:10px 14px; border-radius:8px; font-size:0.88rem; margin-bottom:16px;"></div>
 
-      <form onsubmit="signIn(event)">
+      <form id="loginForm" onsubmit="signIn(event)">
+        <p class="sub">Sign in to manage your subscription and request books.</p>
         <div class="form-field">
-          <label for="loginEmail">Email or phone</label>
-          <input type="text" id="loginEmail" required placeholder="you@example.com or 98765 43210" />
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" required placeholder="you@example.com" />
         </div>
         <div class="form-field">
           <label for="loginPassword">Password</label>
           <input type="password" id="loginPassword" required placeholder="Your password" />
         </div>
-        <div class="forgot">
-          <a href="#">Forgot password?</a>
-        </div>
-        <button type="submit" class="btn btn-primary">Sign in</button>
+        <button type="submit" class="btn btn-primary" id="loginBtn">Sign in</button>
       </form>
 
-      <p class="signup-cta">New to mybookmark? <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I'd%20love%20to%20subscribe.%20Can%20you%20tell%20me%20more?" target="_blank" rel="noopener">Subscribe</a></p>
+      <form id="signupForm2" onsubmit="signUp(event)" style="display:none;">
+        <p class="sub">Create your mybookmark account to get started.</p>
+        <div class="form-field">
+          <label for="signupName">Full name</label>
+          <input type="text" id="signupName" required placeholder="e.g., Priya Sharma" />
+        </div>
+        <div class="form-field">
+          <label for="signupEmail">Email</label>
+          <input type="email" id="signupEmail" required placeholder="you@example.com" />
+        </div>
+        <div class="form-field">
+          <label for="signupPhone">WhatsApp number</label>
+          <input type="tel" id="signupPhone" required placeholder="e.g., 98765 43210" />
+        </div>
+        <div class="form-field">
+          <label for="signupPassword">Password</label>
+          <input type="password" id="signupPassword" required minlength="6" placeholder="At least 6 characters" />
+        </div>
+        <div class="form-field">
+          <label for="signupIdType">Government ID type</label>
+          <select id="signupIdType" required>
+            <option value="">Select ID type</option>
+            <option>Aadhaar card</option>
+            <option>Driving licence</option>
+            <option>Passport</option>
+            <option>Voter ID</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="signupLocality">Locality in Bengaluru</label>
+          <input type="text" id="signupLocality" required placeholder="e.g., HSR Layout, Whitefield" />
+        </div>
+        <button type="submit" class="btn btn-primary" id="signupBtn">Create account</button>
+      </form>
     </div>
 
     <div class="back-link">
@@ -2972,9 +3042,19 @@
   function handleHashChange() {
     const hash = window.location.hash.replace('#', '').toLowerCase();
     if (hash === 'login') {
-      showView('login');
+      if (currentMember) {
+        loadDashboardData(currentMember);
+        showView('dashboard');
+      } else {
+        showView('login');
+      }
     } else if (hash === 'dashboard') {
-      showView('dashboard');
+      if (currentMember) {
+        loadDashboardData(currentMember);
+        showView('dashboard');
+      } else {
+        showView('login');
+      }
     } else if (hash === 'ps-rental' || hash.startsWith('ps-')) {
       showView('ps-rental');
     } else {
@@ -3006,18 +3086,207 @@
   // Authentication (mocked - wire up to real auth backend later)
   // ============================================
 
-  function signIn(e) {
+  var API_URL = ''; // Will be set after Apps Script deploy
+  var currentMember = null;
+
+  function switchAuthTab(tab) {
+    document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+    document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
+    document.getElementById('loginForm').style.display = tab === 'login' ? '' : 'none';
+    document.getElementById('signupForm2').style.display = tab === 'signup' ? '' : 'none';
+    document.getElementById('authError').style.display = 'none';
+    document.getElementById('authSuccess').style.display = 'none';
+  }
+
+  function showAuthError(msg) {
+    var el = document.getElementById('authError');
+    el.textContent = msg;
+    el.style.display = 'block';
+    document.getElementById('authSuccess').style.display = 'none';
+  }
+
+  function showAuthSuccess(msg) {
+    var el = document.getElementById('authSuccess');
+    el.textContent = msg;
+    el.style.display = 'block';
+    document.getElementById('authError').style.display = 'none';
+  }
+
+  async function signIn(e) {
     e.preventDefault();
-    // PRODUCTION: validate email/password against your auth backend.
-    // For now, any input goes to the dashboard.
-    goToView('dashboard');
+    var btn = document.getElementById('loginBtn');
+    var email = document.getElementById('loginEmail').value;
+    var password = document.getElementById('loginPassword').value;
+
+    if (!API_URL) {
+      showAuthError('Backend not configured yet. Please contact mybookmark.');
+      return;
+    }
+
+    btn.textContent = 'Signing in...';
+    btn.disabled = true;
+
+    try {
+      var res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: 'login', email: email, password: password })
+      });
+      var data = await res.json();
+
+      if (data.ok) {
+        currentMember = data.member;
+        localStorage.setItem('mybookmark_member', JSON.stringify(data.member));
+        loadDashboardData(data.member);
+        goToView('dashboard');
+      } else {
+        showAuthError(data.error || 'Login failed');
+      }
+    } catch (err) {
+      showAuthError('Connection error. Please try again.');
+    }
+
+    btn.textContent = 'Sign in';
+    btn.disabled = false;
+  }
+
+  async function signUp(e) {
+    e.preventDefault();
+    var btn = document.getElementById('signupBtn');
+
+    var name = document.getElementById('signupName').value;
+    var email = document.getElementById('signupEmail').value;
+    var phone = document.getElementById('signupPhone').value;
+    var password = document.getElementById('signupPassword').value;
+    var idType = document.getElementById('signupIdType').value;
+    var locality = document.getElementById('signupLocality').value;
+
+    if (!API_URL) {
+      showAuthError('Backend not configured yet. Please contact mybookmark.');
+      return;
+    }
+
+    btn.textContent = 'Creating account...';
+    btn.disabled = true;
+
+    try {
+      var res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: 'signup', name: name, email: email, phone: phone, password: password, idType: idType, locality: locality })
+      });
+      var data = await res.json();
+
+      if (data.ok) {
+        showAuthSuccess('Account created! Please sign in.');
+        switchAuthTab('login');
+        document.getElementById('loginEmail').value = email;
+        document.getElementById('signupForm2').reset();
+      } else {
+        showAuthError(data.error || 'Signup failed');
+      }
+    } catch (err) {
+      showAuthError('Connection error. Please try again.');
+    }
+
+    btn.textContent = 'Create account';
+    btn.disabled = false;
   }
 
   function signOut(e) {
     if (e) e.preventDefault();
-    // PRODUCTION: clear auth tokens, call backend signout.
+    currentMember = null;
+    localStorage.removeItem('mybookmark_member');
     goToView('marketing');
   }
+
+  function loadDashboardData(member) {
+    var firstName = (member.name || '').split(' ')[0] || 'there';
+    var joinDate = member.joinedAt ? new Date(member.joinedAt) : new Date();
+    var monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var memberSince = monthNames[joinDate.getMonth()] + ' ' + joinDate.getFullYear();
+
+    document.querySelector('#view-dashboard .user-chip span').textContent = firstName.charAt(0).toUpperCase();
+    document.querySelector('#view-dashboard .user-chip').lastChild.textContent = ' ' + firstName;
+    document.querySelector('#view-dashboard .welcome h1').textContent = 'Welcome back, ' + firstName + ' 👋';
+    document.querySelector('#view-dashboard .welcome-sub').textContent = 'Member since ' + memberSince;
+    if (member.plan) {
+      document.querySelector('#view-dashboard .plan-pill').textContent = member.plan + ' plan';
+    } else {
+      document.querySelector('#view-dashboard .plan-pill').textContent = 'New member';
+    }
+
+    if (API_URL) {
+      loadIssuances(member.email);
+    }
+  }
+
+  async function loadIssuances(email) {
+    try {
+      var res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: 'get_issuances', email: email })
+      });
+      var data = await res.json();
+      if (data.ok) {
+        renderCurrentBooks(data.current);
+        renderHistory(data.history);
+      }
+    } catch (err) {}
+  }
+
+  function renderCurrentBooks(books) {
+    var grid = document.querySelector('#view-dashboard .books-grid');
+    if (!books || books.length === 0) {
+      grid.innerHTML = '<p style="color:var(--muted); text-align:center; grid-column:1/-1;">No books currently issued. Browse the catalogue to get started!</p>';
+      var statValue = document.querySelector('#view-dashboard .stat-value');
+      if (statValue) statValue.innerHTML = '0 <small>books</small>';
+      return;
+    }
+    grid.innerHTML = books.map(function(b) {
+      var coverUrl = b.bookIsbn ? 'https://covers.openlibrary.org/b/isbn/' + b.bookIsbn + '-M.jpg' : '';
+      var issuedDate = b.issuedAt ? new Date(b.issuedAt) : new Date();
+      var days = Math.ceil((new Date() - issuedDate) / 86400000);
+      return '<div class="book-card">' +
+        '<div class="book-cover">' + (coverUrl ? '<img src="' + coverUrl + '" alt="' + b.bookTitle + '">' : '') + '</div>' +
+        '<h4 class="book-title">' + b.bookTitle + '</h4>' +
+        '<p class="book-author">' + (b.bookAuthor || '') + '</p>' +
+        '<p class="book-meta">Borrowed ' + days + ' days ago</p>' +
+        '<button class="book-swap" onclick="requestSwap(\'' + b.bookTitle.replace(/'/g, "\\'") + '\')">Swap on next delivery</button>' +
+        '</div>';
+    }).join('');
+  }
+
+  function renderHistory(books) {
+    var list = document.querySelector('#view-dashboard .history-list');
+    if (!list) return;
+    if (!books || books.length === 0) {
+      list.innerHTML = '<p style="color:var(--muted);">No reading history yet.</p>';
+      return;
+    }
+    list.innerHTML = books.map(function(b) {
+      var returnedDate = b.returnedAt ? new Date(b.returnedAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }) : '';
+      return '<div class="history-row">' +
+        '<div class="history-cover" style="background: linear-gradient(135deg, var(--gold), #a87d22);"></div>' +
+        '<div>' +
+        '<h4 class="history-title">' + b.bookTitle + '</h4>' +
+        '<p class="history-author">' + (b.bookAuthor || '') + '</p>' +
+        '</div>' +
+        '<div class="history-date">Returned ' + returnedDate + '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  (function checkSavedLogin() {
+    var saved = localStorage.getItem('mybookmark_member');
+    if (saved) {
+      try {
+        currentMember = JSON.parse(saved);
+        loadDashboardData(currentMember);
+      } catch(e) {}
+    }
+  })();
 
   // ============================================
   // Billing period toggle
