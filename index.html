@@ -1948,7 +1948,7 @@
         <a href="#pricing">Pricing</a>
         <a href="#faq">FAQ</a>
         <a href="#login" onclick="goToView('login', event)">Member login</a>
-        <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I'd%20love%20to%20subscribe.%20Can%20you%20tell%20me%20more?" target="_blank" rel="noopener" class="nav-cta">Subscribe</a>
+        <a href="#login" onclick="goToView('login', event)" class="nav-cta">Get started</a>
       </div>
     </div>
   </nav>
@@ -1960,7 +1960,7 @@
         <h1>The books you'll <em>actually</em> finish.</h1>
         <p class="hero-sub">mybookmark is a subscription library in Bengaluru - for everyone who reads. Browse our catalogue, request any book you want. All delivered to your door. Unlimited swaps. No late fees.</p>
         <div class="hero-ctas">
-          <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I'd%20love%20to%20subscribe.%20Can%20you%20tell%20me%20more?" target="_blank" rel="noopener" class="btn btn-primary">Become a member</a>
+          <a href="#login" onclick="goToView('login', event)" class="btn btn-primary">Become a member</a>
         </div>
         <div class="hero-tertiary">
           <a href="#how">See how it works ↓</a>
@@ -2005,12 +2005,12 @@
         <div class="step">
           <div class="step-num">03</div>
           <h3>We deliver to your door</h3>
-          <p>Twice-weekly batched delivery across Bengaluru. WhatsApp by noon, books arrive by evening.</p>
+          <p>Twice-weekly batched delivery across Bengaluru. Request by noon, books arrive by evening.</p>
         </div>
         <div class="step">
           <div class="step-num">04</div>
           <h3>Read, swap, repeat</h3>
-          <p>Done with a book? WhatsApp us. No late fees, no rush, no limits.</p>
+          <p>Done with a book? Request a swap from your dashboard. No late fees, no rush, no limits.</p>
         </div>
       </div>
     </div>
@@ -2032,7 +2032,7 @@
         <div class="feature">
           <div class="feature-icon">🚪</div>
           <h3>Doorstep delivery, twice a week</h3>
-          <p>WhatsApp us by Tuesday or Friday noon. Books arrive Wednesday evening or Saturday morning. No driving, no parking.</p>
+          <p>Request by Tuesday or Friday noon. Books arrive Wednesday evening or Saturday morning. No driving, no parking.</p>
         </div>
         <div class="feature">
           <div class="feature-icon">📖</div>
@@ -2220,7 +2220,7 @@
             <li>Curated by reading level</li>
             <li>Doorstep delivery</li>
           </ul>
-          <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I'd%20like%20to%20subscribe%20to%20the%20Kids%20plan." target="_blank" rel="noopener" class="btn btn-secondary">Choose Kids</a>
+          <button class="btn btn-secondary" onclick="dummyPay('Kids')">Pay with UPI</button>
         </div>
 
         <div class="plan plan-featured">
@@ -2247,7 +2247,7 @@
             <li>Doorstep delivery twice a week</li>
             <li>Early access to new arrivals</li>
           </ul>
-          <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I'd%20like%20to%20subscribe%20to%20the%20Reader%20plan." target="_blank" rel="noopener" class="btn btn-primary">Choose Reader</a>
+          <button class="btn btn-primary" onclick="dummyPay('Reader')">Pay with UPI</button>
         </div>
 
         <div class="plan">
@@ -2273,7 +2273,7 @@
             <li>First pick on new arrivals</li>
             <li>Invite to monthly book clubs & author talks</li>
           </ul>
-          <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I'd%20like%20to%20subscribe%20to%20the%20Bookworm%20plan." target="_blank" rel="noopener" class="btn btn-secondary">Choose Bookworm</a>
+          <button class="btn btn-secondary" onclick="dummyPay('Bookworm')">Pay with UPI</button>
         </div>
 
       </div>
@@ -2300,7 +2300,7 @@
           <div>Help shape the collection - your picks matter</div>
           <div>Priority on reading circles + events</div>
         </div>
-        <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I'd%20love%20to%20subscribe.%20Can%20you%20tell%20me%20more?" target="_blank" rel="noopener" class="btn btn-primary">Claim my founder spot</a>
+        <button class="btn btn-primary" onclick="dummyPay('Founder')">Claim my founder spot</button>
       </div>
     </div>
   </section>
@@ -2318,7 +2318,7 @@
         </details>
         <details>
           <summary>Where in Bengaluru do you deliver?</summary>
-          <p>We currently serve Bengaluru-wide via batched twice-weekly door delivery. Delivery charges apply depending on your location. Drop us a WhatsApp with your locality and we'll confirm.</p>
+          <p>We currently serve Bengaluru-wide via batched twice-weekly door delivery. Delivery charges apply depending on your location. Enter your locality during signup and we'll confirm coverage.</p>
         </details>
         <details>
           <summary>How do I choose books? Do I have to browse or do you pick?</summary>
@@ -2326,11 +2326,11 @@
         </details>
         <details>
           <summary>What if you don't have a book I want?</summary>
-          <p>Request it. Send us the title and author on WhatsApp, and we'll source most books within a week and add them to your next delivery. If a book is rare or out of print and we genuinely can't get it, we'll tell you upfront and suggest close alternatives. The catalogue grows because of what members ask for.</p>
+          <p>Request it. Use the "Request a book" feature in your dashboard - enter the title and author, and we'll source most books within a week and add them to your next delivery. If a book is rare or out of print and we genuinely can't get it, we'll let you know and suggest close alternatives. The catalogue grows because of what members ask for.</p>
         </details>
         <details>
           <summary>Can I see your catalogue before subscribing?</summary>
-          <p>Yes. WhatsApp us and we'll share the full catalogue link. You can browse by genre, author, or reading level before deciding if mybookmark is right for you.</p>
+          <p>Yes. Create a free account and browse the full catalogue by genre, author, or reading level before picking a plan. No payment needed to browse.</p>
         </details>
         <details>
           <summary>What if a book gets damaged?</summary>
@@ -2355,14 +2355,15 @@
   <section class="contact" id="contact">
     <div class="container contact-grid">
       <div class="contact-info">
-        <div class="section-eyebrow">Get started</div>
-        <h2>Ready to start reading?</h2>
-        <p>Chat with us on WhatsApp or fill the form and we'll reach out within 2 hours.</p>
+        <div class="section-eyebrow">Need help?</div>
+        <h2>Have questions? Reach out.</h2>
+        <p>Our team is available to help with any queries about plans, delivery, or your account.</p>
 
-        <div class="quick-signup">
-          <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I'd%20love%20to%20subscribe.%20Can%20you%20tell%20me%20more?" target="_blank" rel="noopener" class="btn btn-whatsapp">
+        <div class="quick-signup" style="display:flex; gap:12px; flex-wrap:wrap;">
+          <a href="#login" onclick="goToView('login', event)" class="btn btn-primary">Create account</a>
+          <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I%20have%20a%20question." target="_blank" rel="noopener" class="btn btn-whatsapp">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-            Chat on WhatsApp
+            Ask a question
           </a>
         </div>
 
@@ -2375,51 +2376,12 @@
         </div>
       </div>
 
-      <form id="signupForm" class="signup-form" onsubmit="handleSignup(event)">
-        <div class="quick-signup-label" style="margin-bottom: 14px;">Or fill in your details</div>
-        <div class="form-field">
-          <label for="parentName">Your name</label>
-          <input type="text" id="parentName" required placeholder="e.g., Priya Sharma" />
-        </div>
-        <div class="form-field">
-          <label for="phone">WhatsApp number</label>
-          <input type="tel" id="phone" required placeholder="e.g., 98765 43210" />
-        </div>
-        <div class="form-field">
-          <label for="readerType">Who's the reader?</label>
-          <select id="readerType" required>
-            <option value="">Select</option>
-            <option>Just me - adult</option>
-            <option>Student (12-22)</option>
-            <option>Child (under 12)</option>
-            <option>Family - multiple readers</option>
-            <option>Book club</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label for="locality">Locality in Bengaluru</label>
-          <input type="text" id="locality" required placeholder="e.g., HSR Layout, Whitefield" />
-        </div>
-        <div class="form-field">
-          <label for="idType">Government ID type</label>
-          <select id="idType" required>
-            <option value="">Select ID type</option>
-            <option>Aadhaar card</option>
-            <option>Driving licence</option>
-            <option>Passport</option>
-            <option>Voter ID</option>
-          </select>
-          <span style="font-size: 0.78rem; color: var(--muted); margin-top: 4px; display: block;">You'll share a photo of your ID on WhatsApp. Used only for verification - kept confidential.</span>
-        </div>
-        <div class="form-field">
-          <label for="notes">What do you love reading? (optional)</label>
-          <textarea id="notes" placeholder="Favorite authors, genres, recent books you loved or hated..."></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Send to mybookmark</button>
-        <div class="form-success" id="formSuccess">
-          ✅ Thanks! We've got your details. We'll WhatsApp you within 2 hours to walk you through plans and get you set up.
-        </div>
-      </form>
+      <div class="signup-form" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:40px 24px;">
+        <h3 style="margin-bottom:12px;">Ready to start reading?</h3>
+        <p style="color:var(--muted); margin-bottom:24px;">Create a free account, pick a plan, and pay with UPI. Your first books can be delivered within 48 hours.</p>
+        <a href="#login" onclick="goToView('login', event)" class="btn btn-primary" style="width:100%; max-width:280px;">Create your account</a>
+        <p style="color:var(--muted); font-size:0.85rem; margin-top:16px;">Already a member? <a href="#login" onclick="goToView('login', event)" style="color:var(--rust); font-weight:600;">Sign in</a></p>
+      </div>
     </div>
   </section>
 
@@ -2727,7 +2689,7 @@
         <div class="stat-card">
           <div class="stat-label">Next delivery</div>
           <div class="stat-value">Wed</div>
-          <p class="stat-meta">May 27 · WhatsApp requests by Tue noon</p>
+          <p class="stat-meta">May 27 · Request by Tue noon</p>
         </div>
         <div class="stat-card">
           <div class="stat-label">Next payment</div>
@@ -2989,7 +2951,7 @@
       <div class="m-modal-header">
         <div>
           <h2>Request a book</h2>
-          <p>If it's not in our catalogue, we'll source it within a week. Sujay will confirm on WhatsApp.</p>
+          <p>If it's not in our catalogue, we'll source it within a week. You'll be notified when it's available.</p>
         </div>
         <button class="m-modal-close" onclick="closeRequestModal()">×</button>
       </div>
@@ -3402,6 +3364,16 @@
   }
 
   // ============================================
+  // UPI Payment (dummy - will be replaced with Razorpay)
+  // ============================================
+  function dummyPay(planName) {
+    if (!currentMember) {
+      goToView('login');
+      return;
+    }
+    alert('UPI payment for ' + planName + ' plan coming soon! We are setting up our payment gateway. You will be able to pay via UPI shortly.');
+  }
+
   // Dashboard actions
   // ============================================
   function requestSwap(bookTitle) {
