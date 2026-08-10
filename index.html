@@ -2630,6 +2630,7 @@
           <label for="loginPassword">Password</label>
           <input type="password" id="loginPassword" required placeholder="Your password" />
         </div>
+        <p style="text-align:right; margin: -8px 0 14px;"><a href="#" onclick="forgotPassword(event)" style="color:var(--rust); font-size:0.85rem;">Forgot password?</a></p>
         <button type="submit" class="btn btn-primary" id="loginBtn">Sign in</button>
       </form>
 
@@ -3170,6 +3171,32 @@
     el.textContent = msg;
     el.style.display = 'block';
     document.getElementById('authError').style.display = 'none';
+  }
+
+  async function forgotPassword(e) {
+    if (e) e.preventDefault();
+    var email = document.getElementById('loginEmail').value.trim();
+    if (!email) {
+      showAuthError('Enter your email above, then click Forgot password.');
+      return;
+    }
+    if (!API_URL) { showAuthError('Backend not configured.'); return; }
+    showAuthSuccess('Sending reset link...');
+    try {
+      var res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: 'forgot_password', email: email })
+      });
+      var data = await res.json();
+      if (data.ok) {
+        showAuthSuccess('A temporary password has been sent to ' + email + '. Check your inbox and sign in with it.');
+      } else {
+        showAuthError(data.error || 'Could not reset password.');
+      }
+    } catch (err) {
+      showAuthError('Connection error. Please try again.');
+    }
   }
 
   async function signIn(e) {
