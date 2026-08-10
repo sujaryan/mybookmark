@@ -814,6 +814,9 @@
   }
   #view-marketing .footer-inner .logo { color: var(--cream); }
   #view-marketing .footer-meta { color: rgba(251, 246, 236, 0.6); font-size: 0.9rem; }
+  .trust-badges { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .trust-badge { font-size: 0.78rem; padding: 5px 12px; border-radius: 999px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); color: rgba(251,246,236,0.85); white-space: nowrap; }
+  #view-dashboard .trust-badge { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.15); }
   #view-marketing footer a { color: var(--gold); }
 
   /* Announcement bar */
@@ -2396,6 +2399,12 @@
         <span class="logo-mark"></span>
         mybookmark
       </div>
+      <div class="trust-badges">
+        <span class="trust-badge">🔒 SSL Secured</span>
+        <span class="trust-badge">✅ UPI Verified Merchant</span>
+        <span class="trust-badge">📍 Google Verified Business</span>
+        <span class="trust-badge">🏛 MSME Registered</span>
+      </div>
       <div class="footer-meta">
         A curated library for readers in Bengaluru · © 2026 mybookmark
       </div>
@@ -2566,6 +2575,12 @@
 
   <footer>
     <div class="container">
+      <div class="trust-badges" style="margin-bottom: 10px;">
+        <span class="trust-badge">🔒 SSL Secured</span>
+        <span class="trust-badge">✅ UPI Verified Merchant</span>
+        <span class="trust-badge">📍 Google Verified Business</span>
+        <span class="trust-badge">🏛 MSME Registered</span>
+      </div>
       <a href="#" onclick="goToView('marketing', event)" style="color: #006FCD;">← Back to mybookmark books</a>
       &nbsp;&middot;&nbsp; A mybookmark venture &middot; &copy; 2026 mybookmark
     </div>
@@ -2929,6 +2944,12 @@
   <footer>
     <div class="footer-inner">
       <div>mybookmark · A curated library for readers in Bengaluru</div>
+      <div class="trust-badges" style="margin: 10px 0;">
+        <span class="trust-badge">🔒 SSL Secured</span>
+        <span class="trust-badge">✅ UPI Verified Merchant</span>
+        <span class="trust-badge">📍 Google Verified Business</span>
+        <span class="trust-badge">🏛 MSME Registered</span>
+      </div>
       <div>
         <a href="#">Help</a> · <a href="#">Privacy</a> · <a href="#" onclick="signOut(event)">Sign out</a>
       </div>
