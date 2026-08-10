@@ -758,7 +758,7 @@
       <div class="nav-user" id="nav-links-user" style="display:none;">
         <a href="javascript:void(0)" onclick="showView('dashboard')">My Rentals</a>
         <a href="javascript:void(0)" onclick="showView('marketing')">Plans</a>
-        <span class="nav-user-name" id="nav-user-name"></span>
+        <span id="nav-user-pic" style="display:none;"><img style="width:28px;height:28px;border-radius:50%;vertical-align:middle;margin-right:6px;object-fit:cover;" referrerpolicy="no-referrer" /></span><span class="nav-user-name" id="nav-user-name"></span>
         <a href="javascript:void(0)" onclick="signOut()" class="nav-signout">Sign out</a>
       </div>
     </div>
@@ -1096,6 +1096,7 @@
       var payload = decodeJwtPayload(response.credential);
       var email = payload.email;
       var name = payload.name || '';
+      var picture = payload.picture || '';
       try {
         var res = await fetch(API_URL, {
           method: 'POST', redirect: 'follow',
@@ -1104,6 +1105,7 @@
         });
         var data = await res.json();
         if (data.ok) {
+          data.member.picture = picture;
           setUser(data.member);
           closeAuthModal();
           updateNav();
@@ -1145,6 +1147,13 @@
         document.getElementById('nav-links-guest').style.display = 'none';
         document.getElementById('nav-links-user').style.display = 'flex';
         document.getElementById('nav-user-name').textContent = user.name.split(' ')[0];
+        var picEl = document.getElementById('nav-user-pic');
+        if (user.picture) {
+          picEl.querySelector('img').src = user.picture;
+          picEl.style.display = 'inline';
+        } else {
+          picEl.style.display = 'none';
+        }
         document.getElementById('hero-cta').textContent = 'My Rentals';
         document.getElementById('hero-cta').setAttribute('href', 'javascript:void(0)');
         document.getElementById('hero-cta').setAttribute('onclick', "showView('dashboard')");
