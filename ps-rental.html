@@ -901,17 +901,52 @@
   <section id="view-dashboard">
     <div class="container">
       <div class="dash-header">
-        <h1>My Rentals</h1>
-        <a href="javascript:void(0)" onclick="showView('marketing')" class="dash-back">← Browse plans</a>
+        <h1>My Account</h1>
+        <a href="javascript:void(0)" onclick="showView('marketing')" class="dash-back">← Back to home</a>
       </div>
 
-      <div id="dash-loading" class="dash-loading">Loading your rentals...</div>
+      <div id="dash-loading" class="dash-loading">Loading...</div>
 
       <div id="dash-content" style="display:none;">
         <div class="dash-card" id="dash-active">
-          <h3>Active Rental</h3>
+          <h3>Active Subscription</h3>
           <div id="active-rental-content"></div>
         </div>
+
+        <h2 style="text-align:center; margin:40px 0 8px;">Pick a plan</h2>
+        <p style="text-align:center; color:rgba(255,255,255,0.5); margin-bottom:30px; font-size:0.95rem;">Choose a new plan or upgrade your current one</p>
+        <div class="ps-consoles">
+          <div class="ps-console-card">
+            <div class="ps-console-icon">🎮</div>
+            <h3>Weekend</h3>
+            <p style="color:rgba(255,255,255,0.5); font-size:0.9rem;">3 days (Fri - Sun)</p>
+            <div class="ps-price">&#8377;3,500</div>
+            <div class="ps-price-period">per weekend</div>
+            <div class="ps-deposit">+ &#8377;10,000 refundable deposit</div>
+            <button class="btn btn-ps" style="margin-top:20px; width:100%;" onclick="dummyPay('PS5 Weekend')">Pay &amp; Rent</button>
+          </div>
+          <div class="ps-console-card" style="border-color: rgba(0, 111, 205, 0.4); position: relative;">
+            <div style="position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:#006FCD; color:#fff; font-size:0.75rem; font-weight:700; padding:4px 14px; border-radius:999px; text-transform:uppercase; letter-spacing:0.5px;">Popular</div>
+            <div class="ps-console-icon">🕹️</div>
+            <h3>Weekly</h3>
+            <p style="color:rgba(255,255,255,0.5); font-size:0.9rem;">7 days</p>
+            <div class="ps-price">&#8377;5,500</div>
+            <div class="ps-price-period">per week</div>
+            <div class="ps-deposit">+ &#8377;10,000 refundable deposit</div>
+            <button class="btn btn-ps" style="margin-top:20px; width:100%;" onclick="dummyPay('PS5 Weekly')">Pay &amp; Rent</button>
+          </div>
+          <div class="ps-console-card">
+            <div class="ps-console-icon">🏆</div>
+            <h3>Monthly</h3>
+            <p style="color:rgba(255,255,255,0.5); font-size:0.9rem;">30 days</p>
+            <div class="ps-price">&#8377;15,000</div>
+            <div class="ps-price-period">per month</div>
+            <div class="ps-deposit">+ &#8377;10,000 refundable deposit</div>
+            <button class="btn btn-ps" style="margin-top:20px; width:100%;" onclick="dummyPay('PS5 Monthly')">Pay &amp; Rent</button>
+          </div>
+        </div>
+
+        <p style="text-align:center; margin-top:30px; font-size:0.85rem; color:rgba(255,255,255,0.4);">Need help? <a href="https://wa.me/917022165307?text=Hi%20mybookmark%20-%20I%20have%20a%20question%20about%20my%20PS5%20rental." target="_blank" rel="noopener">WhatsApp support</a></p>
       </div>
     </div>
   </section>
