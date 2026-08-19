@@ -2273,8 +2273,8 @@
           </p>
           <p class="plan-deposit">Refundable deposit: ₹400</p>
           <ul class="plan-features">
-            <li>3 books at a time</li>
-            <li>Up to 6 swaps per month</li>
+            <li>1 book at a time</li>
+            <li>Up to 2 swaps per month</li>
             <li>Age-tagged catalogue (3-6, 7-9, 10-12)</li>
             <li>Curated by reading level</li>
             <li>Doorstep delivery</li>
@@ -2920,7 +2920,7 @@
               <div class="info-row" style="align-items:center;">
                 <div>
                   <strong>Kids</strong>
-                  <span style="color:var(--muted);font-size:0.85rem;"> · 3 books · ₹249/mo</span>
+                  <span style="color:var(--muted);font-size:0.85rem;"> · 1 book · ₹249/mo</span>
                 </div>
                 <button class="btn-sm primary" onclick="dummyPay('Kids')">Pay</button>
               </div>
@@ -3497,7 +3497,7 @@
     document.querySelector('#view-dashboard .welcome h1').textContent = 'Welcome back, ' + firstName + ' 👋';
     document.querySelector('#view-dashboard .welcome-sub').textContent = 'Member since ' + memberSince;
     var planAmounts = { Kids: 249, Reader: 549, Bookworm: 849, Founder: 400 };
-    var planLimits = { Kids: 2, Reader: 4, Bookworm: 6, Founder: 4 };
+    var planLimits = { Kids: 1, Reader: 4, Bookworm: 6, Founder: 4 };
     if (member.plan) {
       document.querySelector('#view-dashboard .plan-pill').textContent = member.plan + ' plan';
       document.getElementById('dash-plan-name').textContent = member.plan + ' · ₹' + (planAmounts[member.plan] || 0) + '/mo';
@@ -3804,7 +3804,7 @@
   // UPI Payment (dummy - will be replaced with Razorpay)
   // ============================================
   const BOOK_PLAN_PRICES = {
-    'Kids': { amount: 249, deposit: 500, label: 'Kids · 2 books' },
+    'Kids': { amount: 249, deposit: 500, label: 'Kids · 1 book' },
     'Reader': { amount: 549, deposit: 1000, label: 'Reader · 4 books' },
     'Bookworm': { amount: 849, deposit: 1500, label: 'Bookworm · 6 books' },
     'Founder': { amount: 400, deposit: 1000, label: 'Founding Member' }
