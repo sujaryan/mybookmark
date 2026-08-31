@@ -1,0 +1,60 @@
+# mybookmark
+
+> A curated book subscription library with doorstep delivery in Bengaluru, India.
+
+## About
+
+mybookmark is a subscription-based book library serving readers across Bengaluru. Members subscribe to a monthly plan, browse a catalogue of 120+ titles, and get books delivered to their doorstep. No late fees, unlimited swaps, and 100% refundable deposits.
+
+## Website
+
+- Homepage: https://mybookmark.in
+- PS5 Rental: https://mybookmark.in/ps-rental
+
+## Plans
+
+- Kids Plan: ₹249/month, 1 book at a time, age-tagged catalogue (3-12 years), refundable deposit ₹400
+- Reader Plan: ₹549/month, 4 books at a time, full catalogue access, refundable deposit ₹1,000
+- Bookworm Plan: ₹849/month, 6 books at a time, priority delivery, refundable deposit ₹1,500
+- Founder Plan: ₹400/month, 4 books at a time, early supporter pricing, refundable deposit ₹1,000
+
+## Catalogue
+
+120+ titles across genres: Fiction, Indian Fiction, Non-fiction, Self-help, Business, Psychology, Finance, Science, Biography, Thriller, Sci-fi, Classics, Kids, Young Adult.
+
+Popular titles include: Atomic Habits, Sapiens, The Midnight Library, Educated, Ikigai, Rich Dad Poor Dad, The Alchemist, Thinking Fast and Slow, and more.
+
+## How It Works
+
+1. Sign up and choose a plan
+2. Browse the catalogue and request books
+3. Books are delivered to your door (Bengaluru-wide)
+4. Read at your pace, swap anytime
+5. No late fees, no due dates
+
+## PS5 Rental Service
+
+mybookmark also rents PlayStation 5 consoles in Bengaluru with doorstep delivery:
+- Weekend Plan (Fri-Sun): ₹3,500 + ₹10,000 refundable deposit
+- Weekly Plan (7 days): ₹5,500 + ₹10,000 refundable deposit
+- Monthly Plan (30 days): ₹15,000 + ₹10,000 refundable deposit
+
+Includes: PS5 console, 4 DualSense controllers, PS Plus subscription, free setup and pickup.
+
+## Contact
+
+- WhatsApp: +91 70221 65307
+- Email: sales@mybookmark.in
+- Service area: Bengaluru-wide
+- Response time: Within 2 hours, 9 AM - 9 PM
+
+## Trust & Credentials
+
+- MSME Registered
+- Startup India Registered
+- DPIIT Recognized
+- Google Verified Business (4.8 rating)
+- SSL Secured
+- Razorpay Powered payments
+- 100+ readers in Bengaluru
+- 100% refundable deposits
