@@ -10,6 +10,10 @@ mybookmark is a subscription-based book library serving readers across Bengaluru
 
 - Homepage: https://mybookmark.in
 - PS5 Rental: https://mybookmark.in/ps-rental
+- About Us: https://mybookmark.in/about
+- Contact Us: https://mybookmark.in/contact
+- Refund & Cancellation Policy: https://mybookmark.in/refund
+- Shipping & Delivery Policy: https://mybookmark.in/shipping
 - Privacy Policy: https://mybookmark.in/privacy
 - Terms & Conditions: https://mybookmark.in/terms
 
@@ -47,8 +51,19 @@ Includes: PS5 console, 4 DualSense controllers, PS Plus subscription, free setup
 
 - WhatsApp: +91 70221 65307
 - Email: sales@mybookmark.in
-- Service area: Bengaluru-wide
-- Response time: Within 2 hours, 9 AM - 9 PM
+- Service area: All of Bengaluru (Koramangala, Whitefield, Indiranagar, Electronic City, Yelahanka, and all other localities)
+- Response time: Within 2 hours, 9 AM - 9 PM IST, 7 days a week
+- Languages: English, Hindi, Kannada
+
+## Shipping & Delivery
+
+- Doorstep delivery across all of Bengaluru
+- Regular delivery day: Wednesdays
+- Delivery charges: ₹40-₹80 per trip (varies by locality, communicated before each delivery)
+- First delivery: 2-5 business days from signup
+- Swap delivery: 2-3 business days from request
+- PS5 delivery: 1-2 business days, free delivery and pickup included
+- Pay-on-delivery model: subscription fee + deposit collected at first delivery, not online
 
 ## Refund & Cancellation Policy
 
