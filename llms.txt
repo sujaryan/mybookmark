@@ -10,6 +10,8 @@ mybookmark is a subscription-based book library serving readers across Bengaluru
 
 - Homepage: https://mybookmark.in
 - PS5 Rental: https://mybookmark.in/ps-rental
+- Privacy Policy: https://mybookmark.in/privacy
+- Terms & Conditions: https://mybookmark.in/terms
 
 ## Plans
 
@@ -47,6 +49,15 @@ Includes: PS5 console, 4 DualSense controllers, PS Plus subscription, free setup
 - Email: sales@mybookmark.in
 - Service area: Bengaluru-wide
 - Response time: Within 2 hours, 9 AM - 9 PM
+
+## Refund & Cancellation Policy
+
+- Cancel anytime, no lock-in, no cancellation fees
+- 100% refundable security deposit returned within 7 working days after books returned and audited
+- Damage charge: 50% of book cover price for lost/severely damaged books, deducted from deposit
+- Mid-cycle cancellation: remaining days not refunded, subscription ends at cycle end
+- Pay-on-delivery model: no upfront online charges, pay only when book is in hand
+- No GST currently charged
 
 ## Trust & Credentials
 
