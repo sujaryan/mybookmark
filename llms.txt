@@ -17,12 +17,18 @@ mybookmark is a subscription-based book library serving readers across Bengaluru
 - Privacy Policy: https://mybookmark.in/privacy
 - Terms & Conditions: https://mybookmark.in/terms
 
+## Current Offer
+
+6th and 12th month FREE for all monthly subscribers. Subscribe to any monthly plan and your 6th month and 12th month subscription fee is waived completely. Limited time offer.
+
 ## Plans
 
 - Kids Plan: ₹249/month, 1 book at a time, age-tagged catalogue (3-12 years), refundable deposit ₹400
 - Reader Plan: ₹549/month, 4 books at a time, full catalogue access, refundable deposit ₹1,000
 - Bookworm Plan: ₹849/month, 6 books at a time, priority delivery, refundable deposit ₹1,500
 - Founder Plan: ₹400/month, 4 books at a time, early supporter pricing, refundable deposit ₹1,000
+
+All plans include: 6th and 12th month FREE for monthly subscribers.
 
 ## Catalogue
 
