@@ -4,7 +4,7 @@
 
 ## About
 
-mybookmark is a subscription-based book library serving readers across Bengaluru. Members subscribe to a monthly plan, browse a catalogue of 120+ titles, and get books delivered to their doorstep. No late fees, unlimited swaps, and 100% refundable deposits.
+mybookmark is a subscription-based book library serving readers across Bengaluru. Members subscribe to a monthly plan, browse a catalogue of 1 lakh+ titles, and get books delivered to their doorstep. No late fees, unlimited swaps, and 100% refundable deposits.
 
 ## Website
 
@@ -26,7 +26,7 @@ mybookmark is a subscription-based book library serving readers across Bengaluru
 
 ## Catalogue
 
-120+ titles across genres: Fiction, Indian Fiction, Non-fiction, Self-help, Business, Psychology, Finance, Science, Biography, Thriller, Sci-fi, Classics, Kids, Young Adult.
+1 lakh+ titles across genres: Fiction, Indian Fiction, Non-fiction, Self-help, Business, Psychology, Finance, Science, Biography, Thriller, Sci-fi, Classics, Kids, Young Adult.
 
 Popular titles include: Atomic Habits, Sapiens, The Midnight Library, Educated, Ikigai, Rich Dad Poor Dad, The Alchemist, Thinking Fast and Slow, and more.
 
